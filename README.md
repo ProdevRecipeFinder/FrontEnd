@@ -1,3 +1,1 @@
-FrontEnd Repo
-
-Dev branch setup
+# Recipe Finder Front-End
