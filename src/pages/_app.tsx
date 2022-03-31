@@ -3,11 +3,12 @@ import type { AppProps } from 'next/app'
 import React from "react"
 import Layout from '../components/Layout'
 import { ChakraProvider } from '@chakra-ui/react'
+import theme from '../theme'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <React.Fragment>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Layout>
           <Component {...pageProps} />
         </Layout>

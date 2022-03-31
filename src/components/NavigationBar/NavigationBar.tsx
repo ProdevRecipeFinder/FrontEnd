@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Flex,
@@ -21,21 +21,18 @@ import {
   useColorMode,
   Center,
 } from '@chakra-ui/react';
-import { MoonIcon, SunIcon, HamburgerIcon, EmailIcon, InfoIcon } from '@chakra-ui/icons';
 
+import NavigationBarItem from './NavigationBarItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faHome, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-
-import NextLink from 'next/link';
+import { faEnvelope, faHome, faCircleInfo, faBars, faSun, faMoon, faMagnifyingGlass, faBookOpen, faCogs} from '@fortawesome/free-solid-svg-icons'
 
 import styles from "./NavigationBar.module.css";
 
-export default function Nav() {
+const Nav = () => {
   const { colorMode, toggleColorMode } = useColorMode()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const signedIn = false;
+  const signedIn = true
 
   return (
     <React.Fragment>
@@ -46,18 +43,12 @@ export default function Nav() {
           <DrawerHeader borderBottomWidth='1px' textAlign="center">Recipe Finder</DrawerHeader>
           <DrawerBody>
             <Stack direction={"column"}>
-              <Button>
-                <FontAwesomeIcon icon={faHome} className={styles.navMenuItemIcon} />
-                <NextLink href="/">Home</NextLink>
-              </Button>
-              <Button>
-                <FontAwesomeIcon icon={faCircleInfo} className={styles.navMenuItemIcon} />
-                <NextLink href="/">About</NextLink>
-              </Button>
-              <Button>
-                <FontAwesomeIcon icon={faEnvelope} className={styles.navMenuItemIcon} />
-                <NextLink href="/">Contact Us</NextLink>
-              </Button>
+              <NavigationBarItem href={"/"} text={"Home"} icon={faHome} />
+              { signedIn ? <NavigationBarItem href={"/"} text={"My Cook Book"} icon={faBookOpen} /> : null }
+              <NavigationBarItem href={"/"} text={"Search"} icon={faMagnifyingGlass} />
+              <NavigationBarItem href={"/"} text={"About"} icon={faCircleInfo} />
+              <NavigationBarItem href={"/"} text={"Contact Us"} icon={faEnvelope} />
+              <NavigationBarItem href={"/"} text={"Settings"} icon={faCogs} />
             </Stack>
           </DrawerBody>
         </DrawerContent>
@@ -66,12 +57,12 @@ export default function Nav() {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
 
         <Button onClick={onOpen}>
-          <HamburgerIcon />
+          <FontAwesomeIcon icon={faBars} fontSize="1.3em"/>
         </Button>
 
           <Box>
             <Center>
-              <h1 id={styles.navTitle}>Recipe Finder</h1>
+              <h1 id={styles.navTitle} color={colorMode === "dark" ? "white" : "black"}>Recipe Finder</h1>
             </Center>
           </Box>
 
@@ -79,7 +70,7 @@ export default function Nav() {
             <Stack direction={'row'} spacing={5}>
 
               <Button onClick={toggleColorMode}>
-                {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                <FontAwesomeIcon icon={colorMode === 'dark' ? faMoon : faSun} />
               </Button>
 
               {
@@ -105,9 +96,9 @@ export default function Nav() {
                       </Center>
         
                       <MenuDivider />
-                      <MenuItem>Your Servers</MenuItem>
-                      <MenuItem>Account Settings</MenuItem>
-                      <MenuItem>Logout</MenuItem>
+                      <MenuItem>Your Profile</MenuItem>
+                      <MenuItem>Profile Settings</MenuItem>
+                      <MenuItem>Sign Out</MenuItem>
                     </MenuList>
                   </Menu>
                 :
@@ -122,3 +113,5 @@ export default function Nav() {
     </React.Fragment>
   );
 }
+
+export default Nav
