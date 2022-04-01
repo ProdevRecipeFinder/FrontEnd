@@ -1,10 +1,13 @@
-import SettingsLayout from "../../components/layouts/SettingsLayout"
-import styles         from "../../styles/settings.module.css"
-import React          from "react"
-
-import { InputField } from '../../components/InputField'
-import { Box, Divider, Button } from "@chakra-ui/react"
+import { 
+  Box, 
+  Divider, 
+  Button } 
+from "@chakra-ui/react"
 import { Form, Formik } from 'formik'
+import { InputField }   from '../../components/InputField'
+import SettingsLayout   from "../../components/layouts/SettingsLayout"
+import styles           from "../../styles/settings.module.css"
+import React            from "react"
 
 const profile = () => {
   return (
@@ -14,7 +17,7 @@ const profile = () => {
 
       <Divider />
       <br />
-      
+
       <Formik 
         initialValues={{username: ""}}
         onSubmit={(values, {setErrors}) => {}
