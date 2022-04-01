@@ -1,11 +1,14 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import React from "react"
-import Layout from '../components/Layout'
 import { ChakraProvider } from '@chakra-ui/react'
-import theme from '../theme'
+import type { AppProps }  from 'next/app'
+import DefaultLayout      from '../components/layouts/DefaultLayout'
+import React              from "react"
+import theme              from '../theme'
+
+import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const Layout = (Component as any).Layout || DefaultLayout
+
   return (
     <React.Fragment>
       <ChakraProvider theme={theme}>

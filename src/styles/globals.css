@@ -9,3 +9,9 @@ body {
 * {
   box-sizing: border-box;
 }
+
+.container {
+  width: 70%;
+  margin: 1em auto;
+  padding: 1em;
+}
