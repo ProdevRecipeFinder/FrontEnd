@@ -1,17 +1,19 @@
-import React from "react"
-import NavigationBar from "../NavigationBar/NavigationBar"
+import NavigationBar  from "../NavigationBar/NavigationBar"
+import React          from "react"
 
 interface Props {
-  children: React.ReactNode | React.ReactNode[];
+  children: React.ReactNode
 }
 
 const DefaultLayout = ({ children }: Props) => {
   return (
     <React.Fragment>
       <NavigationBar />
-      { children }
+      <div className="container">
+        {children}
+      </div>
     </React.Fragment>
   )
-};
+}
 
 export default DefaultLayout

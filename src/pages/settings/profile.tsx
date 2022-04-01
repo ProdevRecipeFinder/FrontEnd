@@ -1,5 +1,5 @@
-import React from "react"
 import SettingsLayout from "../../components/layouts/SettingsLayout"
+import React          from "react"
 
 const profile = () => {
   return (

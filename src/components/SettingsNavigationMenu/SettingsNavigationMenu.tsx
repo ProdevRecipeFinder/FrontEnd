@@ -1,7 +1,13 @@
-import React from "react"
+import { 
+  faUser, 
+  faGear, 
+  faPaintBrush, 
+  faCreditCard, 
+  faShield 
+} from '@fortawesome/free-solid-svg-icons'
+import NavigationBarItem  from '../NavigationBar/NavigationBarItem'
 import { Stack, Divider } from "@chakra-ui/react"
-import { faUser, faGear, faPaintBrush, faCreditCard, faShield } from '@fortawesome/free-solid-svg-icons'
-import NavigationBarItem from '../NavigationBar/NavigationBarItem'
+import React              from "react"
 
 const SettingsNavigationMenu = () => {
   return (
