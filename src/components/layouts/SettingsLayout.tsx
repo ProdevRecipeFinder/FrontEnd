@@ -26,11 +26,11 @@ const SettingsLayout = ({ children }: Props) => {
         </Button>
       </div>
 
-      <Divider orientation='horizontal' marginBottom="1em" />
+      <Divider marginBottom="1em" />
 
       {/* Settings navigation menu and children.
       This is a layout file, so the children will be whole pages that have the .Layout property set to SettingsLayout (this file)*/}
-      <Stack direction={"row"}>
+      <Stack direction={"row"} justify="space-between">
         <Box w="15em">
           <SettingsNavigationMenu />
         </Box>

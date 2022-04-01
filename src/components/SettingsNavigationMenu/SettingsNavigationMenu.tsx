@@ -5,8 +5,8 @@ import {
   faCreditCard, 
   faShield 
 } from '@fortawesome/free-solid-svg-icons'
-import NavigationBarItem  from '../NavigationBar/NavigationBarItem'
 import { Stack, Divider } from "@chakra-ui/react"
+import NavigationBarItem  from '../NavigationBar/NavigationBarItem'
 import React              from "react"
 
 const SettingsNavigationMenu = () => {
@@ -19,7 +19,7 @@ const SettingsNavigationMenu = () => {
         <NavigationBarItem icon={faPaintBrush} text={"Appearance"} href={"/"}/>
       </Stack>
 
-      <Divider orientation='horizontal' margin="0.5em 0"/>
+      <Divider margin="0.5em 0"/>
 
       <Stack direction={"column"} padding="0.5em">
         <p>Access</p>

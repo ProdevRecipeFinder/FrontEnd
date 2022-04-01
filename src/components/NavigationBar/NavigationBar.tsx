@@ -36,7 +36,6 @@ import NavigationBarItem    from './NavigationBarItem'
 import styles               from "./NavigationBar.module.css"
 import React                from 'react'
 
-
 const Nav = () => {
   const { colorMode, toggleColorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
