@@ -24,7 +24,7 @@ const SettingsNavigationMenu = () => {
       <Stack direction={"column"} padding="0.5em">
         <p>Access</p>
         <NavigationBarItem icon={faCreditCard} text={"Billing"} href={"/"}/>
-        <NavigationBarItem icon={faShield} text={"Password and Auth"} href={"/"}/>
+        <NavigationBarItem icon={faShield} text={"Password and Auth"} href={"/settings/security"}/>
       </Stack>
     </React.Fragment>
   )
