@@ -9,7 +9,7 @@ import { useField }                   from 'formik'
 
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string
-  label: string
+  label?: string
   placeholder?: string
 }
 
