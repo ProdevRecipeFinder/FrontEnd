@@ -10,6 +10,7 @@ import { InputField }     from '../../components/InputField'
 import SettingsLayout     from "../../components/layouts/SettingsLayout"
 import styles             from "../../styles/settings.module.css"
 import React              from "react"
+import Link               from "next/link"
 
 const profile = () => {
   const passwordSchema = new passwordValidator()
@@ -67,7 +68,9 @@ const profile = () => {
               <br />
               <Stack direction={"row"}>
                 <Button type="submit" isLoading={isSubmitting}>Save</Button>
-                <Button>Forgot Password</Button>
+                <Link href="/reset-password/">
+                  <Button>Forgot Password</Button>
+                </Link>
               </Stack>
             </Form>
           )

@@ -1,4 +1,5 @@
 import NavigationBar  from "../NavigationBar/NavigationBar"
+import { Box }        from "@chakra-ui/react"
 import React          from "react"
 
 interface Props {
@@ -9,9 +10,9 @@ const DefaultLayout = ({ children }: Props) => {
   return (
     <React.Fragment>
       <NavigationBar />
-      <div className="container">
+      <Box className="container">
         {children}
-      </div>
+      </Box>
     </React.Fragment>
   )
 }
