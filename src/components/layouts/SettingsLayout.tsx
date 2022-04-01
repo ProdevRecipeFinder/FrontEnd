@@ -18,13 +18,13 @@ const SettingsLayout = ({ children }: Props) => {
   return (
     <DefaultLayout>
       {/* Avatar and username at the top of the page */}
-      <div id={styles.account}>
+      <Box id={styles.account}>
         <Avatar size={'md'} src={'https://avatars.dicebear.com/api/male/username.svg'} marginRight={"0.5em"} />
         <p style={{fontWeight: "500", fontSize: "1.2em"}}>Username</p>
         <Button marginLeft="auto">
           Go to Cookbook
         </Button>
-      </div>
+      </Box>
 
       <Divider marginBottom="1em" marginTop="0.5em" />
 
