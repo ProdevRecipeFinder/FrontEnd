@@ -1,14 +1,15 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import React from 'react'
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <React.Fragment>
       <Head>
         <title>Home</title>
         <meta name="description" content="Recipe Finder Home" />
       </Head>
-    </div>
+    </React.Fragment>
   )
 }
 

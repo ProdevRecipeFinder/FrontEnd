@@ -48,7 +48,7 @@ const Nav = () => {
               <NavigationBarItem href={"/"} text={"Search"} icon={faMagnifyingGlass} />
               <NavigationBarItem href={"/"} text={"About"} icon={faCircleInfo} />
               <NavigationBarItem href={"/"} text={"Contact Us"} icon={faEnvelope} />
-              <NavigationBarItem href={"/"} text={"Settings"} icon={faCogs} />
+              <NavigationBarItem href={"/settings"} text={"Settings"} icon={faCogs} />
             </Stack>
           </DrawerBody>
         </DrawerContent>
