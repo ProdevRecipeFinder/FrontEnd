@@ -12,7 +12,7 @@ import React              from "react"
 const SettingsNavigationMenu = () => {
   return (
     <React.Fragment>
-      <Stack direction={"column"}>
+      <Stack direction={"column"} padding="0.5em">
         <p>Account</p>
         <NavigationBarItem icon={faUser} text={"Public Profile"} href={"/settings/profile"}/>
         <NavigationBarItem icon={faGear} text={"Account"} href={"/"}/>
