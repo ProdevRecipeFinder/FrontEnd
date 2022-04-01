@@ -1,9 +1,13 @@
-import React, { useState } from "react"
-import { Center, VStack, Button } from "@chakra-ui/react"
-import styles from "../../styles/reset-password.module.css"
-import { Form, Formik } from 'formik'
-import { InputField }   from '../../components/InputField'
-import HCaptcha from '@hcaptcha/react-hcaptcha'
+import { 
+  Center, 
+  VStack, 
+  Button 
+} from "@chakra-ui/react"
+import React, { useState }  from "react"
+import { Form, Formik }     from 'formik'
+import { InputField }       from '../../components/InputField'
+import HCaptcha             from '@hcaptcha/react-hcaptcha'
+import styles               from "../../styles/reset-password.module.css"
 
 const verifyEmail = () => {
   const [isHuman, setIsHuman] = useState(false)
@@ -14,6 +18,7 @@ const verifyEmail = () => {
       <Center>
         <h1 id="title">Verify Email</h1>
       </Center>
+      
       <Center>
         <VStack id={styles.resetBox} w="40em">
           <p>Enter your user account's verified email address and we will send you a password reset link.</p>

@@ -1,9 +1,13 @@
-import { useRouter } from 'next/router'
+import { 
+  Center, 
+  VStack, 
+  Button 
+} from "@chakra-ui/react"
 import React, { useEffect } from "react"
-import { Center, VStack, Button } from "@chakra-ui/react"
-import styles from "../../styles/reset-password.module.css"
-import { Form, Formik } from 'formik'
-import { InputField }   from '../../components/InputField'
+import { Form, Formik }     from 'formik'
+import { InputField }       from '../../components/InputField'
+import { useRouter }        from 'next/router'
+import styles               from "../../styles/reset-password.module.css"
 
 const ResetPassword = () => {
   const router = useRouter()
