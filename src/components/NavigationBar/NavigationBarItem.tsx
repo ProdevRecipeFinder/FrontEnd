@@ -5,20 +5,20 @@ import { Button } from "@chakra-ui/react"
 import NextLink from "next/link"
 import styles from "./NavigationBar.module.css"
 
-interface NavigationBarItemProps {
+interface Props {
   href: string,
   text: string,
   icon: IconDefinition
 }
 
-const NavigationBarItem = (props: NavigationBarItemProps) => {
+const NavigationBarItem = (props: Props) => {
   return (
-    <React.Fragment>
+    <NextLink href={props.href}>
       <Button>
         <FontAwesomeIcon icon={props.icon} className={styles.navMenuItemIcon} />
-        <NextLink href={props.href}>{props.text}</NextLink>
+        {props.text}
       </Button>
-    </React.Fragment>
+    </NextLink>
   )
 }
 

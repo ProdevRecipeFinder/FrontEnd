@@ -48,7 +48,7 @@ const Nav = () => {
               <NavigationBarItem href={"/"} text={"Search"} icon={faMagnifyingGlass} />
               <NavigationBarItem href={"/"} text={"About"} icon={faCircleInfo} />
               <NavigationBarItem href={"/"} text={"Contact Us"} icon={faEnvelope} />
-              <NavigationBarItem href={"/settings"} text={"Settings"} icon={faCogs} />
+              <NavigationBarItem href={"/settings/profile"} text={"Settings"} icon={faCogs} />
             </Stack>
           </DrawerBody>
         </DrawerContent>
@@ -70,7 +70,7 @@ const Nav = () => {
             <Stack direction={'row'} spacing={5}>
 
               <Button onClick={toggleColorMode}>
-                <FontAwesomeIcon icon={colorMode === 'dark' ? faMoon : faSun} />
+                <FontAwesomeIcon icon={colorMode === 'light' ? faMoon : faSun} />
               </Button>
 
               {
