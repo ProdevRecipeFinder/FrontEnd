@@ -9,11 +9,10 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react'
-
-import type { Recipe } from "../../types"
-import styles from "./RecipeCard.module.css"
-
 import { truncateString } from "../../utils"
+import type { Recipe }    from "../../types"
+import NextLink           from 'next/link'
+import styles             from "./RecipeCard.module.css"
 
 interface Props {
   recipe: Recipe
@@ -68,15 +67,17 @@ const RecipeCard = ({ recipe }: Props) => {
             >
               Delete
             </Button>
-            <Button
-              flex={1}
-              fontSize={'sm'}
-              rounded={'full'}
-              bg={'blue.400'}
-              _hover={{ bg: 'blue.500' }}
-              _focus={{ bg: 'blue.500' }}>
-              Open
-            </Button>
+            <NextLink href={`/my-cookbook/recipe/${recipe.id}`}>
+              <Button
+                flex={1}
+                fontSize={'sm'}
+                rounded={'full'}
+                bg={'blue.400'}
+                _hover={{ bg: 'blue.500' }}
+                _focus={{ bg: 'blue.500' }}>
+                Open
+              </Button>
+            </NextLink>
           </Stack>
         </Stack>
       </Stack>

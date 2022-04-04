@@ -5,9 +5,10 @@ import {
 import React, { useState } from "react"
 import RecipeCard from "../../components/Recipe/RecipeCard"
 import type { Recipe } from "../../types"
-import fakeData from "./fakeData.json"
-
 import { SimpleGrid } from '@chakra-ui/react'
+
+import fakeData from "../../fakeData.json"
+
 
 function first20(arr: Array<Recipe>): Array<Recipe> {
   return arr.slice(0, 20)

@@ -5,6 +5,7 @@ export type Ingredient = {
 }
 
 export type Recipe = {
+  id: number
   title: string
   external_author: string
   description: string

@@ -16,7 +16,7 @@ body {
   padding: 1em;
 }
 
-#title {
+.title {
   font-size: 1.75em;
   margin-right: 0.5em;
 }
