@@ -1,6 +1,6 @@
 
-import { data } from "../../fakeData.json"
-import { Recipe } from '../../types'
+import { data } from "../../../fakeData.json"
+import { Recipe } from "../../../types"
 import type { NextPageContext } from 'next'
 import { Stack, Image, Button, Center, Box, Divider, Checkbox } from '@chakra-ui/react'
 import React from "react"
