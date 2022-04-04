@@ -2,13 +2,20 @@
 import { data } from "../../../fakeData.json"
 import { Recipe } from "../../../types"
 import type { NextPageContext } from 'next'
-import { Stack, Image, Button, Center, Box, Divider, Checkbox } from '@chakra-ui/react'
+import { Stack, Button, Center, Box, Divider, Checkbox } from '@chakra-ui/react'
 import React from "react"
 import styles from "./recipe.module.css"
 
 export async function getServerSideProps({ query }: NextPageContext) {
   const recipeId = parseInt(query.id as string)
   const recipe = data.find(recipe => recipe.id === recipeId)
+
+  // send to 404 if not found
+  if (!recipe) {
+    return {
+      notFound: true
+    }
+  }
 
   return {
     props: {
@@ -50,11 +57,16 @@ const Recipe = ({ recipe }: Props) => {
               <p><b>Prep: </b> {recipe.prep_time_minutes} mins</p>
               <p><b>Total: </b> {recipe.total_time_minutes} mins</p>
               <p><b>Steps: </b> {recipe.instructions.length} step(s)</p>
+              <p><b>Rating: </b> {recipe.rating_stars}/5</p>
             </Stack>
           </Box>
         </Stack>
 
         <Stack className={styles.ingredientsBox} direction={"column"} width="50%">
+          <Stack direction={"row"}>
+            <Button className={styles.deleteButton}>Save</Button>
+            <Button colorScheme='red' className={styles.deleteButton} variant='outline'>Delete</Button>
+          </Stack>
           <Box>
             <h2 className="title">Ingredients</h2>
             <Divider />
@@ -84,6 +96,25 @@ const Recipe = ({ recipe }: Props) => {
           ))
         }
       </Stack>
+
+      <br />
+
+      {
+        recipe.footnotes.length ? 
+          <Stack>
+            <h2 className="title">Footnotes</h2>
+            <Divider />
+            {
+              recipe.footnotes.map((footnote, index) => (
+                <Box key={index}>
+                  <p>{footnote}</p>
+                </Box>
+              ))
+            }
+          </Stack>
+        :
+        null
+      }
 
     </React.Fragment>
   )
