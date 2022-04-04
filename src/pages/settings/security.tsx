@@ -32,7 +32,7 @@ const profile = () => {
   return (
     <React.Fragment>
       <Box className={styles.container}>
-      <h1 id="title">Change Password</h1>
+      <h1 className="title">Change Password</h1>
 
       <Divider />
       <br />

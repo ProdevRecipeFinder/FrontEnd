@@ -13,7 +13,7 @@ const profile = () => {
   return (
     <React.Fragment>
       <Box className={styles.container}>
-      <h1 id="title">Public Profile</h1>
+      <h1 className="title">Public Profile</h1>
 
       <Divider />
       <br />
