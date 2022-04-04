@@ -8,13 +8,14 @@ import React                    from "react"
 interface Props {
   href: string,
   text: string,
-  icon: IconDefinition
+  icon: IconDefinition,
+  onClick?: () => void
 }
 
 const NavigationBarItem = (props: Props) => {
   return (
     <NextLink href={props.href}>
-      <Button>
+      <Button onClick={props.onClick}>
         <FontAwesomeIcon icon={props.icon} className={styles.navMenuItemIcon} />
         {props.text}
       </Button>

@@ -53,12 +53,15 @@ const Nav = () => {
           <DrawerHeader borderBottomWidth='1px' textAlign="center">Recipe Finder</DrawerHeader>
           <DrawerBody>
             <Stack direction={"column"}>
-              <NavigationBarItem href={"/"} text={"Home"} icon={faHome} />
-              { signedIn ? <NavigationBarItem href={"/"} text={"My Cook Book"} icon={faBookOpen} /> : null }
-              <NavigationBarItem href={"/"} text={"Search"} icon={faMagnifyingGlass} />
-              <NavigationBarItem href={"/"} text={"About"} icon={faCircleInfo} />
-              <NavigationBarItem href={"/"} text={"Contact Us"} icon={faEnvelope} />
-              <NavigationBarItem href={"/settings/profile"} text={"Settings"} icon={faCogs} />
+              <NavigationBarItem onClick={onClose} href={"/"} text={"Home"} icon={faHome} />
+              { signedIn ? 
+                <NavigationBarItem onClick={onClose} href={"/my-cookbook/"} text={"My Cook Book"} icon={faBookOpen} /> 
+                : null 
+              }
+              <NavigationBarItem onClick={onClose} href={"/"} text={"Search"} icon={faMagnifyingGlass} />
+              <NavigationBarItem onClick={onClose} href={"/"} text={"About"} icon={faCircleInfo} />
+              <NavigationBarItem onClick={onClose} href={"/"} text={"Contact Us"} icon={faEnvelope} />
+              <NavigationBarItem onClick={onClose} href={"/settings/profile"} text={"Settings"} icon={faCogs} />
             </Stack>
           </DrawerBody>
         </DrawerContent>
