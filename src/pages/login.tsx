@@ -4,24 +4,30 @@ import { Form, Formik } from "formik";
 import { InputField } from "../components/InputField";
 import NextLink from "next/link";
 const Login = () => {
+  const h1Style = { fontSize: "1.5rem" };
   return (
     <React.Fragment>
       <Center>
         <Box style={{ width: "28em" }}>
           <Center>
             <Image
-              boxSize="200px"
+              boxSize="150px"
               src="http://www.melioramedicalgroup.co.uk/wp-content/uploads/2020/08/blank-avatar.png"
               alt="avatar"
               borderRadius="full"
             />
           </Center>
           <Box>
-            <h1>Login</h1>
+            <br />
+
+            <h1 style={h1Style}>Login</h1>
             <p>
-              Don't have an acount?
+              Don't have an account?
               <NextLink href="" passHref>
-                <Link> Sign Up</Link>
+                <Link fontStyle="italic" fontWeight="bold">
+                  {" "}
+                  Sign Up
+                </Link>
               </NextLink>
             </p>
           </Box>
