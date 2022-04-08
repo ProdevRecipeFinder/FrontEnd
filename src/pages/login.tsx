@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Button, Checkbox, Link, Center, Image, Box } from "@chakra-ui/react";
+import {
+  Button,
+  Checkbox,
+  Link,
+  Center,
+  Image,
+  Box,
+  IconButton,
+} from "@chakra-ui/react";
+import { FaFacebook, FaTwitter } from "react-icons/fa";
 import { Form, Formik } from "formik";
 import { InputField } from "../components/InputField";
 import NextLink from "next/link";
@@ -19,13 +28,11 @@ const Login = () => {
           </Center>
           <Box>
             <br />
-
             <h1 style={h1Style}>Login</h1>
             <p>
-              Don't have an account?
+              Don't have an account?{" "}
               <NextLink href="" passHref>
                 <Link fontStyle="italic" fontWeight="bold">
-                  {" "}
                   Sign Up
                 </Link>
               </NextLink>
@@ -46,19 +53,66 @@ const Login = () => {
                   Forgot your password?
                 </Link>
               </NextLink>
+
               <InputField name="password" label="Password" />
               <br />
               <Checkbox name="rememberMe" defaultChecked>
                 Remember Me
               </Checkbox>
-              <br />
-              <Center>
-                <Button type="submit" colorScheme="red">
-                  Login
-                </Button>
-              </Center>
             </Form>
           </Formik>
+          <br />
+          <Box style={{ width: "20em", margin: "auto" }}>
+            <Center>
+              <Button
+                type="submit"
+                colorScheme="red"
+                isFullWidth="true"
+                borderRadius="45"
+              >
+                Login
+              </Button>
+            </Center>
+            <br />
+            <Box
+              style={{
+                width: "20em",
+                height: "0.9rem",
+                borderBottom: "1px solid grey",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "1rem",
+                  padding: "0 1rem",
+                  backgroundColor: "grey",
+                }}
+              >
+                Or login with
+              </span>
+            </Box>
+          </Box>
+          <br />
+          <Box style={{ width: "20em", margin: "auto" }}>
+            <IconButton
+              icon={<FaFacebook />}
+              aria-label="Login with Facebook"
+              colorScheme="facebook"
+              borderRadius="90"
+              size="lg"
+              width="5em"
+            ></IconButton>
+            <IconButton
+              icon={<FaTwitter />}
+              aria-label="Login with Twitter"
+              colorScheme="twitter"
+              borderRadius="90"
+              float="right"
+              size="lg"
+              width="5em"
+            ></IconButton>
+          </Box>
         </Box>
       </Center>
     </React.Fragment>
