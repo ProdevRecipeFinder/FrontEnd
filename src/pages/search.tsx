@@ -37,7 +37,7 @@ const Login = () => {
       return (
         <SimpleGrid columns={2}>
           {searchResults.map((recipe: Recipe) => (
-            <RecipeCard key={recipe.title} recipe={recipe} />
+            <RecipeCard key={recipe.title} recipe={recipe} isPreview={true}/>
           ))}
         </SimpleGrid>
       )
