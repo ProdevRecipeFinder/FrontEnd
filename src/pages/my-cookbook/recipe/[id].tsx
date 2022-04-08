@@ -3,8 +3,9 @@ import { data } from "../../../fakeData.json"
 import { Recipe } from "../../../types"
 import type { NextPageContext } from 'next'
 import { Stack, Button, Center, Box, Divider, Checkbox } from '@chakra-ui/react'
-import React from "react"
+import React, { useState } from "react"
 import styles from "./recipe.module.css"
+import { HeartSwitch } from '@anatoliygatt/heart-switch'
 
 export async function getServerSideProps({ query }: NextPageContext) {
   const recipeId = parseInt(query.id as string)
@@ -29,6 +30,7 @@ interface Props {
 }
 
 const Recipe = ({ recipe }: Props) => {
+  const [isSaved, setIsSaved] = useState(false)
 
   return (
     <React.Fragment>
@@ -63,10 +65,29 @@ const Recipe = ({ recipe }: Props) => {
         </Stack>
 
         <Stack className={styles.ingredientsBox} direction={"column"} width="50%">
-          <Stack direction={"row"}>
-            <Button className={styles.deleteButton}>Save</Button>
-            <Button colorScheme='red' className={styles.deleteButton} variant='outline'>Delete</Button>
-          </Stack>
+          <Center>
+            <Box className={styles.heartSwitch}>
+              <HeartSwitch
+                size="md"
+                inactiveTrackFillColor="#ffffff"
+                inactiveTrackStrokeColor="#d1d1d1"
+                activeTrackFillColor="#ff708f"
+                activeTrackStrokeColor="#ff4e74"
+                inactiveThumbColor="#ecfeff"
+                activeThumbColor="#ecfeff"
+                checked={isSaved}
+                onChange={(event) => {
+                  setIsSaved(event.target.checked);
+                }}
+              />
+              {
+                isSaved ?
+                  <p>Saved</p>
+                :
+                  <p>Not Saved</p>
+              }
+            </Box>
+          </Center>
           <Box>
             <h2 className="title">Ingredients</h2>
             <Divider />

@@ -16,9 +16,10 @@ import styles             from "./RecipeCard.module.css"
 
 interface Props {
   recipe: Recipe
+  isPreview?: boolean
 }
 
-const RecipeCard = ({ recipe }: Props) => {
+const RecipeCard = ({ recipe, isPreview }: Props) => {
   return (
     <Center>
       <Stack
@@ -59,14 +60,21 @@ const RecipeCard = ({ recipe }: Props) => {
           <Stack
             className={styles.recipeCardButtons}
             direction={'row'}
-            >
-            <Button
-              flex={1}
-              fontSize={'sm'}
-              rounded={'full'}
-            >
-              Delete
-            </Button>
+          >
+            {
+              isPreview ? (
+                null
+              )
+              : (
+                <Button
+                  flex={1}
+                  fontSize={'sm'}
+                  rounded={'full'}
+                >
+                  Delete
+                </Button>
+              )
+            }
             <NextLink href={`/my-cookbook/recipe/${recipe.id}`}>
               <Button
                 flex={1}
