@@ -41,6 +41,11 @@ const Login = () => {
             <Form>
               <InputField name="username" label="Username or Email" />
               <br />
+              <NextLink href="" passHref>
+                <Link fontWeight="bold" float="right">
+                  Forgot your password?
+                </Link>
+              </NextLink>
               <InputField name="password" label="Password" />
               <br />
               <Checkbox name="rememberMe" defaultChecked>
