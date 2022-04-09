@@ -77,7 +77,10 @@ const Nav = () => {
                             <NavigationBarItem onClick={onClose} href={"/search"} text={"Search"} icon={faMagnifyingGlass} />
                             <NavigationBarItem onClick={onClose} href={"/"} text={"About"} icon={faCircleInfo} />
                             <NavigationBarItem onClick={onClose} href={"/"} text={"Contact Us"} icon={faEnvelope} />
-                            <NavigationBarItem onClick={onClose} href={"/settings/profile"} text={"Settings"} icon={faCogs} />
+                            {userData?.whoami?.id ?
+                                <NavigationBarItem onClick={onClose} href={"/settings/profile"} text={"Settings"} icon={faCogs} />
+                                : null
+                            }
                         </Stack>
                     </DrawerBody>
                 </DrawerContent>

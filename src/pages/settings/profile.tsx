@@ -49,7 +49,7 @@ const profile = () => {
             else if (response.data?.changeUsername.user) {
               //handle success
               //send notification saying the user logged in 
-              
+
             }
           }}
         >
@@ -67,4 +67,4 @@ const profile = () => {
   )
 }
 
-export default ssrWithApollo({ssr: true})(profile)
+export default ssrWithApollo({ ssr: false })(profile)
