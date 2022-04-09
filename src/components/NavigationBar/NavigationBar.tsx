@@ -35,11 +35,25 @@ import { FontAwesomeIcon }  from '@fortawesome/react-fontawesome'
 import NavigationBarItem    from './NavigationBarItem'
 import styles               from "./NavigationBar.module.css"
 import React                from 'react'
+import { useLogoutMutation, useWhoAmIQuery } from '../../generated/graphql'
+import { useApolloClient } from '@apollo/client'
+import { useRouter } from 'next/router'
 
 const Nav = () => {
   const { colorMode, toggleColorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const signedIn = true
+  
+  const { data: userData } = useWhoAmIQuery()
+  const [logout] = useLogoutMutation()
+
+  const apolloClient = useApolloClient()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await logout()
+    await apolloClient.resetStore()
+    router.push('/')
+  }
 
   return (
     <React.Fragment>
@@ -54,7 +68,7 @@ const Nav = () => {
           <DrawerBody>
             <Stack direction={"column"}>
               <NavigationBarItem onClick={onClose} href={"/"} text={"Home"} icon={faHome} />
-              { signedIn ? 
+              { userData ? 
                 <NavigationBarItem onClick={onClose} href={"/my-cookbook/"} text={"My Cook Book"} icon={faBookOpen} /> 
                 : null 
               }
@@ -92,7 +106,7 @@ const Nav = () => {
 
               {/* If signed in, render account menu with avatar. If not, render sign in button */}
               {
-                signedIn ? 
+                userData ? 
                   <Menu>
                     <MenuButton>
                       <Avatar
@@ -110,18 +124,18 @@ const Nav = () => {
                       </Center>
                       <br />
                       <Center>
-                        <p>Username</p>
+                        <p>{userData?.whoami?.user_name}</p>
                       </Center>
         
                       <MenuDivider />
                       <MenuItem>Your Profile</MenuItem>
                       <MenuItem>Profile Settings</MenuItem>
-                      <MenuItem>Sign Out</MenuItem>
+                      <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                     </MenuList>
                   </Menu>
                 :
                   <Button>
-                    Sign In
+                    Log In
                   </Button>
               }
             </Stack>
