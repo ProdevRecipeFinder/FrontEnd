@@ -1,13 +1,13 @@
-import { 
-  Center, 
-  VStack, 
-  Button 
+import {
+  Center,
+  VStack,
+  Button
 } from "@chakra-ui/react"
 import React, { useEffect } from "react"
-import { Form, Formik }     from 'formik'
-import { InputField }       from '../../components/InputField'
-import { useRouter }        from 'next/router'
-import styles               from "../../styles/reset-password.module.css"
+import { Form, Formik } from 'formik'
+import { InputField } from '../../components/InputField'
+import { useRouter } from 'next/router'
+import styles from "../../styles/reset-password.module.css"
 
 import { useChangeForgotPasswordMutation } from "../../generated/graphql"
 import { ssrWithApollo } from "../../utils/withApollo"
@@ -27,9 +27,9 @@ const ResetPassword = () => {
       <Center>
         <VStack id={styles.resetBox} w="40em">
           <Formik
-            initialValues={{ password: "", confirmNewPassword: ""}}
+            initialValues={{ password: "", confirmNewPassword: "" }}
             onSubmit={async (values, { setErrors }) => {
-              
+
               if (values.password !== values.confirmNewPassword) {
                 setErrors({
                   password: "Passwords do not match",
@@ -70,4 +70,4 @@ const ResetPassword = () => {
   )
 }
 
-export default ssrWithApollo({ssr: true})(ResetPassword)
+export default ssrWithApollo({ ssr: true })(ResetPassword)
