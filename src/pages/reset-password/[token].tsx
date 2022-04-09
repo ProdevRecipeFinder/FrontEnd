@@ -9,6 +9,8 @@ import { InputField }       from '../../components/InputField'
 import { useRouter }        from 'next/router'
 import styles               from "../../styles/reset-password.module.css"
 
+
+
 const ResetPassword = () => {
   const router = useRouter()
   const token = router.query.token as string
