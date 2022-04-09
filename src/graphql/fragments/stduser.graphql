@@ -1,5 +1,5 @@
 fragment StdUser on User {
   id
-  name
+  user_name
   email
 }
