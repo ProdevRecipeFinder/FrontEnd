@@ -12,8 +12,15 @@ import { FaFacebook, FaTwitter } from "react-icons/fa";
 import { Form, Formik } from "formik";
 import { InputField } from "../components/InputField";
 import NextLink from "next/link";
+import { ssrWithApollo } from "../utils/withApollo";
+import { useLoginMutation } from "../generated/graphql";
+
+
 const Login = () => {
   const h1Style = { fontSize: "1.5rem" };
+
+  const [login] = useLoginMutation()
+
   return (
     <React.Fragment>
       <Center>
@@ -31,7 +38,7 @@ const Login = () => {
             <h1 style={h1Style}>Login</h1>
             <p>
               Don't have an account?{" "}
-              <NextLink href="" passHref>
+              <NextLink href="#">
                 <Link fontStyle="italic" fontWeight="bold">
                   Sign Up
                 </Link>
@@ -41,14 +48,18 @@ const Login = () => {
           <br />
           <Formik
             initialValues={{ username: "", password: "" }}
-            onSubmit={() => {
-              console.log("here");
+            onSubmit={async (values, { setErrors }) => {
+              const response = await login({
+                variables: values,
+                update: (cache, { data }) => { // update cache to login user
+                }
+              })
             }}
           >
             <Form>
               <InputField name="username" label="Username or Email" />
               <br />
-              <NextLink href="" passHref>
+              <NextLink href="#">
                 <Link fontWeight="bold" float="right">
                   Forgot your password?
                 </Link>
@@ -119,4 +130,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ssrWithApollo({ssr: false})(Login);
