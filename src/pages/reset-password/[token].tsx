@@ -9,16 +9,15 @@ import { InputField }       from '../../components/InputField'
 import { useRouter }        from 'next/router'
 import styles               from "../../styles/reset-password.module.css"
 
-
+import { useChangeForgotPasswordMutation } from "../../generated/graphql"
+import { ssrWithApollo } from "../../utils/withApollo"
+import { convertErrorMsg } from "../../utils/convertErrorMsg"
 
 const ResetPassword = () => {
   const router = useRouter()
   const token = router.query.token as string
 
-  useEffect(() => {
-    // verify token here. If invalid, re-route user
-    //router.push("/fakeURL")
-  }, [])
+  const [changeForgotPassword] = useChangeForgotPasswordMutation()
 
   return (
     <React.Fragment>
@@ -28,19 +27,39 @@ const ResetPassword = () => {
       <Center>
         <VStack id={styles.resetBox} w="40em">
           <Formik
-            initialValues={{ username: "" }}
-            onSubmit={(values, { setErrors }) => {
-              // Here send message to backend to send verify email
+            initialValues={{ password: "", confirmNewPassword: ""}}
+            onSubmit={async (values, { setErrors }) => {
+              
+              if (values.password !== values.confirmNewPassword) {
+                setErrors({
+                  password: "Passwords do not match",
+                })
+                return
+              }
+
+              const response = await changeForgotPassword({
+                variables: {
+                  newpass: values.password,
+                  token
+                }
+              })
+
+              if (response.data?.changeForgotPassword.errors) {
+                setErrors(convertErrorMsg(response.data.changeForgotPassword.errors))
+                return
+              }
+
+              //handle success
             }
             }>
             {
-              ({ isSubmitting }) => (
+              ({ isSubmitting, values }) => (
                 <Form style={{ width: "100%" }}>
-                  <InputField name="newPassword" label="New password" />
+                  <InputField name="password" label="New password" />
                   <br />
                   <InputField name="confirmNewPassword" label="Confirm new password" />
                   <br />
-                  <Button type="submit" isLoading={isSubmitting} w="100%">Change password</Button>
+                  <Button disabled={!values.password.length || !values.confirmNewPassword.length} type="submit" isLoading={isSubmitting} w="100%">Change password</Button>
                 </Form>
               )
             }
@@ -51,4 +70,4 @@ const ResetPassword = () => {
   )
 }
 
-export default ResetPassword
+export default ssrWithApollo({ssr: true})(ResetPassword)
