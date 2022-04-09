@@ -83,7 +83,7 @@ const Login = () => {
                 <InputField name="username" label="Username or Email" />
                 <br />
 
-                <InputField name="password" label="Password" />
+                <InputField type="password" name="password" label="Password" />
                 <br />
                 <Checkbox name="rememberMe" defaultChecked>
                   Remember Me
@@ -114,7 +114,7 @@ const Login = () => {
           </Center>
 
           <br />
-          
+
           <Box style={{ width: "20em", margin: "auto" }}>
             <Box
               style={{
