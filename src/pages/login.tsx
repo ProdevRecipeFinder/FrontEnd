@@ -13,12 +13,15 @@ import { Form, Formik } from "formik";
 import { InputField } from "../components/InputField";
 import NextLink from "next/link";
 import { ssrWithApollo } from "../utils/withApollo";
-import { useLoginMutation } from "../generated/graphql";
+import { useRouter } from 'next/router';
+
+import { useLoginMutation, useWhoAmIQuery, WhoAmIDocument, WhoAmIQuery } from '../generated/graphql';
 
 
 const Login = () => {
   const h1Style = { fontSize: "1.5rem" };
 
+  const router = useRouter()
   const [login] = useLoginMutation()
 
   return (
@@ -51,9 +54,25 @@ const Login = () => {
             onSubmit={async (values, { setErrors }) => {
               const response = await login({
                 variables: values,
-                update: (cache, { data }) => { // update cache to login user
+                update: (caches, { data }) => { // Updating the cache for live reload
+                  caches.writeQuery<WhoAmIQuery>({
+                      query: WhoAmIDocument,
+                      data: {
+                          __typename: "Query",
+                          whoami: data?.login.user,
+                      }
+                  })
                 }
               })
+
+              if (response.data?.login.errors) {
+                //handle errors
+              }
+              else if (response.data?.login.user) {
+                //handle success
+                //send notification saying the user logged in 
+                router.push("/")
+              }
             }}
           >
             <Form>
