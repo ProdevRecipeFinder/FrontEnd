@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { Button, Link, Center, Image, Box, IconButton } from "@chakra-ui/react";
+import { Button, Link, Center, Image, Box, IconButton, Stack } from "@chakra-ui/react";
 import { FaFacebook, FaTwitter } from "react-icons/fa";
 import { Form, Formik } from "formik";
 import { InputField } from "../components/InputField";
 import NextLink from "next/link";
+
+import { useRouter } from 'next/router';
+import { useRegisterMutation, WhoAmIDocument, WhoAmIQuery } from "../generated/graphql";
+import { convertErrorMsg } from "../utils/convertErrorMsg";
+
 const signUp = () => {
+  const router = useRouter();
+  const [register] = useRegisterMutation();
+
   const h1Style = { fontSize: "1.5rem" };
   return (
     <React.Fragment>
@@ -22,8 +30,8 @@ const signUp = () => {
             <br />
             <h1 style={h1Style}>Sign Up</h1>
             <p>
-              Have an account?{" "}
-              <NextLink href="" passHref>
+              Have an Account{" "}
+              <NextLink href="/login">
                 <Link fontStyle="italic" fontWeight="bold">
                   Login
                 </Link>
@@ -32,26 +40,45 @@ const signUp = () => {
           </Box>
           <br />
           <Formik
-            initialValues={{ username: "", password: "" }}
-            onSubmit={() => {
-              console.log("here");
-            }}
+            initialValues={{ username: "", email: "", password: "", confirmPassword: "" }}
+            onSubmit={async (values, { setErrors }) => {
+              const response = await register({
+                  variables: values,
+                  update: (caches, { data }) => {
+                      caches.writeQuery<WhoAmIQuery>({
+                          query: WhoAmIDocument,
+                          data: {
+                              __typename: 'Query',
+                              whoami: data?.register.user,
+                          }
+                      })
+                  }
+              });
+              if (response.data?.register.errors) {
+                  setErrors(convertErrorMsg(response.data.register.errors));
+              } else if (response.data?.register.user) {
+                  //handle success
+                  //send notification saying the user logged in 
+                  router.push("/");
+              }
+          }}
           >
             <Form>
-              <InputField name="name" label="Full name" />
-              <br />
-              <InputField name="email" label="Email Address" />
-              <br />
-              <InputField name="password" label="Password" />
-              <br />
+              <Stack direction="column">
+                <InputField name="name" label="username" />
+                <InputField name="email" label="Email Address" />
+                <InputField name="password" label="Password" />
+                <InputField name="confirmPassword" label="Confirm Password" />
+              </Stack>
             </Form>
           </Formik>
+          < br />
           <Box style={{ width: "20em", margin: "auto" }}>
             <Center>
               <Button
                 type="submit"
                 colorScheme="red"
-                isFullWidth="true"
+                isFullWidth={true}
                 borderRadius="45"
               >
                 Create Account
