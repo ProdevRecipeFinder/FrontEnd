@@ -1,16 +1,21 @@
 import React, { useState } from "react";
 import { SimpleGrid, Center, Box, Input } from "@chakra-ui/react";
-import fakeData from "../fakeData.json"
-import type { Recipe } from "../types";
 import RecipeCard from "../components/Recipe/RecipeCard"
 import { useRouter } from "next/router";
 import urlencode from "urlencode";
 
-const Login = () => {
-  const [searchResults, setSearchResults] = useState<Recipe[]>([])
+import { useSearchRecipesQuery, Recipe } from "../generated/graphql";
 
+const Login = () => {
+  
   const router = useRouter()
   const searchQuery = urlencode.decode(router.query.q as string)
+  
+  const { data: searchResults } = useSearchRecipesQuery({
+    variables: {
+      query: searchQuery
+    }
+  })
 
   const displaySearchResults = (searchResults: Recipe[]) => {
     if (!searchQuery.trim().length) {
@@ -21,7 +26,7 @@ const Login = () => {
       return (
         <SimpleGrid columns={2}>
           {searchResults.map((recipe: Recipe) => (
-            <RecipeCard key={recipe.title} recipe={recipe} isPreview={true}/>
+            <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true}/>
           ))}
         </SimpleGrid>
       )
@@ -38,7 +43,7 @@ const Login = () => {
     <React.Fragment>
       <Center>
         {/* Grid of recipies */}
-        { displaySearchResults(searchResults) }
+        { displaySearchResults(searchResults as unknown as Recipe[]) }
       </Center>
     </React.Fragment>
   );
