@@ -1,0 +1,10 @@
+query SearchRecipes($query: String!){
+  searchRecipes(search: $query){
+    id
+    recipe_title
+    recipe_desc
+    photo_url
+    rating_stars
+    review_count
+  }
+}

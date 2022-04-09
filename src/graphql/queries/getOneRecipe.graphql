@@ -1,0 +1,5 @@
+query GetOneRecipe($id: Float!){
+  getOneRecipe(id: $id){
+    ...displayRecipe
+  }
+}
