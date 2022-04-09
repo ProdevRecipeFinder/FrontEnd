@@ -52,6 +52,7 @@ const Login = () => {
           <Formik
             initialValues={{ username: "", password: "" }}
             onSubmit={async (values, { setErrors }) => {
+              console.log("hi")
               const response = await login({
                 variables: values,
                 update: (caches, { data }) => { // Updating the cache for live reload
@@ -89,20 +90,20 @@ const Login = () => {
               <Checkbox name="rememberMe" defaultChecked>
                 Remember Me
               </Checkbox>
+              <Center>
+                <Button
+                  type="submit"
+                  colorScheme="red"
+                  isFullWidth={true}
+                  borderRadius="45"
+                >
+                  Login
+                </Button>
+              </Center>
             </Form>
           </Formik>
           <br />
           <Box style={{ width: "20em", margin: "auto" }}>
-            <Center>
-              <Button
-                type="submit"
-                colorScheme="red"
-                isFullWidth="true"
-                borderRadius="45"
-              >
-                Login
-              </Button>
-            </Center>
             <br />
             <Box
               style={{
