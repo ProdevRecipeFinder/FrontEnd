@@ -4,30 +4,19 @@ import {
   Button,
   Stack 
 } from "@chakra-ui/react"
-import passwordValidator  from "password-validator"
 import { Form, Formik }   from 'formik'
 import { InputField }     from '../../components/InputField'
-import SettingsLayout     from "../../components/layouts/SettingsLayout"
 import styles             from "../../styles/settings.module.css"
 import React              from "react"
 import Link               from "next/link"
 
-const profile = () => {
-  const passwordSchema = new passwordValidator()
-  passwordSchema
-  .is().max(100)
-  .is().min(8)
-  .has().uppercase()
-  .has().lowercase()
-  .has().digits(1)
+import { useChangePasswordMutation } from "../../generated/graphql"
+import { convertErrorMsg } from "../../utils/convertErrorMsg"
+import { ssrWithApollo } from "../../utils/withApollo"
 
-  const reasonsForFailureMap = {
-    "min": "Password must be at least 8 characters long",
-    "max": "Password must be less than 100 characters long",
-    "uppercase": "Password must contain at least one uppercase letter",
-    "lowercase": "Password must contain at least one lowercase letter",
-    "digits": "Password must contain at least one digit"
-  }
+const profile = () => {
+
+  const [changePassword] = useChangePasswordMutation()
 
   return (
     <React.Fragment>
@@ -39,22 +28,25 @@ const profile = () => {
 
       {/* Password form, with error handling. Move error handling later when refactoring */}
       <Formik 
-        initialValues={{oldPassword: "", newPassword: "", confirmNewPassword: ""}}
-        onSubmit={(values, {setErrors}) => {
-          const reasonsForFailure = passwordSchema.validate(values.newPassword, { list: true }) as string[]
-          if (false) { // This if will be updated when the front-end and back-end are stitched together
-            setErrors({oldPassword: "Old password incorrect"})
-          }
-          if (reasonsForFailure.length > 0) {
-            const index = reasonsForFailure.shift() as ("min" | "max" | "uppercase" | "lowercase" | "digits")
-            setErrors({newPassword: reasonsForFailureMap[index]})
-          }
-          else if (values.newPassword !== values.confirmNewPassword) {
+        initialValues={{oldPassword: "", password: "", confirmNewPassword: ""}}
+        onSubmit={async (values, {setErrors}) => {
+          if (values.password !== values.confirmNewPassword) {
             setErrors({
-              confirmNewPassword: "Passwords do not match",
-              newPassword: "Passwords do not match"
+              password: "Passwords do not match",
             })
           }
+          const response = await changePassword({
+            variables: { 
+              oldpass: values.oldPassword, 
+              newpass: values.password 
+            }
+          })
+
+          if (response.data?.changePassword.errors) {
+            setErrors(convertErrorMsg(response.data.changePassword.errors))
+            return 
+          }
+          // handle success here
         }
       }>
         {
@@ -62,9 +54,9 @@ const profile = () => {
             <Form style={{width: "25em"}}>
               <InputField name="oldPassword" label="Old password" />
               <br />
-              <InputField name="newPassword" label="New password" />
+              <InputField type="password" name="password" label="New password" />
               <br />
-              <InputField name="confirmNewPassword" label="Confirm new password" />
+              <InputField type="password" name="confirmNewPassword" label="Confirm new password" />
               <br />
               <Stack direction={"row"}>
                 <Button type="submit" isLoading={isSubmitting}>Save</Button>
@@ -81,6 +73,4 @@ const profile = () => {
   )
 }
 
-profile.Layout = SettingsLayout
-
-export default profile
+export default ssrWithApollo({ssr: false})(profile)

@@ -22,7 +22,7 @@ interface Props {
 const SettingsLayout = ({ children }: Props) => {
     const { data: userData } = useWhoAmIQuery()
     const router = useRouter();
-    checkUserAuth();
+    //checkUserAuth();
     return (
         <DefaultLayout>
             {/* Avatar and username at the top of the page */}
