@@ -39,6 +39,7 @@ import { useLogoutMutation, useWhoAmIQuery } from '../../generated/graphql'
 import { useApolloClient } from '@apollo/client'
 import { useRouter } from 'next/router'
 import { ssrWithApollo } from '../../utils/withApollo'
+import NextLink from 'next/link'
 
 const Nav = () => {
     const { colorMode, toggleColorMode } = useColorMode()
@@ -135,9 +136,11 @@ const Nav = () => {
                                         </MenuList>
                                     </Menu>
                                     :
-                                    <Button>
-                                        Log In
-                                    </Button>
+                                    <NextLink href="/login">
+                                        <Button>
+                                            Log In
+                                        </Button>
+                                    </NextLink>
                             }
                         </Stack>
                     </Flex>
