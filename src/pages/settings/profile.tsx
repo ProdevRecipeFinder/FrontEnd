@@ -12,6 +12,7 @@ import React from "react"
 
 import { useChangeUsernameMutation, WhoAmIQuery, WhoAmIDocument } from "../../generated/graphql"
 import { convertErrorMsg } from "../../utils/convertErrorMsg";
+import { ssrWithApollo } from "../../utils/withApollo"
 
 const profile = () => {
 
@@ -66,6 +67,4 @@ const profile = () => {
   )
 }
 
-profile.Layout = SettingsLayout
-
-export default profile
+export default ssrWithApollo({ssr: true})(profile)
