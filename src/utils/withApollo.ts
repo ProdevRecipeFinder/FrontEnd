@@ -6,6 +6,7 @@ import { withApollo } from "next-apollo";
 
 const apollo = new ApolloClient({
     uri: "http://localhost:4000/graphql",
+    ssrMode: true,
     cache: new InMemoryCache,
     credentials: "include"
 });
