@@ -3,82 +3,69 @@ import React, { useState } from "react";
 import urlencode from "urlencode";
 import { SearchRecipesDocument } from "../generated/graphql";
 import { initializeApollo } from '../utils/apollo';
-import { useQuery } from "@apollo/client";
+import { NormalizedCacheObject, useQuery } from "@apollo/client";
 import { Center, SimpleGrid } from "@chakra-ui/react";
 import { Recipe } from "../generated/graphql";
 import RecipeCard from "../components/Recipe/RecipeCard";
+import { NextPage } from "next";
 
 interface SearchProps {
-  searchQuery: string;
+    searchResults: any
 }
 
-let queryString = "";
+const Search: NextPage<SearchProps> = ({ searchResults }) => {
 
-const SearchRender = ({ searchQuery }: SearchProps) => {
-  
-  const router = useRouter()
-  queryString = urlencode.decode(router.query.q as string);
+    console.log(searchResults);
 
-  const { loading, data: searchResponse } = useQuery(SearchRecipesDocument, {
-    variables: {
-      query: searchQuery
-    }
-  })
+    const displaySearchResults = (plainResult: Recipe[]) => {
+        const router = useRouter()
+        const queryString = urlencode.decode(router.query.q as string);
 
-  if (loading) 
-    return ( <>LOADING...</> );
-  else if (!loading && searchResponse?.searchRecipes === undefined) 
-    return ( <>NO SEARCH QUERY</> );
-  else {
-    const searchResults = searchResponse?.searchRecipes as Recipe[];
+        const plainResults = Object.values(plainResult);
 
-    const displaySearchResults = (searchResults: Recipe[]) => {
-      if (!searchQuery.trim().length) {
-        return null
-      }
-
-      if (searchResults.length) {
-        return (
-          <SimpleGrid columns={2}>
-            {searchResults.map((recipe: Recipe) => (
-              <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
-            ))}
-          </SimpleGrid>
-        )
-      } else {
-        return (
-          <Center>
-            <p>No search results</p>
-          </Center>
-        )
-      }
+        if (plainResult.length) {
+            return (
+                <SimpleGrid columns={2}>
+                    {plainResult.map((recipe: Recipe) => (
+                        <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
+                    ))}
+                </SimpleGrid>
+            )
+        } else {
+            return (
+                <Center>
+                    <p>No search results</p>
+                </Center>
+            )
+        }
     }
 
     return (
-      <React.Fragment>
-        <Center>
-          {/* Grid of recipies */}
-          {displaySearchResults(searchResults)}
-        </Center>
-      </React.Fragment>
+        <React.Fragment>
+            <Center>
+                {/* Grid of recipies */}
+                {displaySearchResults(searchResults)}
+            </Center>
+        </React.Fragment>
     );
-  };
+};
+
+export async function getServerSideProps(context: any) {
+
+    const searchQuery = context.query.q;
+    const apolloClient = initializeApollo();
+    await apolloClient.query({
+        query: SearchRecipesDocument,
+        variables: {
+            query: searchQuery
+        }
+    })
+    return {
+        props: {
+            searchResults: apolloClient.cache.extract()
+        }
+    }
 }
 
-export async function getServerSideProps() {
-  const apolloClient = initializeApollo();
-  await apolloClient.query({
-    query: SearchRecipesDocument,
-    variables: {
-      searchQuery: queryString
-    }
-  })
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract()
-    }
-  }
-}
 
-
-export default SearchRender;
+export default Search;
