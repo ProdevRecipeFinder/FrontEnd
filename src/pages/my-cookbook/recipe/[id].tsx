@@ -1,15 +1,24 @@
-
-import { data } from "../../../fakeData.json"
-import { Recipe } from "../../../types"
 import type { NextPageContext } from 'next'
 import { Stack, Button, Center, Box, Divider, Checkbox } from '@chakra-ui/react'
 import React, { useState } from "react"
 import styles from "./recipe.module.css"
-import { HeartSwitch } from '@anatoliygatt/heart-switch'
+import { HeartSwitch } from '@anatoliygatt/heart-switch'}
+
+import { GetOneRecipeQuery, GetOneRecipeDocument } from '../../../generated/graphql'
+import { initializeApollo } from '../../../utils/apollo'
 
 export async function getServerSideProps({ query }: NextPageContext) {
   const recipeId = parseInt(query.id as string)
-  const recipe = data.find(recipe => recipe.id === recipeId)
+
+  const apolloClient = initializeApollo()
+  await apolloClient.query({
+    query: GetOneRecipeDocument,
+    variables: {
+      id: recipeId
+    }
+  })
+  
+  const recipe = apolloClient.cache.extract()
 
   // send to 404 if not found
   if (!recipe) {
@@ -17,7 +26,6 @@ export async function getServerSideProps({ query }: NextPageContext) {
       notFound: true
     }
   }
-
   return {
     props: {
       recipe,
@@ -26,7 +34,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 }
 
 interface Props {
-  recipe: Recipe
+  recipe: any
 }
 
 const Recipe = ({ recipe }: Props) => {
