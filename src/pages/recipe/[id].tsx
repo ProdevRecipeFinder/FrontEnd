@@ -2,10 +2,10 @@ import type { NextPageContext } from 'next'
 import { Stack, Button, Center, Box, Divider, Checkbox } from '@chakra-ui/react'
 import React, { useState } from "react"
 import styles from "./recipe.module.css"
-import { HeartSwitch } from '@anatoliygatt/heart-switch'}
+import { HeartSwitch } from '@anatoliygatt/heart-switch'
 
-import { GetOneRecipeQuery, GetOneRecipeDocument } from '../../../generated/graphql'
-import { initializeApollo } from '../../../utils/apollo'
+import { GetOneRecipeQuery, GetOneRecipeDocument } from '../../generated/graphql'
+import { initializeApollo } from '../../utils/apollo'
 
 export async function getServerSideProps({ query }: NextPageContext) {
   const recipeId = parseInt(query.id as string)
