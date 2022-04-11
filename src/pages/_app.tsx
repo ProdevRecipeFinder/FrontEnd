@@ -7,9 +7,7 @@ import DefaultLayout from '../components/layouts/DefaultLayout'
 import SettingsLayout from '../components/layouts/SettingsLayout'
 import '../styles/globals.css'
 import theme from '../theme'
-import { useApollo } from "../utils/withApollo"
-
-
+import { useApollo } from "../utils/apollo"
 
 function MyApp({ Component, pageProps }: AppProps) {
 
