@@ -1,64 +1,35 @@
-import React, { useState } from "react";
-import { SimpleGrid, Center, Box, Input } from "@chakra-ui/react";
-import RecipeCard from "../components/Recipe/RecipeCard"
 import { useRouter } from "next/router";
+import React, { useState } from "react";
 import urlencode from "urlencode";
+import SearchComponent from "../components/pageHandlers/searchHandler";
+import { SearchRecipesDocument } from "../generated/graphql";
+import { addApolloState, initializeApollo } from "../utils/withApollo";
 
-import { useSearchRecipesQuery, Recipe } from "../generated/graphql";
-import { ssrWithApollo } from "../utils/withApollo";
+let queryString = "";
 
-const Search = () => {
+const SearchRender = () => {
 
     const router = useRouter()
-    const searchQuery = urlencode.decode(router.query.q as string)
+    queryString = urlencode.decode(router.query.q as string);
+    return (
+        <React.Fragment>
+            <SearchComponent searchQuery={queryString} />
+        </React.Fragment>
+    )
+}
 
-    const { loading, data: searchResponse } = useSearchRecipesQuery({
+export async function getServerSideProps() {
+    const apolloClient = initializeApollo();
+    await apolloClient.query({
+        query: SearchRecipesDocument,
         variables: {
-            query: searchQuery
-        }
+            query: queryString
+        },
     })
+    return addApolloState(apolloClient, {
+        props: apolloClient.cache.extract()
+    })
+}
 
-    if (!loading && searchResponse?.searchRecipes === undefined) {
-        return (
-            <>NO SEARCH QUERY</>
-        );
-    } else if (!loading) {
 
-        console.log("We got here");
-
-        const searchResults = searchResponse?.searchRecipes as Recipe[];
-
-        const displaySearchResults = (searchResults: Recipe[]) => {
-            if (!searchQuery.trim().length) {
-                return null
-            }
-
-            if (searchResults.length) {
-                return (
-                    <SimpleGrid columns={2}>
-                        {searchResults.map((recipe: Recipe) => (
-                            <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
-                        ))}
-                    </SimpleGrid>
-                )
-            } else {
-                return (
-                    <Center>
-                        <p>No search results</p>
-                    </Center>
-                )
-            }
-        }
-
-        return (
-            <React.Fragment>
-                <Center>
-                    {/* Grid of recipies */}
-                    {displaySearchResults(searchResults)}
-                </Center>
-            </React.Fragment>
-        );
-    }
-};
-
-export default ssrWithApollo({ ssr: true })(Search);
+export default SearchRender;

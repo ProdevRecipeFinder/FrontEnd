@@ -1,19 +1,14 @@
 import {
-    Avatar,
-    Button,
-    Divider,
-    Box,
-    Stack
+    Avatar, Box, Button,
+    Divider, Stack
 } from "@chakra-ui/react"
+import React from "react"
 import SettingsNavigationMenu from "../../components/SettingsNavigationMenu/SettingsNavigationMenu"
-import DefaultLayout from "./DefaultLayout"
-import styles from "../../styles/settings.module.css"
-import React, { useEffect, useMemo } from "react"
 import { useWhoAmIQuery } from "../../generated/graphql"
-import { ssrWithApollo } from '../../utils/withApollo'
-
-import { useRouter } from "next/router"
+import styles from "../../styles/settings.module.css"
 import { checkUserAuth } from "../../utils/checkUserAuth"
+import DefaultLayout from "./DefaultLayout"
+
 
 interface Props {
     children?: React.ReactNode
@@ -50,4 +45,4 @@ const SettingsLayout = ({ children }: Props) => {
     )
 }
 
-export default ssrWithApollo({ ssr: false })(SettingsLayout)
+export default SettingsLayout;
