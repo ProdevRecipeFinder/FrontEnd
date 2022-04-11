@@ -1,13 +1,9 @@
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import urlencode from "urlencode";
-import { SearchRecipesDocument } from "../generated/graphql";
-import { initializeApollo } from '../utils/apollo';
-import { NormalizedCacheObject, useQuery } from "@apollo/client";
 import { Center, SimpleGrid } from "@chakra-ui/react";
-import { Recipe } from "../generated/graphql";
-import RecipeCard from "../components/Recipe/RecipeCard";
 import { NextPage } from "next";
+import React from "react";
+import RecipeCard from "../components/Recipe/RecipeCard";
+import { Recipe, SearchRecipesDocument } from "../generated/graphql";
+import { initializeApollo } from '../utils/apollo';
 
 interface SearchProps {
     searchResults: any
@@ -15,18 +11,13 @@ interface SearchProps {
 
 const Search: NextPage<SearchProps> = ({ searchResults }) => {
 
-    console.log(searchResults);
+    const displaySearchResults = (searchResults: Recipe[]) => {
+        const plainResults = Object.values(searchResults);
 
-    const displaySearchResults = (plainResult: Recipe[]) => {
-        const router = useRouter()
-        const queryString = urlencode.decode(router.query.q as string);
-
-        const plainResults = Object.values(plainResult);
-
-        if (plainResult.length) {
+        if (plainResults.length) {
             return (
                 <SimpleGrid columns={2}>
-                    {plainResult.map((recipe: Recipe) => (
+                    {plainResults.map((recipe: Recipe) => (
                         <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
                     ))}
                 </SimpleGrid>
