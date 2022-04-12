@@ -26,9 +26,9 @@ export type FieldError = {
 export type Ingredient = {
   __typename?: 'Ingredient';
   id: Scalars['Float'];
-  ingredient_name: Scalars['String'];
+  ingredient_name?: Maybe<Scalars['String']>;
   ingredient_qty: Scalars['String'];
-  ingredient_unit: Scalars['String'];
+  ingredient_unit?: Maybe<Scalars['String']>;
 };
 
 export type IngredientsInput = {
@@ -270,7 +270,7 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type DisplayRecipeFragment = { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors?: Array<{ __typename?: 'User', user_name: string }> | null, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit: string, ingredient_name: string }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null };
+export type DisplayRecipeFragment = { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors?: Array<{ __typename?: 'User', user_name: string }> | null, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null };
 
 export type StdUserFragment = { __typename?: 'User', id: number, user_name: string, email: string };
 
@@ -331,12 +331,12 @@ export type GetOneRecipeQueryVariables = Exact<{
 }>;
 
 
-export type GetOneRecipeQuery = { __typename?: 'Query', getOneRecipe?: { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors?: Array<{ __typename?: 'User', user_name: string }> | null, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit: string, ingredient_name: string }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null } | null };
+export type GetOneRecipeQuery = { __typename?: 'Query', getOneRecipe?: { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors?: Array<{ __typename?: 'User', user_name: string }> | null, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null } | null };
 
 export type SavedRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SavedRecipesQuery = { __typename?: 'Query', getSavedRecipes?: { __typename?: 'User', savedRecipes?: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors?: Array<{ __typename?: 'User', user_name: string }> | null, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit: string, ingredient_name: string }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null }> | null } | null };
+export type SavedRecipesQuery = { __typename?: 'Query', getSavedRecipes?: { __typename?: 'User', savedRecipes?: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors?: Array<{ __typename?: 'User', user_name: string }> | null, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null }> | null } | null };
 
 export type SearchRecipesQueryVariables = Exact<{
   query: Scalars['String'];

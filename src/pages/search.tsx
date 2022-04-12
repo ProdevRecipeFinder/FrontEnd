@@ -10,61 +10,61 @@ import RecipeCard from "../components/Recipe/RecipeCard";
 import { NextPage } from "next";
 
 interface SearchProps {
-    searchResults: any
+  searchResults: any
 }
 
 const Search: NextPage<SearchProps> = ({ searchResults }) => {
 
-    console.log(searchResults);
+  console.log(searchResults);
 
-    const displaySearchResults = (plainResult: Recipe[]) => {
-        const router = useRouter()
-        const queryString = urlencode.decode(router.query.q as string);
+  const displaySearchResults = (searchResults: Recipe[]) => {
+    const router = useRouter()
+    const queryString = urlencode.decode(router.query.q as string);
 
-        const plainResults = Object.values(plainResult);
+    const plainResult = Object.values(searchResults);
 
-        if (plainResult.length) {
-            return (
-                <SimpleGrid columns={2}>
-                    {plainResult.map((recipe: Recipe) => (
-                        <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
-                    ))}
-                </SimpleGrid>
-            )
-        } else {
-            return (
-                <Center>
-                    <p>No search results</p>
-                </Center>
-            )
-        }
+    if (plainResult.length) {
+      return (
+        <SimpleGrid columns={2}>
+          {plainResult.map((recipe: Recipe) => (
+            <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
+          ))}
+        </SimpleGrid>
+      )
+    } else {
+      return (
+        <Center>
+          <p>No search results</p>
+        </Center>
+      )
     }
+  }
 
-    return (
-        <React.Fragment>
-            <Center>
-                {/* Grid of recipies */}
-                {displaySearchResults(searchResults)}
-            </Center>
-        </React.Fragment>
-    );
+  return (
+    <React.Fragment>
+      <Center>
+        {/* Grid of recipies */}
+        {displaySearchResults(searchResults)}
+      </Center>
+    </React.Fragment>
+  );
 };
 
 export async function getServerSideProps(context: any) {
 
-    const searchQuery = context.query.q;
-    const apolloClient = initializeApollo();
-    await apolloClient.query({
-        query: SearchRecipesDocument,
-        variables: {
-            query: searchQuery
-        }
-    })
-    return {
-        props: {
-            searchResults: apolloClient.cache.extract()
-        }
+  const searchQuery = context.query.q;
+  const apolloClient = initializeApollo();
+  await apolloClient.query({
+    query: SearchRecipesDocument,
+    variables: {
+      query: searchQuery
     }
+  })
+  return {
+    props: {
+      searchResults: apolloClient.cache.extract()
+    }
+  }
 }
 
 

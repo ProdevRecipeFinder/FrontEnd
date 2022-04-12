@@ -1,52 +1,31 @@
 import type { NextPageContext } from 'next'
 import { Stack, Button, Center, Box, Divider, Checkbox } from '@chakra-ui/react'
 import React, { useState } from "react"
-import styles from "./recipe.module.css"
+import styles from "./Recipe.module.css"
 import { HeartSwitch } from '@anatoliygatt/heart-switch'
 
-import { GetOneRecipeQuery, GetOneRecipeDocument } from '../../generated/graphql'
+import { GetOneRecipeDocument, Recipe } from '../../generated/graphql'
 import { initializeApollo } from '../../utils/apollo'
 
-export async function getServerSideProps({ query }: NextPageContext) {
-  const recipeId = parseInt(query.id as string)
-
-  const apolloClient = initializeApollo()
-  await apolloClient.query({
-    query: GetOneRecipeDocument,
-    variables: {
-      id: recipeId
-    }
-  })
-  
-  const recipe = apolloClient.cache.extract()
-
-  // send to 404 if not found
-  if (!recipe) {
-    return {
-      notFound: true
-    }
-  }
-  return {
-    props: {
-      recipe,
-    }
-  }
-}
-
 interface Props {
-  recipe: any
+  recipe: Recipe
 }
 
 const Recipe = ({ recipe }: Props) => {
   const [isSaved, setIsSaved] = useState(false)
 
+  console.log(recipe.recipe_title)
+
+
   return (
     <React.Fragment>
       <Center>
         <Stack direction={"column"} >
-          <h1 className="title" style={{fontWeight: "bold", textAlign: "center"}}>{recipe.title}</h1>
-          <p style={{color: "grey", textAlign: "center"}}>By {recipe.external_author}</p>
-          <p>{recipe.description}</p>
+          <h1 className="title" style={{ fontWeight: "bold", textAlign: "center" }}>{recipe.recipe_title}</h1>
+          <p style={{ color: "grey", textAlign: "center" }}>By {
+            // recipe.recipeAuthors![0].user_name || "null"
+          }</p>
+          <p>{recipe.recipe_desc}</p>
         </Stack>
       </Center>
 
@@ -55,10 +34,10 @@ const Recipe = ({ recipe }: Props) => {
       <Stack direction={"row"}>
         <Stack direction={"column"} width="50%">
           <Box>
-            <img 
+            <img
               className={styles.recipeImage}
-              src={recipe.photo_url} 
-              alt={recipe.title} 
+              src={recipe.photo_url}
+              alt={recipe.recipe_title}
             />
           </Box>
           <Box>
@@ -66,7 +45,7 @@ const Recipe = ({ recipe }: Props) => {
               <p><b>Cook: </b> {recipe.cook_time_minutes} mins</p>
               <p><b>Prep: </b> {recipe.prep_time_minutes} mins</p>
               <p><b>Total: </b> {recipe.total_time_minutes} mins</p>
-              <p><b>Steps: </b> {recipe.instructions.length} step(s)</p>
+              <p><b>Steps: </b> {recipe.recipeSteps?.length} step(s)</p>
               <p><b>Rating: </b> {recipe.rating_stars}/5</p>
             </Stack>
           </Box>
@@ -91,7 +70,7 @@ const Recipe = ({ recipe }: Props) => {
               {
                 isSaved ?
                   <p>Saved</p>
-                :
+                  :
                   <p>Not Saved</p>
               }
             </Box>
@@ -101,9 +80,9 @@ const Recipe = ({ recipe }: Props) => {
             <Divider />
             <br />
             <ul>
-              {recipe.ingredients.map((ingredient, index) => (
-                <Box key={index} style={{marginBottom: "1em"}}>
-                  <Checkbox size="lg"> {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} </Checkbox>
+              {recipe.recipeIngredients?.map((ingredient, index) => (
+                <Box key={index} style={{ marginBottom: "1em" }}>
+                  <Checkbox size="lg"> {ingredient.ingredient_qty} {ingredient.ingredient_unit} {ingredient.ingredient_name} </Checkbox>
                 </Box>
               ))}
             </ul>
@@ -117,8 +96,8 @@ const Recipe = ({ recipe }: Props) => {
         <h2 className="title">Instructions</h2>
         <Divider />
         {
-          recipe.instructions.map((instruction, index) => (
-            <Box key={index} style={{marginBottom: "1em"}}>
+          recipe.recipeSteps?.map((instruction, index) => (
+            <Box key={index} style={{ marginBottom: "1em" }}>
               <b><p>Step {index + 1}</p></b>
               <p>{instruction}</p>
             </Box>
@@ -129,24 +108,50 @@ const Recipe = ({ recipe }: Props) => {
       <br />
 
       {
-        recipe.footnotes.length ? 
+        recipe.footnotes?.length ?
           <Stack>
             <h2 className="title">Footnotes</h2>
             <Divider />
             {
-              recipe.footnotes.map((footnote, index) => (
+              recipe.footnotes?.map((footnote, index) => (
                 <Box key={index}>
                   <p>{footnote}</p>
                 </Box>
               ))
             }
           </Stack>
-        :
-        null
+          :
+          null
       }
 
     </React.Fragment>
   )
+}
+
+export async function getServerSideProps({ query }: NextPageContext) {
+  const recipeId = parseInt(query.id as string)
+
+  const apolloClient = initializeApollo()
+  await apolloClient.query({
+    query: GetOneRecipeDocument,
+    variables: {
+      id: recipeId
+    }
+  })
+
+  const recipe = apolloClient.cache.extract()
+
+  // send to 404 if not found
+  if (!recipe) {
+    return {
+      notFound: true
+    }
+  }
+  return {
+    props: {
+      recipe,
+    }
+  }
 }
 
 export default Recipe
