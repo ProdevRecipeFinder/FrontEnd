@@ -1,0 +1,3 @@
+mutation DeleteSavedRecipe($recipe_id: Float!){
+  deleteSavedRecipe(recipe_id: $recipe_id)
+}

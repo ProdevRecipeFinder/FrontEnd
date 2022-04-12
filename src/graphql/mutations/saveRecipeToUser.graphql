@@ -1,0 +1,3 @@
+mutation SaveRecipeToUser($recipe_id: Float!){
+  saveRecipeToUser(recipe_id: $recipe_id)
+}
