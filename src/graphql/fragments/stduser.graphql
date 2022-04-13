@@ -1,0 +1,5 @@
+fragment StdUser on User {
+  id
+  user_name
+  email
+}
