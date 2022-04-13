@@ -9,7 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { truncateString } from "../../utils"
+import { truncateString } from "../../utils/truncString"
 import NextLink from 'next/link'
 import styles from './RecipeCard.module.css'
 import { Recipe } from '../../generated/graphql'
