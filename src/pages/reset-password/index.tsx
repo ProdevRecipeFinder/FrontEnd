@@ -39,16 +39,16 @@ const verifyEmail = () => {
                         {
                             ({ isSubmitting }) => (
                                 <Form style={{ width: "100%" }}>
-                                    <InputField disabled={!isHuman} name="email" placeholder="Enter email here" />
+                                    <InputField name="email" placeholder="Enter email here" />
                                     < br />
-                                    <Center>
+                                    {/* <Center>
                                         <HCaptcha
                                             sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY as string}
                                             onVerify={() => handleVerificationSuccess()}
                                         />
-                                    </Center>
+                                    </Center> */}
                                     <br />
-                                    <Button disabled={!isHuman} type="submit" isLoading={isSubmitting} w="100%">Send password reset email</Button>
+                                    <Button type="submit" isLoading={isSubmitting} w="100%">Send password reset email</Button>
                                 </Form>
                             )
                         }
