@@ -4,7 +4,7 @@ import {
     DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader,
     DrawerOverlay, Input, Menu,
     MenuButton, MenuDivider, MenuItem, MenuList, Stack,
-    useColorMode, useColorModeValue, useDisclosure
+    useColorMode, useColorModeValue, useDisclosure, Flex, InputGroup, InputRightElement
 } from '@chakra-ui/react'
 import {
     faBars, faBookOpen, faCircleInfo, faCogs, faEnvelope,
@@ -33,7 +33,8 @@ const Nav = () => {
 
     const onSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)
 
-    const handleSearch = () => {
+    const handleSearch = (event: any) => {
+        event.preventDefault()
         router.push("/search?q=" + urlencode(searchQuery))
     }
 
@@ -60,7 +61,6 @@ const Nav = () => {
                                 <NavigationBarItem onClick={onClose} href={"/my-cookbook/"} text={"My Cook Book"} icon={faBookOpen} />
                                 : null
                             }
-                            <NavigationBarItem onClick={onClose} href={"/search"} text={"Search"} icon={faMagnifyingGlass} />
                             <NavigationBarItem onClick={onClose} href={"/"} text={"About"} icon={faCircleInfo} />
                             <NavigationBarItem onClick={onClose} href={"/"} text={"Contact Us"} icon={faEnvelope} />
                             {userData?.whoami?.id ?
@@ -74,64 +74,65 @@ const Nav = () => {
             </Drawer>
 
             {/* Navigation Bar. This appears at the top of the page */}
-            <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
-                <Stack padding="1em 0em" direction="row">
+            <Box padding="0.75em 0" bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
 
-                    {/* Hamburger Button */}
-                    <Button onClick={onOpen}>
-                        <FontAwesomeIcon icon={faBars} fontSize="1.3em" />
-                    </Button>
-
-                    <Input type="search" placeholder="Search" width="20em" style={{ marginLeft: "1em" }} value={searchQuery} onChange={onSearchQueryChange} />
-                    <Button onClick={handleSearch}>Go</Button>
-
-                    <h1 id={styles.navTitle} color={colorMode === "dark" ? "white" : "black"}>Recipe Finder</h1>
-
-                    <Stack style={{ position: "absolute", right: "1em" }} direction={'row'} spacing={5}>
-                        {/* Theme Mode Toggle */}
-                        <Button onClick={toggleColorMode}>
-                            <FontAwesomeIcon icon={colorMode === 'light' ? faMoon : faSun} />
+                <Flex alignItems={"center"} justifyContent="space-between">
+                    <Stack direction={'row'} spacing={5}>
+                        <Button onClick={onOpen}>
+                            <FontAwesomeIcon icon={faBars} fontSize="1.3em" />
                         </Button>
-
-                        {/* If signed in, render account menu with avatar. If not, render sign in button */}
-                        {
-                            userData?.whoami?.id ?
-                                <Menu>
-                                    <MenuButton>
-                                        <Avatar
-                                            size={'sm'}
-                                            src={'https://avatars.dicebear.com/api/male/username.svg'}
-                                        />
-                                    </MenuButton>
-                                    <MenuList alignItems={'center'}>
-                                        <br />
-                                        <Center>
-                                            <Avatar
-                                                size={'2xl'}
-                                                src={'https://avatars.dicebear.com/api/male/username.svg'}
-                                            />
-                                        </Center>
-                                        <br />
-                                        <Center>
-                                            <p>{userData?.whoami?.user_name}</p>
-                                        </Center>
-
-                                        <MenuDivider />
-                                        <MenuItem>Your Profile</MenuItem>
-                                        <MenuItem>Profile Settings</MenuItem>
-                                        <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-                                    </MenuList>
-                                </Menu>
-                                :
-                                <NextLink href="/login">
-                                    <Button>
-                                        Log In
-                                    </Button>
-                                </NextLink>
-                        }
+                        
+                        <form onSubmit={handleSearch}>
+                            <InputGroup>
+                                <Input type="search" placeholder="Search" width="20em" value={searchQuery} onChange={onSearchQueryChange} />
+                                <InputRightElement _hover={{cursor: "pointer"}} onClick={handleSearch} children={<FontAwesomeIcon icon={faMagnifyingGlass} />}/>
+                            </InputGroup>
+                        </form>
                     </Stack>
 
-                </Stack>
+                    <Flex alignItems={"center"}>
+                        <Stack direction={'row'} spacing={5}>
+                            <Button onClick={toggleColorMode}>
+                                <FontAwesomeIcon icon={colorMode === 'light' ? faMoon : faSun} />
+                            </Button>
+                            {
+                                userData?.whoami?.id ?
+                                    <Menu>
+                                        <MenuButton>
+                                            <Avatar
+                                                size={'sm'}
+                                                src={'https://avatars.dicebear.com/api/male/username.svg'}
+                                            />
+                                        </MenuButton>
+                                        <MenuList alignItems={'center'}>
+                                            <br />
+                                            <Center>
+                                                <Avatar
+                                                    size={'2xl'}
+                                                    src={'https://avatars.dicebear.com/api/male/username.svg'}
+                                                />
+                                            </Center>
+                                            <br />
+                                            <Center>
+                                                <p>{userData?.whoami?.user_name}</p>
+                                            </Center>
+
+                                            <MenuDivider />
+                                            <MenuItem>Your Profile</MenuItem>
+                                            <MenuItem>Profile Settings</MenuItem>
+                                            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                    :
+                                    <NextLink href="/login">
+                                        <Button>
+                                            Log In
+                                        </Button>
+                                    </NextLink>
+                            }
+                        </Stack>
+                    </Flex>
+                </Flex>
             </Box>
         </React.Fragment>
     )
