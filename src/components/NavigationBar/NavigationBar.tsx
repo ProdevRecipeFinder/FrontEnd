@@ -48,7 +48,7 @@ const Nav = () => {
         <React.Fragment>
 
             {/* Sidebar. This will appear on the left when the hamburger button is pressed in the top left*/}
-            <Drawer onClose={onClose} placement={"left"} isOpen={isOpen} closeOnOverlayClick={true}>
+            <Drawer onClose={onClose} placement={"left"} isOpen={isOpen} closeOnOverlayClick={true} size={"xs"}>
                 <DrawerOverlay /> {/* Applies dark filter over app when drawer is open */}
 
                 <DrawerContent>
@@ -75,6 +75,8 @@ const Nav = () => {
 
             {/* Navigation Bar. This appears at the top of the page */}
             <Box padding="0.75em 0" bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+
+                <h1 id={styles.navTitle}>Recipe Finder</h1>
 
                 <Flex alignItems={"center"} justifyContent="space-between">
                     <Stack direction={'row'} spacing={5}>
