@@ -9,6 +9,12 @@
   transform: translate(-50%, 0%);
 }
 
+.navMenuItemWrapper {
+  width: 50%;
+  text-align: left;
+}
+
 .navMenuItemIcon {
   margin-right: 1em;
+  float: left;
 }
