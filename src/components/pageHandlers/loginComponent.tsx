@@ -89,6 +89,7 @@ export const LoginComponent: React.FC = () => {
                                 isFullWidth={true}
                                 isLoading={isSubmitting}
                                 borderRadius="45"
+                                id="loginButton"
                             >
                                 Login
                             </Button>
