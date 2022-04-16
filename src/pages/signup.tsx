@@ -3,7 +3,8 @@ import { Form, Formik } from "formik";
 import NextLink from "next/link";
 import { useRouter } from 'next/router';
 import React from "react";
-import { FaFacebook, FaTwitter } from "react-icons/fa";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { InputField } from "../components/InputField";
 import { useRegisterMutation, WhoAmIDocument, WhoAmIQuery } from "../generated/graphql";
 import { convertErrorMsg } from "../utils/convertErrorMsg";
@@ -108,23 +109,23 @@ const signUp = () => {
 
           <br />
           <Box style={{ width: "20em", margin: "auto" }}>
-            <IconButton
-              icon={<FaFacebook />}
-              aria-label="signUp with Facebook"
+            <Button
+              aria-label="Login with Facebook"
               colorScheme="facebook"
               borderRadius="90"
               size="lg"
-              width="5em"
-            ></IconButton>
-            <IconButton
-              icon={<FaTwitter />}
-              aria-label="signUp with Twitter"
+              width="5em">
+              <FontAwesomeIcon icon={faFacebook} />
+            </Button>
+            <Button
+              aria-label="Login with Twitter"
               colorScheme="twitter"
               borderRadius="90"
               float="right"
               size="lg"
-              width="5em"
-            ></IconButton>
+              width="5em">
+              <FontAwesomeIcon icon={faTwitter} />
+            </Button>
           </Box>
         </Box>
       </Center>
