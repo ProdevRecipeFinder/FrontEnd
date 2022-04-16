@@ -17,7 +17,7 @@ describe("Login", () => {
 
   it("Should fail username or email", () => {
     enterDetails("fake" + username, password)
-    cy.get("#loginButton").click()
+    cy.get("#loginButton").click().wait(1000)
 
     cy.findByText("This Username does not exist").should("exist")
   })
