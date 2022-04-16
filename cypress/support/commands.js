@@ -24,18 +24,3 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import "@testing-library/cypress/add-commands";
-
-Cypress.Commands.add("requestGraphQL", (query, variables) => {
-  cy.request({
-    url: "http://localhost:4000/graphql",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: {
-      query,
-      variables,
-    },
-    failOnStatusCode: false,
-  })
-})
