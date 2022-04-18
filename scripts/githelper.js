@@ -14,7 +14,7 @@ const menuFunctions = {
         name: "branchType",
         message: "What type of branch would you like to create?",
         type: "list",
-        choices: ["feature (use for tests)", "bugfix", "hotfix", "release"]
+        choices: ["feature", "bugfix", "hotfix", "release"]
       }])
     const { branchName } = await inquirer.prompt([{
         name: "branchName",
@@ -29,7 +29,7 @@ const menuFunctions = {
 
     // Create new branch and push to remote
     exec(`git checkout -b ${branchType}/${formattedBranchName}`)
-    exec(`git push origin ${branchType}/${formattedBranchName}`)
+    exec(`git push -u origin ${branchType}/${formattedBranchName}`)
   
     console.log(`Branch ${branchType}/${formattedBranchName} created and pushed to origin`)
     console.log(`You are now on branch ${branchType}/${formattedBranchName}`)
