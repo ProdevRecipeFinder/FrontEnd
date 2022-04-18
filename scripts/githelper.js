@@ -1,5 +1,8 @@
 const inquirer = require('inquirer');
 const { exec } = require("child_process");
+const util = require('util')
+
+const execPromise = util.promisify(exec);
 
 const mainMenu = {
   name: "operation",
@@ -7,7 +10,6 @@ const mainMenu = {
   type: "list",
   choices: ["New Branch"]
 }
-
 const menuFunctions = {
   "New Branch": async () => {
     const { branchType } = await inquirer.prompt([{
@@ -23,14 +25,16 @@ const menuFunctions = {
     }])
     const formattedBranchName = branchName.replace(/\s/g, '-').toLowerCase();
 
-    // Update local repository before creating new branch
-    exec("git checkout dev")
-    exec("git pull")
+    try {
+      // Update local repository before creating new branch")
+      await execPromise("git checkout dev && git pull");
+      await execPromise(`git checkout -b ${branchType}/${formattedBranchName}`);
+      await execPromise(`git push -u origin ${branchType}/${formattedBranchName}`);
+    } catch (e) {
+      console.log(e.stderr)
+      return
+    }
 
-    // Create new branch and push to remote
-    exec(`git checkout -b ${branchType}/${formattedBranchName}`)
-    exec(`git push -u origin ${branchType}/${formattedBranchName}`)
-  
     console.log(`Branch ${branchType}/${formattedBranchName} created and pushed to origin`)
     console.log(`You are now on branch ${branchType}/${formattedBranchName}`)
   }
