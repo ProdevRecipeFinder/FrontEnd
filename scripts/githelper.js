@@ -8,7 +8,7 @@ const mainMenu = {
   name: "operation",
   message: "What Git operation would you like to perform?",
   type: "list",
-  choices: ["New Branch"]
+  choices: ["New Branch", "Graph Log", "Exit"]
 }
 const menuFunctions = {
   "New Branch": async () => {
@@ -37,6 +37,19 @@ const menuFunctions = {
 
     console.log(`Branch ${branchType}/${formattedBranchName} created and pushed to origin`)
     console.log(`You are now on branch ${branchType}/${formattedBranchName}`)
+  },
+  "Graph Log": async () => {
+    const { stdout, stderr } = await execPromise("git log --graph --oneline --all")
+    console.log(stdout)
+    if (stderr) {
+      console.log(stderr)
+    }
+
+    console.log("Run the following command to see this graph log in colour: git log --graph --oneline --all")
+  },
+  "Exit": () => {
+    console.log("Exiting Git Helper")
+    process.exit(0)
   }
 }
 
