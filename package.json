@@ -8,7 +8,8 @@
         "start": "next start",
         "lint": "next lint",
         "gen": "graphql-codegen --config codegen.yml",
-        "test": "cypress open"
+        "test": "cypress open",
+        "githelper": "node ./scripts/githelper.js"
     },
     "dependencies": {
         "@anatoliygatt/heart-switch": "^1.0.2",
@@ -29,6 +30,7 @@
         "framer-motion": "^6",
         "graphql": "^16.3.0",
         "icons": "^1.0.0",
+        "inquirer": "^8.2.2",
         "next": "12.1.4",
         "next-apollo": "^5.0.8",
         "password-validator": "^5.2.1",
