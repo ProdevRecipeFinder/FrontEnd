@@ -4,12 +4,16 @@ import {
 import NextLink from 'next/link'
 import { Recipe } from '../../generated/graphql'
 import Card from '../Card/Card'
+import { useRouter } from 'next/router'
 
 interface Props {
   recipe: Recipe
+  showHeart?: boolean
 }
 
-const RecipeCard = ({ recipe }: Props) => {
+const RecipeCard = ({ recipe, showHeart }: Props) => {
+  const router = useRouter()
+
   return (
     <Center>
       <NextLink href={`/recipe/${recipe.id}`}>
@@ -17,7 +21,8 @@ const RecipeCard = ({ recipe }: Props) => {
           <Card
             title={recipe.recipe_title}
             desc={recipe.recipe_desc}
-            img={recipe.photo_url} 
+            img={recipe.photo_url}
+            showHeart={showHeart ? true : false}
           />
         </a>
       </NextLink>

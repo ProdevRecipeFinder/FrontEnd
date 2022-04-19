@@ -13,10 +13,24 @@ interface Props {
   savedStatus: boolean
 }
 
-const Recipe: NextPage<Props> = ({ recipe, savedStatus }) => {
+const Recipe: NextPage<Props> = ({ recipe }) => {
   const router = useRouter()
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+  const apolloClient = initializeApollo();
+  
+  useEffect(() => {
+    const getStuff = async () => {
+      const { data: savedStatus } = await apolloClient.query({
+        query: GetSavedStatusDocument,
+        variables: {
+          recipe_ids: [recipe.id]
+        }
+      })
+      setIsSaved(savedStatus.getSavedStatus[0])
+     }
 
-  const [isSaved, setIsSaved] = useState<boolean>(savedStatus);
+     getStuff()
+  }, [])
 
   // GraphQL API
   const [saveRecipe] = useSaveRecipeToUserMutation();
@@ -38,25 +52,11 @@ const Recipe: NextPage<Props> = ({ recipe, savedStatus }) => {
       })
     }
     setIsSaved(!isSaved)
-    // if (statusLoading || isSaved === statusData?.getSavedStatus) {
-
-    // }
-    // if (!statusLoading && !isSaved) {
-    //   await saveRecipe({
-    //     variables: {
-    //       recipe_id: recipeId
-    //     }
-    //   })
-    // }
-    // if (!statusLoading && isSaved) {
-    //   await unsaveRecipe({
-    //     variables: {
-    //       recipe_id: recipeId
-    //     }
-    //   })
-    // }
+    console.log(apolloClient.cache.extract())
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedStatus"})
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes"})
+    console.log(apolloClient.cache.extract())
   }
-
 
   return (
 
@@ -69,9 +69,9 @@ const Recipe: NextPage<Props> = ({ recipe, savedStatus }) => {
         </Stack >
       </Center >
 
-      {
+      {/* {
         JSON.stringify(savedStatus, null, 2)
-      }
+      } */}
 
       <br />
 
@@ -108,7 +108,6 @@ const Recipe: NextPage<Props> = ({ recipe, savedStatus }) => {
                 activeThumbColor="#ecfeff"
                 checked={isSaved}
                 onChange={(event) => {
-                  setIsSaved(event.target.checked);
                   updateSaveStatus();
                 }}
               />
@@ -183,17 +182,9 @@ export async function getServerSideProps(context: any) {
     }
   })
 
-  const { data: savedStatus } = await apolloClient.query({
-    query: GetSavedStatusDocument,
-    variables: {
-      recipe_id: parseInt(recipeId)
-    }
-  })
-
   return {
     props: {
       recipe: recipeData.data.getOneRecipe,
-      savedStatus: savedStatus.getSavedStatus
     }
   }
 }

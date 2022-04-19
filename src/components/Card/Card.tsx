@@ -8,19 +8,23 @@ import { truncateString } from "../../utils/truncString"
 interface Props {
   title: string
   desc: string
-  img: string
+  img: string,
+  showHeart?: boolean
 }
 
-const card = ({title, desc, img}: Props) => {
+const card = ({title, desc, img, showHeart}: Props) => {
   return (
     <React.Fragment>
       <Box className={styles.card}>
         
         <Box className={styles.card_img}>
           <img src={img} className={styles.img} />
-          <Box className={styles.card_heart}>
-            <FontAwesomeIcon icon={faHeartCircleCheck} fontSize="2em"/>
-          </Box>
+          {
+            !showHeart ? null :
+            <Box className={styles.card_heart}>
+              <FontAwesomeIcon icon={faHeartCircleCheck} fontSize="2em"/>
+            </Box>
+          }
         </Box>
 
         <Box className={styles.card_text}>
