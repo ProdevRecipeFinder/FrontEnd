@@ -1,10 +1,9 @@
-import { Center, Box, SimpleGrid } from "@chakra-ui/react";
+import { Center, SimpleGrid } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import urlencode from "urlencode";
 import RecipeCard from "../components/Recipe/RecipeCard";
-import { GetSavedStatusDocument, Recipe, SearchRecipesDocument, useGetSavedStatusQuery } from "../generated/graphql";
+import { GetSavedStatusDocument, Recipe, SearchRecipesDocument } from "../generated/graphql";
 import { initializeApollo } from '../utils/apollo';
 
 
@@ -27,11 +26,11 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
         }
       })
       setSavedRecipes(savedRecipes.getSavedStatus)
-     }
+    }
 
-     getStuff()
+    getStuff()
   }, [router.query.q])
-  
+
   const displaySearchResults = (searchResults: Recipe[]) => {
     const plainResult = Object.values(searchResults);
 
@@ -39,9 +38,9 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
       return (
         <SimpleGrid columns={2}>
           {
-            plainResult.map((recipe: Recipe, index: number) => <RecipeCard recipe={recipe} key={recipe.id} showHeart={!!savedRecipes[index]}/> )
+            plainResult.map((recipe: Recipe, index: number) => <RecipeCard recipe={recipe} key={recipe.id} showHeart={!!savedRecipes[index]} />)
           }
-        </SimpleGrid>  
+        </SimpleGrid>
       )
     } else {
       return (
