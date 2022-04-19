@@ -1,10 +1,16 @@
 import type { NextPage } from 'next'
 import React from 'react'
 import Card from '../components/Card/Card'
+import { useWhoAmIQuery } from '../generated/graphql'
 
 const Home: NextPage = () => {
+
+  const { data } = useWhoAmIQuery()
+
   return (
     <React.Fragment>
+
+      { data?.whoami ? data?.whoami.email : "Null"}
 
       <Card 
         title="Harissa Egg Salad" 

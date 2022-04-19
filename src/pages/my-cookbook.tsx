@@ -47,10 +47,6 @@ const myCookBook: NextPage = () => {
       recipe_data = filteredData
     }
 
-    console.log(recipe_data);
-
-
-
     return (
       <React.Fragment>
 

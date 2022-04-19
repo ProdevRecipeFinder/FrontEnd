@@ -1,27 +1,45 @@
 import { Center, Box, SimpleGrid } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import urlencode from "urlencode";
 import RecipeCard from "../components/Recipe/RecipeCard";
-import { Recipe, SearchRecipesDocument } from "../generated/graphql";
+import { GetSavedStatusDocument, Recipe, SearchRecipesDocument, useGetSavedStatusQuery } from "../generated/graphql";
 import { initializeApollo } from '../utils/apollo';
+
 
 interface SearchProps {
   searchResults: any
 }
 
 const Search: NextPage<SearchProps> = ({ searchResults }) => {
+  const apolloClient = initializeApollo();
+  const router = useRouter();
 
+  const [savedRecipes, setSavedRecipes] = useState<Boolean[]>([]);
+
+  useEffect(() => {
+    const getStuff = async () => {
+      const { data: savedRecipes } = await apolloClient.query({
+        query: GetSavedStatusDocument,
+        variables: {
+          recipe_ids: searchResults.map((recipe: Recipe) => recipe.id)
+        }
+      })
+      setSavedRecipes(savedRecipes.getSavedStatus)
+     }
+
+     getStuff()
+  }, [router.query.q])
+  
   const displaySearchResults = (searchResults: Recipe[]) => {
     const plainResult = Object.values(searchResults);
-    plainResult.pop();
 
     if (plainResult.length) {
       return (
-        <SimpleGrid columns={3} spacing={10}>
+        <SimpleGrid columns={2}>
           {
-            plainResult.map((recipe: Recipe) => <RecipeCard recipe={recipe} key={recipe.id} /> )
+            plainResult.map((recipe: Recipe, index: number) => <RecipeCard recipe={recipe} key={recipe.id} showHeart={!!savedRecipes[index]}/> )
           }
         </SimpleGrid>  
       )
@@ -36,7 +54,7 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
 
   return (
     <React.Fragment>
-      {/* {Grid of recipies} */}
+      {/* Grid of recipies */}
       {displaySearchResults(searchResults)}
     </React.Fragment>
   );
@@ -46,20 +64,16 @@ export async function getServerSideProps(context: any) {
   const searchQuery = context.query.q;
   const apolloClient = initializeApollo();
 
-  try {
-    await apolloClient.query({
-      query: SearchRecipesDocument,
-      variables: {
-        query: searchQuery
-      }
-    })
-  } catch(e) {
-    console.log(e)
-  }
+  const searchResults = await apolloClient.query({
+    query: SearchRecipesDocument,
+    variables: {
+      query: searchQuery
+    }
+  })
 
   return {
     props: {
-      searchResults: apolloClient.cache.extract()
+      searchResults: searchResults.data.searchRecipes
     }
   }
 }

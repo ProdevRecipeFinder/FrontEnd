@@ -48,14 +48,8 @@ export type Mutation = {
   changeForgotPassword: UserResponse;
   changePassword: UserResponse;
   changeUsername: UserResponse;
-  createIngredient: Ingredient;
-  createStep: Step;
-  createTag: Tag;
-  deleteIngredient: Scalars['Boolean'];
   deleteOwnedRecipe: Recipe;
   deleteSavedRecipe: Scalars['Boolean'];
-  deleteStep: Scalars['Boolean'];
-  deleteTag: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
@@ -87,28 +81,6 @@ export type MutationChangeUsernameArgs = {
 };
 
 
-export type MutationCreateIngredientArgs = {
-  ingredient_name: Scalars['String'];
-  ingredient_qty: Scalars['String'];
-};
-
-
-export type MutationCreateStepArgs = {
-  step_desc: Scalars['String'];
-};
-
-
-export type MutationCreateTagArgs = {
-  tag_desc: Scalars['String'];
-  tag_name: Scalars['String'];
-};
-
-
-export type MutationDeleteIngredientArgs = {
-  ingredient_id: Scalars['Float'];
-};
-
-
 export type MutationDeleteOwnedRecipeArgs = {
   id: Scalars['Float'];
 };
@@ -116,16 +88,6 @@ export type MutationDeleteOwnedRecipeArgs = {
 
 export type MutationDeleteSavedRecipeArgs = {
   recipe_id: Scalars['Float'];
-};
-
-
-export type MutationDeleteStepArgs = {
-  step_id: Scalars['Float'];
-};
-
-
-export type MutationDeleteTagArgs = {
-  tag_id: Scalars['Float'];
 };
 
 
@@ -156,23 +118,12 @@ export type MutationUpdateRecipeArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  getAllIngredients: Array<Ingredient>;
   getAllRecipes?: Maybe<Array<Recipe>>;
-  getAllSteps: Array<Step>;
-  getAllTags: Array<Tag>;
-  getOneIngredient: Ingredient;
   getOneRecipe?: Maybe<Recipe>;
-  getOneStep: Step;
-  getOneTag: Tag;
   getSavedRecipes?: Maybe<User>;
-  getSavedStatus: Scalars['Boolean'];
+  getSavedStatus: Array<Scalars['Boolean']>;
   searchRecipes: Array<Recipe>;
   whoami?: Maybe<User>;
-};
-
-
-export type QueryGetOneIngredientArgs = {
-  ingredient_id: Scalars['Float'];
 };
 
 
@@ -181,18 +132,8 @@ export type QueryGetOneRecipeArgs = {
 };
 
 
-export type QueryGetOneStepArgs = {
-  step_id: Scalars['Float'];
-};
-
-
-export type QueryGetOneTagArgs = {
-  tag_id: Scalars['Float'];
-};
-
-
 export type QueryGetSavedStatusArgs = {
-  recipe_id: Scalars['Float'];
+  recipe_ids: Array<Scalars['Float']>;
 };
 
 
@@ -211,8 +152,8 @@ export type Recipe = {
   prep_time_minutes: Scalars['Float'];
   rating_stars: Scalars['String'];
   recipeAuthors: Array<User>;
-  recipeIngredients: Array<Ingredient>;
-  recipeSteps: Array<Step>;
+  recipeIngredients?: Maybe<Array<Ingredient>>;
+  recipeSteps?: Maybe<Array<Step>>;
   recipeTags?: Maybe<Array<Tag>>;
   recipe_desc: Scalars['String'];
   recipe_title: Scalars['String'];
@@ -274,7 +215,7 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type DisplayRecipeFragment = { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }>, recipeSteps: Array<{ __typename?: 'Step', step_desc: string }> };
+export type DisplayRecipeFragment = { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null };
 
 export type StdUserFragment = { __typename?: 'User', id: number, user_name: string, email: string };
 
@@ -349,19 +290,19 @@ export type GetOneRecipeQueryVariables = Exact<{
 }>;
 
 
-export type GetOneRecipeQuery = { __typename?: 'Query', getOneRecipe?: { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }>, recipeSteps: Array<{ __typename?: 'Step', step_desc: string }> } | null };
+export type GetOneRecipeQuery = { __typename?: 'Query', getOneRecipe?: { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null } | null };
 
 export type GetSavedStatusQueryVariables = Exact<{
-  recipe_id: Scalars['Float'];
+  recipe_ids: Array<Scalars['Float']> | Scalars['Float'];
 }>;
 
 
-export type GetSavedStatusQuery = { __typename?: 'Query', getSavedStatus: boolean };
+export type GetSavedStatusQuery = { __typename?: 'Query', getSavedStatus: Array<boolean> };
 
 export type SavedRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SavedRecipesQuery = { __typename?: 'Query', getSavedRecipes?: { __typename?: 'User', savedRecipes?: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }>, recipeSteps: Array<{ __typename?: 'Step', step_desc: string }> }> | null } | null };
+export type SavedRecipesQuery = { __typename?: 'Query', getSavedRecipes?: { __typename?: 'User', savedRecipes?: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null }> | null } | null };
 
 export type SearchRecipesQueryVariables = Exact<{
   query: Scalars['String'];
@@ -767,8 +708,8 @@ export type GetOneRecipeQueryHookResult = ReturnType<typeof useGetOneRecipeQuery
 export type GetOneRecipeLazyQueryHookResult = ReturnType<typeof useGetOneRecipeLazyQuery>;
 export type GetOneRecipeQueryResult = Apollo.QueryResult<GetOneRecipeQuery, GetOneRecipeQueryVariables>;
 export const GetSavedStatusDocument = gql`
-    query GetSavedStatus($recipe_id: Float!) {
-  getSavedStatus(recipe_id: $recipe_id)
+    query GetSavedStatus($recipe_ids: [Float!]!) {
+  getSavedStatus(recipe_ids: $recipe_ids)
 }
     `;
 
@@ -784,7 +725,7 @@ export const GetSavedStatusDocument = gql`
  * @example
  * const { data, loading, error } = useGetSavedStatusQuery({
  *   variables: {
- *      recipe_id: // value for 'recipe_id'
+ *      recipe_ids: // value for 'recipe_ids'
  *   },
  * });
  */
