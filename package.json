@@ -24,6 +24,7 @@
         "@fortawesome/react-fontawesome": "^0.1.18",
         "@hcaptcha/react-hcaptcha": "^1.1.1",
         "@testing-library/cypress": "^8.0.2",
+        "@types/react-stonecutter": "^0.3.1",
         "cypress": "^9.5.4",
         "dotenv": "^16.0.0",
         "formik": "^2.2.9",
@@ -37,6 +38,7 @@
         "react": "^18.0.0",
         "react-dom": "18.0.0",
         "react-icons": "^4.3.1",
+        "react-stonecutter": "^0.3.10",
         "sass": "^1.50.1",
         "urlencode": "^1.1.0"
     },

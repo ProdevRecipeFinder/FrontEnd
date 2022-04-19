@@ -59,11 +59,9 @@ const myCookBook: NextPage = () => {
 
         <br /> <br />
 
-        <>HELLO</>
-
         {/* Grid of recipies */}
         {
-          recipe_data.length ?
+          recipe_data && recipe_data.length ?
             <SimpleGrid columns={2}>
               {recipe_data.map((recipe: Recipe) => (
                 <RecipeCard key={recipe.recipe_title} recipe={recipe} />
