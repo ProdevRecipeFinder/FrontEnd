@@ -17,34 +17,34 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
 
   console.log(searchResults);
 
-  const displaySearchResults = (searchResults: Recipe[]) => {
-    const router = useRouter()
-    const queryString = urlencode.decode(router.query.q as string);
+  // const displaySearchResults = (searchResults: Recipe[]) => {
+  //   const router = useRouter()
+  //   const queryString = urlencode.decode(router.query.q as string);
 
-    const plainResult = Object.values(searchResults);
+  //   const plainResult = Object.values(searchResults);
 
-    if (plainResult.length) {
-      return (
-        <SimpleGrid columns={2}>
-          {plainResult.map((recipe: Recipe) => (
-            <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
-          ))}
-        </SimpleGrid>
-      )
-    } else {
-      return (
-        <Center>
-          <p>No search results</p>
-        </Center>
-      )
-    }
-  }
+  //   if (plainResult.length) {
+  //     return (
+  //       <SimpleGrid columns={2}>
+  //         {plainResult.map((recipe: Recipe) => (
+  //           <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
+  //         ))}
+  //       </SimpleGrid>
+  //     )
+  //   } else {
+  //     return (
+  //       <Center>
+  //         <p>No search results</p>
+  //       </Center>
+  //     )
+  //   }
+  // }
 
   return (
     <React.Fragment>
       <Center>
         {/* Grid of recipies */}
-        {displaySearchResults(searchResults)}
+        {/* {displaySearchResults(searchResults)} */}
       </Center>
     </React.Fragment>
   );
