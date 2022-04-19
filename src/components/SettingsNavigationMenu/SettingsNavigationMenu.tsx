@@ -15,7 +15,7 @@ const SettingsNavigationMenu = () => {
       <Stack direction={"column"} padding="0.5em">
         <p>Account</p>
         <NavigationBarItem icon={faUser} text={"Public Profile"} href={"/settings/profile"}/>
-        <NavigationBarItem icon={faGear} text={"Account"} href={"/"}/>
+        <NavigationBarItem icon={faGear} text={"Account"} href={"/settings/account"}/>
         <NavigationBarItem icon={faPaintBrush} text={"Appearance"} href={"/"}/>
       </Stack>
 

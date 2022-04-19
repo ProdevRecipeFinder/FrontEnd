@@ -1,0 +1,10 @@
+#infoBox {
+  background: #292b34;
+  padding: 1.5em;
+  border-radius: 0.5em;
+  border: 1px solid #3a3c44;
+}
+
+#infoBoxTitle {
+  font-size: 1.3em;
+}
