@@ -1,13 +1,11 @@
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import urlencode from "urlencode";
-import { SearchRecipesDocument } from "../generated/graphql";
-import { initializeApollo } from '../utils/apollo';
-import { NormalizedCacheObject, useQuery } from "@apollo/client";
-import { Center, SimpleGrid } from "@chakra-ui/react";
-import { Recipe } from "../generated/graphql";
-import RecipeCard from "../components/Recipe/RecipeCard";
+import { Center, Box, SimpleGrid } from "@chakra-ui/react";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
+import React from "react";
+import urlencode from "urlencode";
+import RecipeCard from "../components/Recipe/RecipeCard";
+import { Recipe, SearchRecipesDocument } from "../generated/graphql";
+import { initializeApollo } from '../utils/apollo';
 
 interface SearchProps {
   searchResults: any
@@ -15,21 +13,17 @@ interface SearchProps {
 
 const Search: NextPage<SearchProps> = ({ searchResults }) => {
 
-  console.log(searchResults);
-
   const displaySearchResults = (searchResults: Recipe[]) => {
-    const router = useRouter()
-    const queryString = urlencode.decode(router.query.q as string);
-
     const plainResult = Object.values(searchResults);
+    plainResult.pop();
 
     if (plainResult.length) {
       return (
-        <SimpleGrid columns={2}>
-          {plainResult.map((recipe: Recipe) => (
-            <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
-          ))}
-        </SimpleGrid>
+        <SimpleGrid columns={3} spacing={10}>
+          {
+            plainResult.map((recipe: Recipe) => <RecipeCard recipe={recipe} key={recipe.id} /> )
+          }
+        </SimpleGrid>  
       )
     } else {
       return (
@@ -42,24 +36,27 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
 
   return (
     <React.Fragment>
-      <Center>
-        {/* Grid of recipies */}
-        {displaySearchResults(searchResults)}
-      </Center>
+      {/* {Grid of recipies} */}
+      {displaySearchResults(searchResults)}
     </React.Fragment>
   );
 };
 
 export async function getServerSideProps(context: any) {
-
   const searchQuery = context.query.q;
   const apolloClient = initializeApollo();
-  await apolloClient.query({
-    query: SearchRecipesDocument,
-    variables: {
-      query: searchQuery
-    }
-  })
+
+  try {
+    await apolloClient.query({
+      query: SearchRecipesDocument,
+      variables: {
+        query: searchQuery
+      }
+    })
+  } catch(e) {
+    console.log(e)
+  }
+
   return {
     props: {
       searchResults: apolloClient.cache.extract()
