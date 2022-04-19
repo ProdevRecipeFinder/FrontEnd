@@ -1,13 +1,11 @@
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import urlencode from "urlencode";
-import { SearchRecipesDocument } from "../generated/graphql";
-import { initializeApollo } from '../utils/apollo';
-import { NormalizedCacheObject, useQuery } from "@apollo/client";
 import { Center, SimpleGrid } from "@chakra-ui/react";
-import { Recipe } from "../generated/graphql";
-import RecipeCard from "../components/Recipe/RecipeCard";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
+import React from "react";
+import urlencode from "urlencode";
+import RecipeCard from "../components/Recipe/RecipeCard";
+import { Recipe, SearchRecipesDocument } from "../generated/graphql";
+import { initializeApollo } from '../utils/apollo';
 
 interface SearchProps {
   searchResults: any
@@ -17,34 +15,34 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
 
   console.log(searchResults);
 
-  // const displaySearchResults = (searchResults: Recipe[]) => {
-  //   const router = useRouter()
-  //   const queryString = urlencode.decode(router.query.q as string);
+  const displaySearchResults = (searchResults: Recipe[]) => {
+    const router = useRouter()
+    const queryString = urlencode.decode(router.query.q as string);
 
-  //   const plainResult = Object.values(searchResults);
+    const plainResult = Object.values(searchResults);
 
-  //   if (plainResult.length) {
-  //     return (
-  //       <SimpleGrid columns={2}>
-  //         {plainResult.map((recipe: Recipe) => (
-  //           <RecipeCard key={recipe.recipe_title} recipe={recipe} isPreview={true} />
-  //         ))}
-  //       </SimpleGrid>
-  //     )
-  //   } else {
-  //     return (
-  //       <Center>
-  //         <p>No search results</p>
-  //       </Center>
-  //     )
-  //   }
-  // }
+    if (plainResult.length) {
+      return (
+        <SimpleGrid columns={2}>
+          {plainResult.map((recipe: Recipe) => (
+            <RecipeCard key={recipe.recipe_title} recipe={recipe} />
+          ))}
+        </SimpleGrid>
+      )
+    } else {
+      return (
+        <Center>
+          <p>No search results</p>
+        </Center>
+      )
+    }
+  }
 
   return (
     <React.Fragment>
       <Center>
-        {/* Grid of recipies */}
-        {/* {displaySearchResults(searchResults)} */}
+        {/* {Grid of recipies} */}
+        {displaySearchResults(searchResults)}
       </Center>
     </React.Fragment>
   );
