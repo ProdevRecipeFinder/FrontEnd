@@ -13,11 +13,13 @@ const RecipeCard = ({ recipe }: Props) => {
   return (
     <Center>
       <NextLink href={`/recipe/${recipe.id}`}>
-        <Card
-          title={recipe.recipe_title}
-          desc={recipe.recipe_desc}
-          img={recipe.photo_url} 
-        />
+        <a>
+          <Card
+            title={recipe.recipe_title}
+            desc={recipe.recipe_desc}
+            img={recipe.photo_url} 
+          />
+        </a>
       </NextLink>
     </Center>
   )
