@@ -19,7 +19,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const apolloClient = initializeApollo();
   const { data: whoAmI } = useWhoAmIQuery()
-  
+
   useEffect(() => {
     const getIsSaved = async () => {
       const { data: savedStatus } = await apolloClient.query({
@@ -29,9 +29,9 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         }
       })
       setIsSaved(savedStatus.getSavedStatus[0])
-     }
+    }
 
-     if (whoAmI?.whoami)
+    if (whoAmI?.whoami)
       getIsSaved()
   }, [])
 
@@ -58,10 +58,11 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
     }
     setIsSaved(!isSaved)
     console.log(apolloClient.cache.extract())
-    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedStatus"})
-    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes"})
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedStatus" })
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes" })
     console.log(apolloClient.cache.extract())
   }
+
 
   return (
 
@@ -98,30 +99,30 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
 
         <Stack className={styles.ingredientsBox} direction={"column"} width="50%">
           {
-            !(whoAmI?.whoami) ? null : 
-            <Center>
-              <Box className={styles.heartSwitch}>
-                <HeartSwitch
-                  size="md"
-                  inactiveTrackFillColor="#ffffff"
-                  inactiveTrackStrokeColor="#d1d1d1"
-                  activeTrackFillColor="#ff708f"
-                  activeTrackStrokeColor="#ff4e74"
-                  inactiveThumbColor="#ecfeff"
-                  activeThumbColor="#ecfeff"
-                  checked={isSaved}
-                  onChange={(event) => {
-                    updateSaveStatus();
-                  }}
-                />
-                {
-                  isSaved ?
-                    <p>Saved</p>
-                    :
-                    <p>Not Saved</p>
-                }
-              </Box>
-            </Center>
+            !(whoAmI?.whoami) ? null :
+              <Center>
+                <Box className={styles.heartSwitch}>
+                  <HeartSwitch
+                    size="md"
+                    inactiveTrackFillColor="#ffffff"
+                    inactiveTrackStrokeColor="#d1d1d1"
+                    activeTrackFillColor="#ff708f"
+                    activeTrackStrokeColor="#ff4e74"
+                    inactiveThumbColor="#ecfeff"
+                    activeThumbColor="#ecfeff"
+                    checked={isSaved}
+                    onChange={(event) => {
+                      updateSaveStatus();
+                    }}
+                  />
+                  {
+                    isSaved ?
+                      <p>Saved</p>
+                      :
+                      <p>Not Saved</p>
+                  }
+                </Box>
+              </Center>
           }
           <Box>
             <h2 className="title">Ingredients</h2>

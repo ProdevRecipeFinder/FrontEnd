@@ -48,12 +48,14 @@ export type Mutation = {
   changeForgotPassword: UserResponse;
   changePassword: UserResponse;
   changeUsername: UserResponse;
+  deleteAccount: UserResponse;
   deleteOwnedRecipe: Recipe;
   deleteSavedRecipe: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
+  requestDeleteAccount: Scalars['Boolean'];
   saveRecipeToUser: Scalars['Boolean'];
   updateRecipe: Recipe;
 };
@@ -78,6 +80,11 @@ export type MutationChangePasswordArgs = {
 
 export type MutationChangeUsernameArgs = {
   user_name: Scalars['String'];
+};
+
+
+export type MutationDeleteAccountArgs = {
+  token: Scalars['String'];
 };
 
 
@@ -242,6 +249,13 @@ export type ChangeUsernameMutationVariables = Exact<{
 
 export type ChangeUsernameMutation = { __typename?: 'Mutation', changeUsername: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, user_name: string, email: string } | null } };
 
+export type DeleteAccountMutationVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+
+export type DeleteAccountMutation = { __typename?: 'Mutation', deleteAccount: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
 export type DeleteSavedRecipeMutationVariables = Exact<{
   recipe_id: Scalars['Float'];
 }>;
@@ -277,6 +291,11 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, user_name: string, email: string } | null } };
+
+export type RequestDeleteAccountMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RequestDeleteAccountMutation = { __typename?: 'Mutation', requestDeleteAccount: boolean };
 
 export type SaveRecipeToUserMutationVariables = Exact<{
   recipe_id: Scalars['Float'];
@@ -468,6 +487,42 @@ export function useChangeUsernameMutation(baseOptions?: Apollo.MutationHookOptio
 export type ChangeUsernameMutationHookResult = ReturnType<typeof useChangeUsernameMutation>;
 export type ChangeUsernameMutationResult = Apollo.MutationResult<ChangeUsernameMutation>;
 export type ChangeUsernameMutationOptions = Apollo.BaseMutationOptions<ChangeUsernameMutation, ChangeUsernameMutationVariables>;
+export const DeleteAccountDocument = gql`
+    mutation DeleteAccount($token: String!) {
+  deleteAccount(token: $token) {
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+export type DeleteAccountMutationFn = Apollo.MutationFunction<DeleteAccountMutation, DeleteAccountMutationVariables>;
+
+/**
+ * __useDeleteAccountMutation__
+ *
+ * To run a mutation, you first call `useDeleteAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAccountMutation, { data, loading, error }] = useDeleteAccountMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useDeleteAccountMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAccountMutation, DeleteAccountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAccountMutation, DeleteAccountMutationVariables>(DeleteAccountDocument, options);
+      }
+export type DeleteAccountMutationHookResult = ReturnType<typeof useDeleteAccountMutation>;
+export type DeleteAccountMutationResult = Apollo.MutationResult<DeleteAccountMutation>;
+export type DeleteAccountMutationOptions = Apollo.BaseMutationOptions<DeleteAccountMutation, DeleteAccountMutationVariables>;
 export const DeleteSavedRecipeDocument = gql`
     mutation DeleteSavedRecipe($recipe_id: Float!) {
   deleteSavedRecipe(recipe_id: $recipe_id)
@@ -641,6 +696,36 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const RequestDeleteAccountDocument = gql`
+    mutation RequestDeleteAccount {
+  requestDeleteAccount
+}
+    `;
+export type RequestDeleteAccountMutationFn = Apollo.MutationFunction<RequestDeleteAccountMutation, RequestDeleteAccountMutationVariables>;
+
+/**
+ * __useRequestDeleteAccountMutation__
+ *
+ * To run a mutation, you first call `useRequestDeleteAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRequestDeleteAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [requestDeleteAccountMutation, { data, loading, error }] = useRequestDeleteAccountMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRequestDeleteAccountMutation(baseOptions?: Apollo.MutationHookOptions<RequestDeleteAccountMutation, RequestDeleteAccountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RequestDeleteAccountMutation, RequestDeleteAccountMutationVariables>(RequestDeleteAccountDocument, options);
+      }
+export type RequestDeleteAccountMutationHookResult = ReturnType<typeof useRequestDeleteAccountMutation>;
+export type RequestDeleteAccountMutationResult = Apollo.MutationResult<RequestDeleteAccountMutation>;
+export type RequestDeleteAccountMutationOptions = Apollo.BaseMutationOptions<RequestDeleteAccountMutation, RequestDeleteAccountMutationVariables>;
 export const SaveRecipeToUserDocument = gql`
     mutation SaveRecipeToUser($recipe_id: Float!) {
   saveRecipeToUser(recipe_id: $recipe_id)

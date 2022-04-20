@@ -3,13 +3,14 @@ import {
 } from "@chakra-ui/react"
 import { Form, Formik } from 'formik'
 import React from "react"
-import { InputField } from '../../../components/InputField'
-import { useChangeUsernameMutation, WhoAmIDocument, WhoAmIQuery } from "../../../generated/graphql"
-import styles from "../../../styles/settings.module.css"
-import { convertErrorMsg } from "../../../utils/convertErrorMsg"
+import styles from "../../styles/settings.module.css"
+import { InputField } from "../../components/InputField"
+import { useChangeUsernameMutation, WhoAmIQuery, WhoAmIDocument, useRequestDeleteAccountMutation } from "../../generated/graphql"
+import { convertErrorMsg } from "../../utils/convertErrorMsg"
 
 const account = () => {
   const [changeUsername] = useChangeUsernameMutation()
+  const [requestDeleteAccount] = useRequestDeleteAccountMutation();
 
   return (
     <React.Fragment>
@@ -64,7 +65,7 @@ const account = () => {
         <br />
 
         {/* delete account button */}
-        <Button variant="outline" colorScheme="red" >
+        <Button variant="outline" colorScheme="red" onClick={() => requestDeleteAccount()} >
           Delete your account
         </Button>
       </Box>

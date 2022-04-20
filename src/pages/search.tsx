@@ -26,9 +26,10 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
         }
       })
 
-      if(savedRecipes.length)
+
+      if (savedRecipes.getSavedStatus.length)
         setSavedRecipes(savedRecipes.getSavedStatus)
-     }
+    }
 
     getStuff()
   }, [router.query.q])
