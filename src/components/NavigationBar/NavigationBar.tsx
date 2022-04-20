@@ -130,7 +130,7 @@ const Nav = () => {
 
                                             <MenuDivider />
                                             <MenuItem>Settings</MenuItem>
-                                            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                                            <MenuItem onClick={handleLogout}>Logout</MenuItem>
                                         </MenuList>
                                     </Menu>
                                     :

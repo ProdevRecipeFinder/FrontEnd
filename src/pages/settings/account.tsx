@@ -23,7 +23,7 @@ const account = () => {
 
         <Formik
           initialValues={{ username: "" }}
-          onSubmit={async (values, { setErrors }) => {
+          onSubmit={async (values, { setErrors, resetForm }) => {
             const response = await changeUsername({
               variables: values,
               update: (caches, { data }) => { // Updating the cache for live reload
@@ -50,6 +50,7 @@ const account = () => {
                 duration: 5000,
                 isClosable: true
               })
+              resetForm()
             }
           }}
         >

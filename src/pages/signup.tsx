@@ -70,7 +70,7 @@ const signUp = () => {
                   title: "Success",
                   description: `Account created for ${values.username}`,
                   status: "success",
-                  duration: 5000,
+                  duration: 150000,
                   isClosable: true
                 })
 
