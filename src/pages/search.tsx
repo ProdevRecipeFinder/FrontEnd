@@ -26,7 +26,9 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
           recipe_ids: searchResults.map((recipe: Recipe) => recipe.id)
         }
       })
-      setSavedRecipes(savedRecipes.getSavedStatus)
+
+      if(savedRecipes.length)
+        setSavedRecipes(savedRecipes.getSavedStatus)
      }
 
      getStuff()
@@ -39,7 +41,7 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
       return (
         <SimpleGrid columns={2}>
           {
-            plainResult.map((recipe: Recipe, index: number) => <RecipeCard recipe={recipe} key={recipe.id} showHeart={!!savedRecipes[index]}/> )
+            plainResult.map((recipe: Recipe, index: number) => <RecipeCard recipe={recipe} key={recipe.id} /> )
           }
         </SimpleGrid>  
       )

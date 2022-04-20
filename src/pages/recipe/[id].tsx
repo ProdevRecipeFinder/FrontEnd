@@ -1,9 +1,10 @@
 import { HeartSwitch } from '@anatoliygatt/heart-switch'
+import { gql } from '@apollo/client'
 import { Box, Center, Checkbox, Divider, Stack } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from "react"
-import { Recipe, useDeleteSavedRecipeMutation, GetOneRecipeDocument, GetSavedStatusDocument, useSaveRecipeToUserMutation } from '../../generated/graphql'
+import { Recipe, useDeleteSavedRecipeMutation, GetOneRecipeDocument, GetSavedStatusDocument, useSaveRecipeToUserMutation, useWhoAmIQuery } from '../../generated/graphql'
 import { initializeApollo } from '../../utils/apollo'
 import { useGetIntId } from '../../utils/getIdFromUrl'
 import styles from "./Recipe.module.css"
@@ -17,9 +18,10 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   const router = useRouter()
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const apolloClient = initializeApollo();
+  const { data: whoAmI } = useWhoAmIQuery()
   
   useEffect(() => {
-    const getStuff = async () => {
+    const getIsSaved = async () => {
       const { data: savedStatus } = await apolloClient.query({
         query: GetSavedStatusDocument,
         variables: {
@@ -29,7 +31,8 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       setIsSaved(savedStatus.getSavedStatus[0])
      }
 
-     getStuff()
+     if (whoAmI?.whoami)
+      getIsSaved()
   }, [])
 
   // GraphQL API
@@ -43,6 +46,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           recipe_id: recipe.id
         }
       })
+      console.log("unsave sent")
     }
     else {
       await saveRecipe({
@@ -50,6 +54,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           recipe_id: recipe.id
         }
       })
+      console.log("save sent")
     }
     setIsSaved(!isSaved)
     console.log(apolloClient.cache.extract())
@@ -68,10 +73,6 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           <p>{recipe!.recipe_desc}</p>
         </Stack >
       </Center >
-
-      {/* {
-        JSON.stringify(savedStatus, null, 2)
-      } */}
 
       <br />
 
@@ -96,29 +97,32 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         </Stack>
 
         <Stack className={styles.ingredientsBox} direction={"column"} width="50%">
-          <Center>
-            <Box className={styles.heartSwitch}>
-              <HeartSwitch
-                size="md"
-                inactiveTrackFillColor="#ffffff"
-                inactiveTrackStrokeColor="#d1d1d1"
-                activeTrackFillColor="#ff708f"
-                activeTrackStrokeColor="#ff4e74"
-                inactiveThumbColor="#ecfeff"
-                activeThumbColor="#ecfeff"
-                checked={isSaved}
-                onChange={(event) => {
-                  updateSaveStatus();
-                }}
-              />
-              {
-                isSaved ?
-                  <p>Saved</p>
-                  :
-                  <p>Not Saved</p>
-              }
-            </Box>
-          </Center>
+          {
+            !(whoAmI?.whoami) ? null : 
+            <Center>
+              <Box className={styles.heartSwitch}>
+                <HeartSwitch
+                  size="md"
+                  inactiveTrackFillColor="#ffffff"
+                  inactiveTrackStrokeColor="#d1d1d1"
+                  activeTrackFillColor="#ff708f"
+                  activeTrackStrokeColor="#ff4e74"
+                  inactiveThumbColor="#ecfeff"
+                  activeThumbColor="#ecfeff"
+                  checked={isSaved}
+                  onChange={(event) => {
+                    updateSaveStatus();
+                  }}
+                />
+                {
+                  isSaved ?
+                    <p>Saved</p>
+                    :
+                    <p>Not Saved</p>
+                }
+              </Box>
+            </Center>
+          }
           <Box>
             <h2 className="title">Ingredients</h2>
             <Divider />
@@ -167,7 +171,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           :
           null
       }
-    </React.Fragment >
+    </React.Fragment>
   )
 }
 
@@ -175,12 +179,16 @@ export async function getServerSideProps(context: any) {
   const apolloClient = initializeApollo();
   const recipeId = context.query.id;
 
+  console.log("before")
+
   const recipeData = await apolloClient.query({
     query: GetOneRecipeDocument,
     variables: {
       id: parseInt(recipeId)
     }
   })
+
+  console.log("after")
 
   return {
     props: {
