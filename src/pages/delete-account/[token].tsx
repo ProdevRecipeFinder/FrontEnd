@@ -3,7 +3,8 @@ import {
   Divider,
   Stack,
   Box,
-  Checkbox
+  Checkbox,
+  useToast
 } from "@chakra-ui/react"
 import { useRouter } from 'next/router'
 import React, { useState } from "react"
@@ -17,7 +18,7 @@ const DeleteAccount = () => {
   const apolloClient = initializeApollo();
   const [agreed, setAgreed] = useState(false)
   const [deleteAccount] = useDeleteAccountMutation();
-
+  const toast = useToast()
 
   return (
     <React.Fragment>
@@ -44,13 +45,22 @@ const DeleteAccount = () => {
         </Box>
         <Center>
           <Button disabled={!agreed} colorScheme="red" onClick={() => {
-            deleteAccount(
-              {
+            deleteAccount({
                 variables: { token: token }
               }
             )
             //evict cache
             apolloClient.resetStore();
+
+            //notify user
+            toast({
+              title: "Success",
+              description: "Account deleted",
+              status: "success",
+              duration: 5000,
+              isClosable: true
+            })
+
             //launch back to home
             router.replace("/");
           }}>Yes, delete my account</Button>

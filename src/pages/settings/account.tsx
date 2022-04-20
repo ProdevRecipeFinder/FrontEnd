@@ -1,5 +1,5 @@
 import {
-  Box, Button, Divider
+  Box, Button, Divider, useToast
 } from "@chakra-ui/react"
 import { Form, Formik } from 'formik'
 import React from "react"
@@ -10,7 +10,8 @@ import { convertErrorMsg } from "../../utils/convertErrorMsg"
 
 const account = () => {
   const [changeUsername] = useChangeUsernameMutation()
-  const [requestDeleteAccount] = useRequestDeleteAccountMutation();
+  const [requestDeleteAccount] = useRequestDeleteAccountMutation()
+  const toast = useToast()
 
   return (
     <React.Fragment>
@@ -35,7 +36,6 @@ const account = () => {
                 })
               }
             })
-
             if (response.data?.changeUsername.errors) {
               //handle errors
               setErrors(convertErrorMsg(response.data.changeUsername.errors));
@@ -43,7 +43,13 @@ const account = () => {
             else if (response.data?.changeUsername.user) {
               //handle success
               //send notification saying the user logged in 
-
+              toast({
+                title: "Success",
+                description: `Username changed to ${values.username}`,
+                status: "success",
+                duration: 5000,
+                isClosable: true
+              })
             }
           }}
         >
@@ -65,7 +71,17 @@ const account = () => {
         <br />
 
         {/* delete account button */}
-        <Button variant="outline" colorScheme="red" onClick={() => requestDeleteAccount()} >
+        <Button variant="outline" colorScheme="red" 
+          onClick={() => {
+            requestDeleteAccount()
+            toast({
+              title: "Account Deletion Link Sent",
+              description: "Please check your email for a link to delete your account.",
+              status: "success",
+              duration: 5000,
+              isClosable: true
+            })
+          }}>
           Delete your account
         </Button>
       </Box>

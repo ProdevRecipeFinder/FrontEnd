@@ -27,7 +27,10 @@ const menuFunctions = {
 
     try {
       // Update local repository before creating new branch")
-      await execPromise("git checkout dev && git pull");
+      try {
+        await execPromise("git checkout dev");
+      } catch (e) {}
+      await execPromise("git pull");
       await execPromise(`git checkout -b ${branchType}/${formattedBranchName}`);
       await execPromise(`git push -u origin ${branchType}/${formattedBranchName}`);
     } catch (e) {
