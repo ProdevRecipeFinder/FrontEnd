@@ -44,6 +44,12 @@ const signUp = () => {
           <Formik
             initialValues={{ username: "", email: "", password: "", confirmPassword: "" }}
             onSubmit={async (values, { setErrors }) => {
+
+              if (values.password !== values.confirmPassword) {
+                setErrors({ confirmPassword: "Passwords do not match"})
+                return
+              }
+
               const response = await register({
                 variables: values,
                 update: (caches, { data }) => {
