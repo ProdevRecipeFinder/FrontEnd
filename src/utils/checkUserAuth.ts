@@ -1,13 +1,20 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useWhoAmIQuery } from "../generated/graphql";
+import { useEffect, useState } from "react";
+import { StdUserFragment, User, useWhoAmIQuery, WhoAmIDocument } from "../generated/graphql";
+import { initializeApollo } from "./apollo";
 
-export const checkUserAuth = () => {
-    const { data: userData, loading: isLoading } = useWhoAmIQuery();
+export const checkUserAuth = async () => {
     const router = useRouter();
+    const apolloClient = initializeApollo();
     useEffect(() => {
-        if (!isLoading && !userData?.whoami?.id) {
-            router.replace("/login?next=" + router.pathname);
+        const userStatus = async () => {
+            const { data: authorized } = await apolloClient.query({
+                query: WhoAmIDocument
+            })
+            if (!authorized.whoami.id) {
+                router.replace("/login?next=" + router.pathname);
+            }
         }
-    }, [isLoading, userData, router]);
+        userStatus();
+    }, [router]);
 }
