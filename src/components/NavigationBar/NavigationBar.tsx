@@ -4,7 +4,8 @@ import {
     DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader,
     DrawerOverlay, Input, Menu,
     MenuButton, MenuDivider, MenuItem, MenuList, Stack,
-    useColorMode, useColorModeValue, useDisclosure, Flex, InputGroup, InputRightElement
+    useColorMode, useColorModeValue, useDisclosure, Flex, InputGroup, InputRightElement,
+    useToast
 } from '@chakra-ui/react'
 import {
     faBars, faBookOpen, faCircleInfo, faCogs, faEnvelope,
@@ -30,6 +31,7 @@ const Nav = () => {
     const router = useRouter()
 
     const [searchQuery, setSearchQuery] = useState('')
+    const toast = useToast()
 
     const onSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)
 
@@ -41,6 +43,13 @@ const Nav = () => {
     const handleLogout = async () => {
         await logout()
         await apolloClient.resetStore()
+        toast({
+            title: "Success",
+            description: "Logout successful",
+            status: "success",
+            duration: 5000,
+            isClosable: true
+        })
         router.push('/')
     }
 
@@ -120,8 +129,7 @@ const Nav = () => {
                                             </Center>
 
                                             <MenuDivider />
-                                            <MenuItem>Your Profile</MenuItem>
-                                            <MenuItem>Profile Settings</MenuItem>
+                                            <MenuItem>Settings</MenuItem>
                                             <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                                         </MenuList>
                                     </Menu>

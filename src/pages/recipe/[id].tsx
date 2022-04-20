@@ -1,6 +1,6 @@
 import { HeartSwitch } from '@anatoliygatt/heart-switch'
 import { gql } from '@apollo/client'
-import { Box, Center, Checkbox, Divider, Stack } from '@chakra-ui/react'
+import { Box, Center, Checkbox, Divider, Stack, useToast } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from "react"
@@ -19,6 +19,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const apolloClient = initializeApollo();
   const { data: whoAmI } = useWhoAmIQuery()
+  const toast = useToast()
 
   useEffect(() => {
     const getIsSaved = async () => {
@@ -46,7 +47,13 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           recipe_id: recipe.id
         }
       })
-      console.log("unsave sent")
+      toast({
+        title: "Unsaved",
+        description: "Recipe unsaved",
+        status: "info",
+        duration: 5000,
+        isClosable: true
+      })
     }
     else {
       await saveRecipe({
@@ -54,7 +61,13 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           recipe_id: recipe.id
         }
       })
-      console.log("save sent")
+      toast({
+        title: "Saved",
+        description: "Recipe saved",
+        status: "info",
+        duration: 5000,
+        isClosable: true
+      })
     }
     setIsSaved(!isSaved)
     console.log(apolloClient.cache.extract())

@@ -1,4 +1,4 @@
-import { Box, Button, Center, IconButton, Image, Link, Stack } from "@chakra-ui/react";
+import { Box, Button, Center, IconButton, Image, Link, Stack, useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import NextLink from "next/link";
 import { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import { convertErrorMsg } from "../utils/convertErrorMsg";
 const signUp = () => {
   const router = useRouter();
   const [register] = useRegisterMutation();
+  const toast = useToast()
 
   const h1Style = { fontSize: "1.5rem" };
   return (
@@ -59,6 +60,14 @@ const signUp = () => {
                 setErrors(convertErrorMsg(response.data.register.errors));
               } else if (response.data?.register.user) {
                 //handle success
+                toast({
+                  title: "Success",
+                  description: `Account created for ${values.username}`,
+                  status: "success",
+                  duration: 5000,
+                  isClosable: true
+                })
+
                 //send notification saying the user logged in 
                 router.push("/");
               }
