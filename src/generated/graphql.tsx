@@ -123,13 +123,25 @@ export type MutationUpdateRecipeArgs = {
   input: RecipeInput;
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['Float']>;
+  hasNextPage: Scalars['Boolean'];
+};
+
+export type PaginatedSearch = {
+  __typename?: 'PaginatedSearch';
+  pageInfo: PageInfo;
+  recipes: Array<Recipe>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllRecipes?: Maybe<Array<Recipe>>;
   getOneRecipe?: Maybe<Recipe>;
   getSavedRecipes?: Maybe<User>;
   getSavedStatus: Array<Scalars['Boolean']>;
-  searchRecipes: Array<Recipe>;
+  searchRecipes: PaginatedSearch;
   whoami?: Maybe<User>;
 };
 
@@ -145,6 +157,8 @@ export type QueryGetSavedStatusArgs = {
 
 
 export type QuerySearchRecipesArgs = {
+  cursor?: InputMaybe<Scalars['Float']>;
+  limit?: InputMaybe<Scalars['Float']>;
   search: Scalars['String'];
 };
 
@@ -325,10 +339,12 @@ export type SavedRecipesQuery = { __typename?: 'Query', getSavedRecipes?: { __ty
 
 export type SearchRecipesQueryVariables = Exact<{
   query: Scalars['String'];
+  limit?: InputMaybe<Scalars['Float']>;
+  cursor?: InputMaybe<Scalars['Float']>;
 }>;
 
 
-export type SearchRecipesQuery = { __typename?: 'Query', searchRecipes: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }> };
+export type SearchRecipesQuery = { __typename?: 'Query', searchRecipes: { __typename?: 'PaginatedSearch', recipes: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } } };
 
 export type WhoAmIQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -883,14 +899,20 @@ export type SavedRecipesQueryHookResult = ReturnType<typeof useSavedRecipesQuery
 export type SavedRecipesLazyQueryHookResult = ReturnType<typeof useSavedRecipesLazyQuery>;
 export type SavedRecipesQueryResult = Apollo.QueryResult<SavedRecipesQuery, SavedRecipesQueryVariables>;
 export const SearchRecipesDocument = gql`
-    query SearchRecipes($query: String!) {
-  searchRecipes(search: $query) {
-    id
-    recipe_title
-    recipe_desc
-    photo_url
-    rating_stars
-    review_count
+    query SearchRecipes($query: String!, $limit: Float, $cursor: Float) {
+  searchRecipes(search: $query, limit: $limit, cursor: $cursor) {
+    recipes {
+      id
+      recipe_title
+      recipe_desc
+      photo_url
+      rating_stars
+      review_count
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
   }
 }
     `;
@@ -908,6 +930,8 @@ export const SearchRecipesDocument = gql`
  * const { data, loading, error } = useSearchRecipesQuery({
  *   variables: {
  *      query: // value for 'query'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */

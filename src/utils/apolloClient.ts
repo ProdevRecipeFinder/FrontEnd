@@ -1,5 +1,6 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import getConfig from 'next/config';
+import { relayStylePagination  } from '@apollo/client/utilities';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -10,7 +11,15 @@ function createApolloClient() {
             uri: 'http://localhost:4000/graphql',
             credentials: 'include',
         }),
-        cache: new InMemoryCache(),
+        cache: new InMemoryCache({
+            typePolicies: {
+                Query: {
+                    fields: {
+                        searchRecipes: relayStylePagination()
+                    }
+                }
+            }
+        }),
     });
 }
 
