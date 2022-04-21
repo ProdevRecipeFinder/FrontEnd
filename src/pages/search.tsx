@@ -13,16 +13,28 @@ interface SearchProps {
 const Search: NextPage<SearchProps> = () => {
   const apolloClient = initializeApollo();
   const router = useRouter();
+  const searchQuery = typeof router.query.id === "string" ? router.query.id : "empty";
 
   const { data: searchResultsData, loading, fetchMore } = useSearchRecipesQuery({
     variables: {
-      query: router.query.q as string,
-    }
+      query: searchQuery,
+    },
+    // skip: searchQuery === "empty"
   })
 
-  const searchResults = searchResultsData?.searchRecipes.recipes as Recipe[];
 
-  const [savedRecipes, setSavedRecipes] = useState<Boolean[]>([]);
+  // useEffect(() => {
+  //   apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "searchRecipes" })
+  // }, [router.query.q])
+
+
+  const searchResults = searchResultsData?.searchRecipes.recipes as Recipe[];
+  console.log(searchResultsData);
+
+
+
+
+  // const [savedRecipes, setSavedRecipes] = useState<Boolean[]>([]);
 
   // useEffect(() => {
   //   const getStuff = async () => {
@@ -32,6 +44,8 @@ const Search: NextPage<SearchProps> = () => {
   //         recipe_ids: searchResults.map((recipe: Recipe) => recipe.id)
   //       }
   //     })
+
+  //     console.log(searchResults[]);
 
 
   //     if (savedRecipes.getSavedStatus.length)
@@ -86,24 +100,5 @@ const Search: NextPage<SearchProps> = () => {
     </React.Fragment>
   );
 };
-
-// export async function getServerSideProps(context: any) {
-//   const searchQuery = context.query.q;
-//   const apolloClient = initializeApollo();
-
-//   const searchResults = await apolloClient.query({
-//     query: SearchRecipesDocument,
-//     variables: {
-//       query: searchQuery
-//     }
-//   })
-
-//   return {
-//     props: {
-//       searchResults: searchResults.data.searchRecipes
-//     }
-//   }
-// }
-
 
 export default Search;
