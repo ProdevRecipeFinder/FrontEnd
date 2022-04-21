@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import RecipeCard from "../components/Recipe/RecipeCard";
 import { GetSavedStatusDocument, Recipe, SearchRecipesDocument, useSearchRecipesQuery } from "../generated/graphql";
 import { initializeApollo } from '../utils/apollo'
+import StackGrid from "react-stack-grid"
 
 interface SearchProps {
   searchResults: any
@@ -21,11 +22,6 @@ const Search: NextPage<SearchProps> = () => {
     },
     skip: searchQuery === "empty"
   })
-
-
-  // useEffect(() => {
-  //   apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "searchRecipes" })
-  // }, [router.query.q])
 
   const searchResults = searchResultsData?.searchRecipes.recipes as Recipe[];
 
