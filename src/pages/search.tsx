@@ -13,13 +13,13 @@ interface SearchProps {
 const Search: NextPage<SearchProps> = () => {
   const apolloClient = initializeApollo();
   const router = useRouter();
-  const searchQuery = typeof router.query.id === "string" ? router.query.id : "empty";
+  const searchQuery = typeof router.query.q === "string" ? router.query.q : "empty";
 
   const { data: searchResultsData, loading, fetchMore } = useSearchRecipesQuery({
     variables: {
       query: searchQuery,
     },
-    // skip: searchQuery === "empty"
+    skip: searchQuery === "empty"
   })
 
 
@@ -27,33 +27,30 @@ const Search: NextPage<SearchProps> = () => {
   //   apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "searchRecipes" })
   // }, [router.query.q])
 
-
   const searchResults = searchResultsData?.searchRecipes.recipes as Recipe[];
-  console.log(searchResultsData);
 
+  const [savedRecipes, setSavedRecipes] = useState<Boolean[]>([]);
 
+  useEffect(() => {
+    if (searchQuery === "empty" || searchResults === undefined) {
+      return
+    }
 
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "searchRecipes" })
+    const getStuff = async () => {
+      const { data: savedRecipes } = await apolloClient.query({
+        query: GetSavedStatusDocument,
+        variables: {
+          recipe_ids: searchResults?.map((recipe: Recipe) => recipe.id)
+        }
+      })
 
-  // const [savedRecipes, setSavedRecipes] = useState<Boolean[]>([]);
+      if (savedRecipes.getSavedStatus.length)
+        setSavedRecipes(savedRecipes.getSavedStatus)
+    }
 
-  // useEffect(() => {
-  //   const getStuff = async () => {
-  //     const { data: savedRecipes } = await apolloClient.query({
-  //       query: GetSavedStatusDocument,
-  //       variables: {
-  //         recipe_ids: searchResults.map((recipe: Recipe) => recipe.id)
-  //       }
-  //     })
-
-  //     console.log(searchResults[]);
-
-
-  //     if (savedRecipes.getSavedStatus.length)
-  //       setSavedRecipes(savedRecipes.getSavedStatus)
-  //   }
-
-  //   getStuff()
-  // }, [router.query.q])
+    getStuff()
+  }, [router.query.q, searchResults])
 
   const displaySearchResults = (searchResults: Recipe[]) => {
     const plainResult = Object.values(searchResults);
@@ -91,10 +88,6 @@ const Search: NextPage<SearchProps> = () => {
               cursor: searchResultsData?.searchRecipes.pageInfo.endCursor
             }
           })
-
-
-          console.log(apolloClient.cache.extract())
-
         }}>Load more</Button>
       </Center>
     </React.Fragment>
