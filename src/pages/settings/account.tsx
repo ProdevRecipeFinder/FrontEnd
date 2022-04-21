@@ -26,7 +26,10 @@ const account = () => {
           onSubmit={async (values, { setErrors, resetForm }) => {
             const response = await changeUsername({
               variables: values,
-              update: (caches, { data }) => { // Updating the cache for live reload
+              update: (caches, { data }) => { // Updating the cache for live reload, skip if username error
+                if (data?.changeUsername.user === null) {
+                  return
+                }
                 caches.writeQuery<WhoAmIQuery>({
                   query: WhoAmIDocument,
                   data: {
@@ -72,7 +75,7 @@ const account = () => {
         <br />
 
         {/* delete account button */}
-        <Button variant="outline" colorScheme="red" 
+        <Button variant="outline" colorScheme="red"
           onClick={() => {
             requestDeleteAccount()
             toast({
