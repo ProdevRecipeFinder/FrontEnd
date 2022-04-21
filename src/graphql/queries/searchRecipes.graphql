@@ -14,3 +14,4 @@ query SearchRecipes($query: String!, $limit: Float, $cursor: Float) {
     }
   }
 }
+ 

@@ -1,7 +1,6 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import getConfig from 'next/config';
-import { relayStylePagination } from '@apollo/client/utilities';
-import { PaginatedSearch } from '../generated/graphql';
+import { PaginatedRecipe } from '../generated/graphql';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -19,9 +18,21 @@ function createApolloClient() {
                         searchRecipes: {
                             keyArgs: [],
                             merge(
-                                existing: PaginatedSearch | undefined,
-                                incoming: PaginatedSearch
-                            ): PaginatedSearch {
+                                existing: PaginatedRecipe | undefined,
+                                incoming: PaginatedRecipe
+                            ): PaginatedRecipe {
+                                return {
+                                    ...incoming,
+                                    recipes: [...(existing?.recipes || []), ...incoming.recipes]
+                                }
+                            }
+                        },
+                        getSavedRecipes: {
+                            keyArgs: [],
+                            merge(
+                                existing: PaginatedRecipe | undefined,
+                                incoming: PaginatedRecipe
+                            ): PaginatedRecipe {
                                 return {
                                     ...incoming,
                                     recipes: [...(existing?.recipes || []), ...incoming.recipes]

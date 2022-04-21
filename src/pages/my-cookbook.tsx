@@ -1,4 +1,5 @@
 import {
+  Button,
   Center,
   Input
 } from "@chakra-ui/react"
@@ -8,20 +9,12 @@ import { SimpleGrid } from '@chakra-ui/react'
 import { Recipe, User, useSavedRecipesQuery } from "../generated/graphql"
 import { NextPage } from "next"
 
-const getAuthor = (authors: [User]) => {
-  if (!authors[0].id) {
-    return authors[0].user_name
-  } else {
-    return authors[0].user_name
-  }
-}
-
 const myCookBook: NextPage = () => {
 
   const [search, setSearch] = useState("")
 
 
-  const { data: recipe_response, loading } = useSavedRecipesQuery();
+  const { data: recipe_response, loading, fetchMore } = useSavedRecipesQuery();
 
   if (loading) {
     return (
@@ -34,7 +27,10 @@ const myCookBook: NextPage = () => {
     )
   } else {
 
-    let recipe_data = recipe_response!.getSavedRecipes?.savedRecipes as Recipe[];
+    let recipe_data = recipe_response!.getSavedRecipes?.recipes as Recipe[];
+    console.log(recipe_response);
+
+
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
       //Fix this and add debounce
@@ -58,15 +54,27 @@ const myCookBook: NextPage = () => {
         {/* Grid of recipies */}
         {
           recipe_data && recipe_data.length ?
-            <SimpleGrid columns={2}>
-              {recipe_data.map((recipe: Recipe) => (
-                <RecipeCard key={recipe.recipe_title} recipe={recipe} />
-              ))}
-            </SimpleGrid>
+            <React.Fragment>
+              <SimpleGrid columns={2}>
+                {recipe_data.map((recipe: Recipe) => (
+                  <RecipeCard key={recipe.recipe_title} recipe={recipe} />
+                ))}
+              </SimpleGrid>
+              <Center>
+                <Button disabled={!recipe_response?.getSavedRecipes?.pageInfo.hasNextPage} onClick={() => {
+                  fetchMore({
+                    variables: {
+                      cursor: recipe_response?.getSavedRecipes?.pageInfo.endCursor
+                    }
+                  })
+                }}>Load more</Button>
+              </Center>
+            </React.Fragment>
             :
             <Center>
               <p>No search results</p>
             </Center>
+
         }
 
 

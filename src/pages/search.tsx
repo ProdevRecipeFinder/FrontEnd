@@ -33,7 +33,7 @@ const Search: NextPage<SearchProps> = () => {
     }
 
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "searchRecipes" })
-    const getStuff = async () => {
+    const getSaveStatus = async () => {
       const { data: savedRecipes } = await apolloClient.query({
         query: GetSavedStatusDocument,
         variables: {
@@ -45,7 +45,7 @@ const Search: NextPage<SearchProps> = () => {
         setSavedRecipes(savedRecipes.getSavedStatus)
     }
 
-    getStuff()
+    getSaveStatus()
   }, [router.query.q, searchResults])
 
   const displaySearchResults = (searchResults: Recipe[]) => {
