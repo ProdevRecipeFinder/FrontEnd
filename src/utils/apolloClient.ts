@@ -1,8 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
-import getConfig from 'next/config';
 import { PaginatedRecipe } from '../generated/graphql';
-
-const { publicRuntimeConfig } = getConfig();
 
 function createApolloClient() {
     return new ApolloClient({
