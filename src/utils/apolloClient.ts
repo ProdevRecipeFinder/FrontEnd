@@ -1,5 +1,6 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import getConfig from 'next/config';
+import { PaginatedRecipe } from '../generated/graphql';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -10,7 +11,38 @@ function createApolloClient() {
             uri: 'http://localhost:4000/graphql',
             credentials: 'include',
         }),
-        cache: new InMemoryCache(),
+        cache: new InMemoryCache({
+            typePolicies: {
+                Query: {
+                    fields: {
+                        searchRecipes: {
+                            keyArgs: [],
+                            merge(
+                                existing: PaginatedRecipe | undefined,
+                                incoming: PaginatedRecipe
+                            ): PaginatedRecipe {
+                                return {
+                                    ...incoming,
+                                    recipes: [...(existing?.recipes || []), ...incoming.recipes]
+                                }
+                            }
+                        },
+                        getSavedRecipes: {
+                            keyArgs: [],
+                            merge(
+                                existing: PaginatedRecipe | undefined,
+                                incoming: PaginatedRecipe
+                            ): PaginatedRecipe {
+                                return {
+                                    ...incoming,
+                                    recipes: [...(existing?.recipes || []), ...incoming.recipes]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }),
     });
 }
 

@@ -70,10 +70,8 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       })
     }
     setIsSaved(!isSaved)
-    console.log(apolloClient.cache.extract())
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedStatus" })
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes" })
-    console.log(apolloClient.cache.extract())
   }
 
 

@@ -123,13 +123,25 @@ export type MutationUpdateRecipeArgs = {
   input: RecipeInput;
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['Float']>;
+  hasNextPage: Scalars['Boolean'];
+};
+
+export type PaginatedRecipe = {
+  __typename?: 'PaginatedRecipe';
+  pageInfo: PageInfo;
+  recipes: Array<Recipe>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllRecipes?: Maybe<Array<Recipe>>;
   getOneRecipe?: Maybe<Recipe>;
-  getSavedRecipes?: Maybe<User>;
+  getSavedRecipes?: Maybe<PaginatedRecipe>;
   getSavedStatus: Array<Scalars['Boolean']>;
-  searchRecipes: Array<Recipe>;
+  searchRecipes: PaginatedRecipe;
   whoami?: Maybe<User>;
 };
 
@@ -139,12 +151,20 @@ export type QueryGetOneRecipeArgs = {
 };
 
 
+export type QueryGetSavedRecipesArgs = {
+  cursor?: InputMaybe<Scalars['Float']>;
+  limit?: InputMaybe<Scalars['Float']>;
+};
+
+
 export type QueryGetSavedStatusArgs = {
   recipe_ids: Array<Scalars['Float']>;
 };
 
 
 export type QuerySearchRecipesArgs = {
+  cursor?: InputMaybe<Scalars['Float']>;
+  limit?: InputMaybe<Scalars['Float']>;
   search: Scalars['String'];
 };
 
@@ -211,7 +231,6 @@ export type User = {
   created_at: Scalars['DateTime'];
   email: Scalars['String'];
   id: Scalars['Float'];
-  savedRecipes?: Maybe<Array<Recipe>>;
   updated_at: Scalars['DateTime'];
   user_name: Scalars['String'];
 };
@@ -318,17 +337,22 @@ export type GetSavedStatusQueryVariables = Exact<{
 
 export type GetSavedStatusQuery = { __typename?: 'Query', getSavedStatus: Array<boolean> };
 
-export type SavedRecipesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SavedRecipesQuery = { __typename?: 'Query', getSavedRecipes?: { __typename?: 'User', savedRecipes?: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null }> | null } | null };
-
-export type SearchRecipesQueryVariables = Exact<{
-  query: Scalars['String'];
+export type SavedRecipesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Float']>;
+  cursor?: InputMaybe<Scalars['Float']>;
 }>;
 
 
-export type SearchRecipesQuery = { __typename?: 'Query', searchRecipes: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }> };
+export type SavedRecipesQuery = { __typename?: 'Query', getSavedRecipes?: { __typename?: 'PaginatedRecipe', recipes: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } } | null };
+
+export type SearchRecipesQueryVariables = Exact<{
+  query: Scalars['String'];
+  limit?: InputMaybe<Scalars['Float']>;
+  cursor?: InputMaybe<Scalars['Float']>;
+}>;
+
+
+export type SearchRecipesQuery = { __typename?: 'Query', searchRecipes: { __typename?: 'PaginatedRecipe', recipes: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } } };
 
 export type WhoAmIQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -826,31 +850,19 @@ export type GetSavedStatusQueryHookResult = ReturnType<typeof useGetSavedStatusQ
 export type GetSavedStatusLazyQueryHookResult = ReturnType<typeof useGetSavedStatusLazyQuery>;
 export type GetSavedStatusQueryResult = Apollo.QueryResult<GetSavedStatusQuery, GetSavedStatusQueryVariables>;
 export const SavedRecipesDocument = gql`
-    query SavedRecipes {
-  getSavedRecipes {
-    savedRecipes {
+    query SavedRecipes($limit: Float, $cursor: Float) {
+  getSavedRecipes(limit: $limit, cursor: $cursor) {
+    recipes {
       id
       recipe_title
       recipe_desc
-      prep_time_minutes
-      cook_time_minutes
-      total_time_minutes
-      footnotes
-      original_url
       photo_url
       rating_stars
       review_count
-      recipeAuthors {
-        user_name
-      }
-      recipeIngredients {
-        ingredient_qty
-        ingredient_unit
-        ingredient_name
-      }
-      recipeSteps {
-        step_desc
-      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
     }
   }
 }
@@ -868,6 +880,8 @@ export const SavedRecipesDocument = gql`
  * @example
  * const { data, loading, error } = useSavedRecipesQuery({
  *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
@@ -883,14 +897,20 @@ export type SavedRecipesQueryHookResult = ReturnType<typeof useSavedRecipesQuery
 export type SavedRecipesLazyQueryHookResult = ReturnType<typeof useSavedRecipesLazyQuery>;
 export type SavedRecipesQueryResult = Apollo.QueryResult<SavedRecipesQuery, SavedRecipesQueryVariables>;
 export const SearchRecipesDocument = gql`
-    query SearchRecipes($query: String!) {
-  searchRecipes(search: $query) {
-    id
-    recipe_title
-    recipe_desc
-    photo_url
-    rating_stars
-    review_count
+    query SearchRecipes($query: String!, $limit: Float, $cursor: Float) {
+  searchRecipes(search: $query, limit: $limit, cursor: $cursor) {
+    recipes {
+      id
+      recipe_title
+      recipe_desc
+      photo_url
+      rating_stars
+      review_count
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
   }
 }
     `;
@@ -908,6 +928,8 @@ export const SearchRecipesDocument = gql`
  * const { data, loading, error } = useSearchRecipesQuery({
  *   variables: {
  *      query: // value for 'query'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
