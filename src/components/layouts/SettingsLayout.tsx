@@ -1,13 +1,16 @@
 import {
-  Avatar, Box, Button,
-  Divider, Stack
+  Avatar, 
+  Box, 
+  Button,
+  Divider, 
+  Stack
 } from "@chakra-ui/react"
-import React from "react"
 import SettingsNavigationMenu from "../../components/SettingsNavigationMenu/SettingsNavigationMenu"
-import { useWhoAmIQuery } from "../../generated/graphql"
-import styles from "../../styles/settings.module.css"
-import { checkUserAuth } from "../../utils/checkUserAuth"
-import DefaultLayout from "./DefaultLayout"
+import { useWhoAmIQuery }     from "../../generated/graphql"
+import { checkUserAuth }      from "../../utils/checkUserAuth"
+import DefaultLayout          from "./DefaultLayout"
+import React                  from "react"
+import styles                 from "../../styles/settings.module.css"
 
 
 interface Props {
@@ -15,11 +18,12 @@ interface Props {
 }
 
 const SettingsLayout = ({ children }: Props) => {
-  const { data: userData } = useWhoAmIQuery();
-  checkUserAuth();
+  const { data: userData } = useWhoAmIQuery()
+  checkUserAuth()
 
   return (
     <DefaultLayout>
+      
       {/* Avatar and username at the top of the page */}
       <Box id={styles.account}>
         <Avatar size={'md'} src={'https://avatars.dicebear.com/api/male/username.svg'} marginRight={"0.5em"} />
@@ -40,10 +44,10 @@ const SettingsLayout = ({ children }: Props) => {
         <Box w="65em">
           {children}
         </Box>
-
       </Stack>
+
     </DefaultLayout>
   )
 }
 
-export default SettingsLayout;
+export default SettingsLayout

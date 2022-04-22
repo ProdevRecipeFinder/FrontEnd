@@ -1,10 +1,10 @@
 import {
-  Box, Button, Divider, useToast
+  Box, Button, Divider, useToast, Stack
 } from "@chakra-ui/react"
 import { Form, Formik } from 'formik'
 import React from "react"
 import styles from "../../styles/settings.module.css"
-import { InputField } from "../../components/InputField"
+import InputField from "../../components/InputField"
 import { useChangeUsernameMutation, WhoAmIQuery, WhoAmIDocument, useRequestDeleteAccountMutation } from "../../generated/graphql"
 import { convertErrorMsg } from "../../utils/convertErrorMsg"
 
@@ -59,9 +59,10 @@ const account = () => {
         >
           {
             ({ isSubmitting }) => (
-              <Form style={{ width: "25em" }}>
-                <InputField name="username" label="Username" style={{ width: "75%", float: "left" }} />
-                <Button type="submit" isLoading={isSubmitting} w="20%" float="right">Save</Button>
+              <Form style={{ width: "25em"}}>
+                <InputField name="username" label="Username" />
+                <br />
+                <Button type="submit" isLoading={isSubmitting}>Save</Button>
               </Form>
             )
           }

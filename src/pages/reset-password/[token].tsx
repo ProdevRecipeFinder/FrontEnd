@@ -6,7 +6,7 @@ import {
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React from "react"
-import { InputField } from '../../components/InputField'
+import InputField from '../../components/InputField'
 import { useChangeForgotPasswordMutation } from "../../generated/graphql"
 import styles from "../../styles/reset-password.module.css"
 import { convertErrorMsg } from "../../utils/convertErrorMsg"

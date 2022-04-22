@@ -4,7 +4,7 @@ import {
 import { Form, Formik } from 'formik'
 import Link from "next/link"
 import React from "react"
-import { InputField } from '../../components/InputField'
+import InputField from '../../components/InputField'
 import { useChangePasswordMutation } from "../../generated/graphql"
 import styles from "../../styles/settings.module.css"
 import { convertErrorMsg } from "../../utils/convertErrorMsg"

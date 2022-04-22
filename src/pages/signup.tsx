@@ -5,12 +5,12 @@ import { useRouter } from 'next/router';
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { InputField } from "../components/InputField";
+import InputField from "../components/InputField";
 import { useRegisterMutation, WhoAmIDocument, WhoAmIQuery } from "../generated/graphql";
 import { convertErrorMsg } from "../utils/convertErrorMsg";
+import type { NextPage }  from 'next'
 
-
-const signUp = () => {
+const SignUp: NextPage = () => {
   const router = useRouter();
   const [register] = useRegisterMutation();
   const toast = useToast()
@@ -148,4 +148,4 @@ const signUp = () => {
   );
 };
 
-export default signUp;
+export default SignUp;

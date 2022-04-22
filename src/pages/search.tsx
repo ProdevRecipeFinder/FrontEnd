@@ -1,11 +1,20 @@
-import { Center, SimpleGrid, Button } from "@chakra-ui/react";
+import { 
+  Center, 
+  SimpleGrid, 
+  Button 
+} from "@chakra-ui/react";
+import { 
+  GetSavedStatusDocument, 
+  useSearchRecipesQuery, 
+  Recipe
+} from "../generated/graphql";
+import React, { 
+  useEffect, 
+  useState } from "react";
+  import { useRouter } from "next/router";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
 import RecipeCard from "../components/Recipe/RecipeCard";
-import { GetSavedStatusDocument, Recipe, SearchRecipesDocument, useSearchRecipesQuery } from "../generated/graphql";
 import { initializeApollo } from '../utils/apollo'
-import StackGrid from "react-stack-grid"
 
 interface SearchProps {
   searchResults: any

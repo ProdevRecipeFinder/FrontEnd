@@ -6,7 +6,7 @@ import {
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { Form, Formik } from 'formik'
 import React, { useState } from "react"
-import { InputField } from '../../components/InputField'
+import InputField from '../../components/InputField'
 import { useForgotPasswordMutation } from "../../generated/graphql"
 import styles from "../../styles/reset-password.module.css"
 
