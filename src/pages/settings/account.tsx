@@ -1,17 +1,28 @@
 import {
-  Box, Button, Divider, useToast, Stack
+  Box, 
+  Button, 
+  Divider, 
+  useToast,
 } from "@chakra-ui/react"
-import { Form, Formik } from 'formik'
-import React from "react"
-import styles from "../../styles/settings.module.css"
-import InputField from "../../components/InputField"
-import { useChangeUsernameMutation, WhoAmIQuery, WhoAmIDocument, useRequestDeleteAccountMutation } from "../../generated/graphql"
-import { convertErrorMsg } from "../../utils/convertErrorMsg"
+import { 
+  WhoAmIQuery, 
+  WhoAmIDocument, 
+  useChangeUsernameMutation, 
+  useRequestDeleteAccountMutation 
+} from "../../generated/graphql"
+import { convertErrorMsg }  from "../../utils/convertErrorMsg"
+import { Form, Formik }     from 'formik'
+import InputField           from "../../components/InputField"
+import React                from "react"
+import styles               from "../../styles/settings.module.css"
 
 const account = () => {
+  // Hooks
+  const toast = useToast()
+  
+  // Mutations
   const [changeUsername] = useChangeUsernameMutation()
   const [requestDeleteAccount] = useRequestDeleteAccountMutation()
-  const toast = useToast()
 
   return (
     <React.Fragment>

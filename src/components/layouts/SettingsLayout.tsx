@@ -10,7 +10,7 @@ import { useWhoAmIQuery }     from "../../generated/graphql"
 import { checkUserAuth }      from "../../utils/checkUserAuth"
 import DefaultLayout          from "./DefaultLayout"
 import React                  from "react"
-import styles                 from "../../styles/settings.module.css"
+import styles                 from "./settings.module.css"
 
 
 interface Props {

@@ -1,41 +1,46 @@
 import {
-  Button, Center,
+  useToast,
+  Button, 
+  Center,
   VStack,
-  useToast
 } from "@chakra-ui/react"
-import { Form, Formik } from 'formik'
-import { useRouter } from 'next/router'
-import React from "react"
-import InputField from '../../components/InputField'
-import { useChangeForgotPasswordMutation } from "../../generated/graphql"
-import styles from "../../styles/reset-password.module.css"
-import { convertErrorMsg } from "../../utils/convertErrorMsg"
-
+import { useChangeForgotPasswordMutation }  from "../../generated/graphql"
+import { convertErrorMsg }                  from "../../utils/convertErrorMsg"
+import { Form, Formik }                     from 'formik'
+import { useRouter }                        from 'next/router'
+import InputField                           from '../../components/InputField'
+import styles                               from "./reset-password.module.css"
+import React                                from "react"
 
 const ResetPassword = () => {
+  // Hooks
   const router = useRouter()
-  const token = router.query.token as string
   const toast = useToast()
-
+  
+  // Mutations
   const [changeForgotPassword] = useChangeForgotPasswordMutation()
-
+  
+  // State
+  const token = router.query.token as string
+  
+  // Render
   return (
     <React.Fragment>
+
+      {/* Title */}
       <Center>
         <h1 id="title">Reset Password</h1>
       </Center>
+
+      { /* Form */ }
       <Center>
         <VStack id={styles.resetBox} w="40em">
           <Formik
             initialValues={{ password: "", confirmNewPassword: "" }}
             onSubmit={async (values, { setErrors }) => {
 
-              if (values.password !== values.confirmNewPassword) {
-                setErrors({
-                  password: "Passwords do not match",
-                })
-                return
-              }
+              if (values.password !== values.confirmNewPassword)
+                return setErrors({ password: "Passwords do not match" })
 
               const response = await changeForgotPassword({
                 variables: {
@@ -44,10 +49,8 @@ const ResetPassword = () => {
                 }
               })
 
-              if (response.data?.changeForgotPassword.errors) {
-                setErrors(convertErrorMsg(response.data.changeForgotPassword.errors))
-                return
-              }
+              if (response.data?.changeForgotPassword.errors)
+                return setErrors(convertErrorMsg(response.data.changeForgotPassword.errors))
 
               //handle success
               toast({

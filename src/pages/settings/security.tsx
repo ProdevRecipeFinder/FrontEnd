@@ -1,19 +1,26 @@
 import {
-  Box, Button, Divider, Stack, useToast
+  Box, 
+  Button,
+  Divider, 
+  Stack, 
+  useToast
 } from "@chakra-ui/react"
-import { Form, Formik } from 'formik'
-import Link from "next/link"
-import React from "react"
-import InputField from '../../components/InputField'
-import { useChangePasswordMutation } from "../../generated/graphql"
-import styles from "../../styles/settings.module.css"
-import { convertErrorMsg } from "../../utils/convertErrorMsg"
-
+import { useChangePasswordMutation }  from "../../generated/graphql"
+import { convertErrorMsg }            from "../../utils/convertErrorMsg"
+import { Form, Formik }               from 'formik'
+import InputField                     from '../../components/InputField'
+import styles                         from "../../styles/settings.module.css"
+import React                          from "react"
+import Link                           from "next/link"
 
 const Security = () => {
+  // Hooks
   const toast = useToast()
+  
+  // Mutations
   const [changePassword] = useChangePasswordMutation()
 
+  // Render
   return (
     <React.Fragment>
       <Box className={styles.container}>
@@ -26,12 +33,9 @@ const Security = () => {
         <Formik
           initialValues={{ oldPassword: "", password: "", confirmNewPassword: "" }}
           onSubmit={async (values, { setErrors, resetForm }) => {
-            if (values.password !== values.confirmNewPassword) {
-              setErrors({
-                password: "Passwords do not match",
-              })
-              return
-            }
+            if (values.password !== values.confirmNewPassword)
+              return setErrors({ password: "Passwords do not match", })
+    
             const response = await changePassword({
               variables: {
                 oldpass: values.oldPassword,
@@ -39,10 +43,9 @@ const Security = () => {
               }
             })
 
-            if (response.data?.changePassword.errors) {
-              setErrors(convertErrorMsg(response.data.changePassword.errors))
-              return
-            }
+            if (response.data?.changePassword.errors)
+              return setErrors(convertErrorMsg(response.data.changePassword.errors))
+              
             // handle success here
             toast({
               title: "Success",
@@ -78,4 +81,4 @@ const Security = () => {
   )
 }
 
-export default Security;
+export default Security

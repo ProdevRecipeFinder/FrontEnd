@@ -1,13 +1,24 @@
-import { HeartSwitch } from '@anatoliygatt/heart-switch'
-import { gql } from '@apollo/client'
-import { Box, Center, Checkbox, Divider, Stack, useToast } from '@chakra-ui/react'
-import { NextPage } from 'next'
-import { useRouter } from 'next/router'
+import { 
+  useToast, 
+  Divider, 
+  Checkbox, 
+  Center, 
+  Stack, 
+  Box, 
+} from '@chakra-ui/react'
+import { 
+  useDeleteSavedRecipeMutation, 
+  useSaveRecipeToUserMutation, 
+  GetSavedStatusDocument, 
+  GetOneRecipeDocument, 
+  useWhoAmIQuery, 
+  Recipe, 
+} from '../../generated/graphql'
 import React, { useEffect, useState } from "react"
-import { Recipe, useDeleteSavedRecipeMutation, GetOneRecipeDocument, GetSavedStatusDocument, useSaveRecipeToUserMutation, useWhoAmIQuery } from '../../generated/graphql'
-import { initializeApollo } from '../../utils/apollo'
-import { useGetIntId } from '../../utils/getIdFromUrl'
-import styles from "./Recipe.module.css"
+import { initializeApollo }           from '../../utils/apollo'
+import { HeartSwitch }                from '@anatoliygatt/heart-switch'
+import { NextPage }                   from 'next'
+import styles                         from "./Recipe.module.css"
 
 interface Props {
   recipe: Recipe,
@@ -15,13 +26,20 @@ interface Props {
 }
 
 const Recipe: NextPage<Props> = ({ recipe }) => {
-  const router = useRouter()
-  const [isSaved, setIsSaved] = useState<boolean>(false);
+  // Hooks
   const apolloClient = initializeApollo();
-  const { data: whoAmI } = useWhoAmIQuery()
   const toast = useToast()
 
-  useEffect(() => {
+  // Queries and Mutations
+  const { data: whoAmI } = useWhoAmIQuery()
+  const [saveRecipe] = useSaveRecipeToUserMutation();
+  const [unsaveRecipe] = useDeleteSavedRecipeMutation();
+
+  // State
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+
+  // Effects
+  useEffect(() => { // Get saved status of this recipe
     const getIsSaved = async () => {
       const { data: savedStatus } = await apolloClient.query({
         query: GetSavedStatusDocument,
@@ -32,13 +50,9 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       setIsSaved(savedStatus.getSavedStatus[0])
     }
 
-    if (whoAmI?.whoami)
+    if (whoAmI?.whoami) // Only run if user is logged in
       getIsSaved()
   }, [])
-
-  // GraphQL API
-  const [saveRecipe] = useSaveRecipeToUserMutation();
-  const [unsaveRecipe] = useDeleteSavedRecipeMutation();
 
   async function updateSaveStatus() {
     if (isSaved) {
@@ -69,15 +83,15 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         isClosable: true
       })
     }
-    setIsSaved(!isSaved)
+    setIsSaved(!isSaved) // Toggle saved status
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedStatus" })
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes" })
   }
 
-
+  // Render
   return (
-
     <React.Fragment>
+      { /* Page Title */}
       <Center>
         <Stack direction={"column"} >
           <h1 className="title" style={{ fontWeight: "bold", textAlign: "center" }}>{recipe!.recipe_title}</h1>
@@ -89,6 +103,8 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       <br />
 
       <Stack direction={"row"}>
+
+        { /* Recipe Image and information summary */}
         <Stack direction={"column"} width="50%">
           <Box>
             <img
@@ -107,7 +123,8 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
             </Stack>
           </Box>
         </Stack>
-
+        
+        { /* Recipe Ingredients and switch to save */}
         <Stack className={styles.ingredientsBox} direction={"column"} width="50%">
           {
             !(whoAmI?.whoami) ? null :
@@ -127,10 +144,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
                     }}
                   />
                   {
-                    isSaved ?
-                      <p>Saved</p>
-                      :
-                      <p>Not Saved</p>
+                    isSaved ? <p>Saved</p> : <p>Not Saved</p>
                   }
                 </Box>
               </Center>
@@ -152,6 +166,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
 
       <br />
 
+      { /* Recipe Steps */}
       <Stack>
         <h2 className="title">Instructions</h2>
         <Divider />
@@ -167,6 +182,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
 
       <br />
 
+      { /* Recipe Notes */}
       {
         recipe.footnotes?.length ?
           <Stack>
@@ -187,11 +203,9 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   )
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: any) { // Get recipe from url id parameter
   const apolloClient = initializeApollo();
   const recipeId = context.query.id;
-
-  console.log("before")
 
   const recipeData = await apolloClient.query({
     query: GetOneRecipeDocument,
@@ -199,8 +213,6 @@ export async function getServerSideProps(context: any) {
       id: parseInt(recipeId)
     }
   })
-
-  console.log("after")
 
   return {
     props: {

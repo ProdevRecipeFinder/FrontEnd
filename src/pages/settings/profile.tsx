@@ -1,21 +1,19 @@
-import {
-    Box, Divider
-} from "@chakra-ui/react"
-import React from "react"
-import styles from "../../styles/settings.module.css"
+import { Box, Divider } from "@chakra-ui/react"
+import React            from "react"
+import styles           from "../../styles/settings.module.css"
 
 const profile = () => {
-    return (
-        <React.Fragment>
-            <Box className={styles.container}>
-                <h1 className="title">Public Profile</h1>
+  return (
+    <React.Fragment>
+      <Box className={styles.container}>
+        <h1 className="title">Public Profile</h1>
 
-                <Divider />
-                <br />
+        <Divider />
+        <br />
 
-            </Box>
-        </React.Fragment>
-    )
+      </Box>
+    </React.Fragment>
+  )
 }
 
 export default profile;
