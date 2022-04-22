@@ -18,9 +18,13 @@ interface Props {
 }
 
 const SettingsLayout = ({ children }: Props) => {
-  const { data: userData } = useWhoAmIQuery()
+  // Check authentication
   checkUserAuth()
 
+  // Queries
+  const { data: userData } = useWhoAmIQuery()
+
+  // Render
   return (
     <DefaultLayout>
       

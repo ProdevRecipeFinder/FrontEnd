@@ -5,11 +5,16 @@ import {
 } from "@chakra-ui/react"
 import { Recipe, useSavedRecipesQuery } from "../generated/graphql"
 import React, { useState }              from "react"
+import { checkUserAuth }                from "../utils/checkUserAuth"
 import { SimpleGrid }                   from '@chakra-ui/react'
 import { NextPage }                     from "next"
 import RecipeCard                       from "../components/Recipe/RecipeCard"
+import { readyException } from "cypress/types/jquery"
 
 const MyCookBook: NextPage = () => {
+  // Check authentication
+  checkUserAuth()
+
   // Hooks and Queries
   const { data: recipeResponse, loading, fetchMore } = useSavedRecipesQuery();
   const [search, setSearch] = useState("")
@@ -19,16 +24,18 @@ const MyCookBook: NextPage = () => {
   if (!loading && !recipeResponse?.getSavedRecipes)
     return ( <Center>No recipes added to Cookbook</Center> )
   
+  
   let recipeData = recipeResponse!.getSavedRecipes?.recipes as Recipe[];
 
-  // Handlers
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value)
+  // Functions
+  const localSearch = () => {
+    if (search === "") 
+      return recipeData
     const filteredData = recipeData.filter(recipe => { // Return only the recipes that match the search
-      const toSearch = [recipe.recipe_title, recipe.recipe_desc, recipe.recipeAuthors![0].user_name]
-      return toSearch.some(str => str.toLowerCase().includes(e.target.value.toLowerCase().trim()))
+      const toSearch = [recipe.recipe_title, recipe.recipe_desc]
+      return toSearch.some(str => str.toLowerCase().includes(search.toLowerCase().trim()))
     })
-    recipeData = filteredData
+    return filteredData
   }
 
   // Render
@@ -36,7 +43,7 @@ const MyCookBook: NextPage = () => {
     <React.Fragment>
 
       {/* An input search bar */}
-      <Input type="search" variant="flushed" placeholder="Search" value={search} onChange={handleSearch} />
+      <Input type="search" variant="flushed" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
 
       <br /> <br />
 
@@ -45,7 +52,7 @@ const MyCookBook: NextPage = () => {
         recipeData && recipeData.length ?
           <React.Fragment>
             <SimpleGrid columns={2}>
-              {recipeData.map((recipe: Recipe) => (
+              {localSearch().map((recipe: Recipe) => (
                 <RecipeCard key={recipe.recipe_title} recipe={recipe} />
               ))}
             </SimpleGrid>

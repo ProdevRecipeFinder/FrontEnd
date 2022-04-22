@@ -12,8 +12,8 @@ export const checkUserAuth = async () => {
       const { data: authorized } = await apolloClient.query({
         query: WhoAmIDocument,
       })
-      if (!authorized.whoami.id)
-        router.replace("/login?next=" + router.pathname)
+      if (!authorized.whoami)
+        router.replace("/login?next=" + router.pathname) // fix this
     }
     userStatus()
   }, [router])
