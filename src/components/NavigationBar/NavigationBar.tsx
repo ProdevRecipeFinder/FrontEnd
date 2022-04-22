@@ -70,8 +70,9 @@ const NavigationBar = () => {
     router.push("/search?q=" + urlencode(searchQuery))
   }
   const handleLogout = async () => {
-    await logout()
     await apolloClient.resetStore()
+    await logout()
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "whoami" })
     toast({
       title: "Success",
       description: "Logout successful",
