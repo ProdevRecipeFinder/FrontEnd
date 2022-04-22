@@ -16,23 +16,26 @@ const Search: NextPage<SearchProps> = () => {
   const router = useRouter();
   const searchQuery = typeof router.query.q === "string" ? router.query.q : "empty";
 
+  
   const { data: searchResultsData, loading, fetchMore } = useSearchRecipesQuery({
     variables: {
       query: searchQuery,
     },
     skip: searchQuery === "empty"
   })
-
+  
   const searchResults = searchResultsData?.searchRecipes.recipes as Recipe[];
-
+  
   const [savedRecipes, setSavedRecipes] = useState<Boolean[]>([]);
-
+  
   useEffect(() => {
+    console.log("searchQuery: " + searchQuery + ", searchResults.length: " + searchResults);
     if (searchQuery === "empty" || searchResults === undefined) {
-      return
+        return
     }
 
-    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "searchRecipes" })
+    // apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "searchRecipes" })
+    apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedStatus"})
     const getSaveStatus = async () => {
       const { data: savedRecipes } = await apolloClient.query({
         query: GetSavedStatusDocument,
@@ -41,11 +44,20 @@ const Search: NextPage<SearchProps> = () => {
         }
       })
 
-      if (savedRecipes.getSavedStatus.length)
+      if (savedRecipes.getSavedStatus.length) {
         setSavedRecipes(savedRecipes.getSavedStatus)
+        apolloClient.cache.modify({
+          id: "ROOT_QUERY",
+          fields: {
+            getSavedStatus() {
+              return savedRecipes.getSavedStatus
+            }
+          }
+        })
+      }
     }
 
-    getSaveStatus()
+      getSaveStatus()
   }, [router.query.q, searchResults])
 
   const displaySearchResults = (searchResults: Recipe[]) => {

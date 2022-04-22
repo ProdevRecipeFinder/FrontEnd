@@ -37,6 +37,8 @@ const Nav = () => {
 
     const handleSearch = (event: any) => {
         event.preventDefault()
+        apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "searchRecipes" })
+        apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedStatus"})
         router.push("/search?q=" + urlencode(searchQuery))
     }
 
