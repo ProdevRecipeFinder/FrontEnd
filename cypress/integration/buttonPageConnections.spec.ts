@@ -46,7 +46,7 @@ describe("Test button and link connections work and point to corretct pages", ()
   it("MyCookbook button should work", () => {
     cy.visit("/")
     cy.get("#hamburgerButton").click()
-    cy.get(".chakra-button").contains("My Cook Book").click().wait(1000)
+    cy.get(".chakra-button").contains("My Cookbook").click().wait(1000)
     cy.url().should("eq", "http://localhost:3000/my-cookbook")
   })
 
