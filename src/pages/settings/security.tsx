@@ -9,7 +9,7 @@ import { useChangePasswordMutation }  from "../../generated/graphql"
 import { convertErrorMsg }            from "../../utils/convertErrorMsg"
 import { Form, Formik }               from 'formik'
 import InputField                     from '../../components/InputField'
-import styles                         from "../../styles/settings.module.css"
+import styles                         from "./settings.module.css"
 import React                          from "react"
 import Link                           from "next/link"
 

@@ -13,8 +13,8 @@ import {
 import { convertErrorMsg }  from "../../utils/convertErrorMsg"
 import { Form, Formik }     from 'formik'
 import InputField           from "../../components/InputField"
+import styles               from "./settings.module.css"
 import React                from "react"
-import styles               from "../../styles/settings.module.css"
 
 const account = () => {
   // Hooks

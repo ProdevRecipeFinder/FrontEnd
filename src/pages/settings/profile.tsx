@@ -1,6 +1,6 @@
 import { Box, Divider } from "@chakra-ui/react"
 import React            from "react"
-import styles           from "../../styles/settings.module.css"
+import styles           from "./settings.module.css"
 
 const profile = () => {
   return (

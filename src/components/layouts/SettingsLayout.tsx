@@ -9,9 +9,9 @@ import SettingsNavigationMenu from "../../components/SettingsNavigationMenu/Sett
 import { useWhoAmIQuery }     from "../../generated/graphql"
 import { checkUserAuth }      from "../../utils/checkUserAuth"
 import DefaultLayout          from "./DefaultLayout"
+import NextLink               from "next/link"
 import React                  from "react"
-import styles                 from "./settings.module.css"
-
+import styles                 from "./settingsLayout.module.css"
 
 interface Props {
   children?: React.ReactNode;
