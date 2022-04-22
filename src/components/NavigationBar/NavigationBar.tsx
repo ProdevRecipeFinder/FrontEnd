@@ -98,7 +98,7 @@ const NavigationBar = () => {
               {/* Sidebar links */}
               <NavigationBarItem onClick={onClose} href={"/"} text={"Home"} icon={faHome} />
               {userData?.whoami?.id ?
-                <NavigationBarItem onClick={onClose} href={"/my-cookbook/"} text={"My Cook Book"} icon={faBookOpen} />
+                <NavigationBarItem onClick={onClose} href={"/my-cookbook/"} text={"My Cookbook"} icon={faBookOpen} />
                 : null
               }
               <NavigationBarItem onClick={onClose} href={"/"} text={"About"} icon={faCircleInfo} />

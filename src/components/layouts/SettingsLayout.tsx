@@ -14,7 +14,7 @@ import styles                 from "./settings.module.css"
 
 
 interface Props {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 const SettingsLayout = ({ children }: Props) => {
@@ -26,11 +26,17 @@ const SettingsLayout = ({ children }: Props) => {
       
       {/* Avatar and username at the top of the page */}
       <Box id={styles.account}>
-        <Avatar size={'md'} src={'https://avatars.dicebear.com/api/male/username.svg'} marginRight={"0.5em"} />
-        <p style={{ fontWeight: "500", fontSize: "1.2em" }}>{userData?.whoami?.user_name}</p>
-        <Button marginLeft="auto">
-          Go to Cookbook
-        </Button>
+        <Avatar
+          size={"md"}
+          src={"https://avatars.dicebear.com/api/male/username.svg"}
+          marginRight={"0.5em"}
+        />
+        <p style={{ fontWeight: "500", fontSize: "1.2em" }}>
+          {userData?.whoami?.user_name}
+        </p>
+        <NextLink passHref href="/my-cookbook">
+          <Button marginLeft="auto">Go to My Cookbook</Button>
+        </NextLink>
       </Box>
 
       <Divider marginBottom="1em" marginTop="0.5em" />
@@ -47,7 +53,7 @@ const SettingsLayout = ({ children }: Props) => {
       </Stack>
 
     </DefaultLayout>
-  )
-}
+  );
+};
 
 export default SettingsLayout
