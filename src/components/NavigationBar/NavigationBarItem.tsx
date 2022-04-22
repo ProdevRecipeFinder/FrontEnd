@@ -1,16 +1,16 @@
-import type { IconDefinition } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button, Center } from "@chakra-ui/react"
-import NextLink from "next/link"
-import useURL from "../../hooks/useURL"
-import styles from "./NavigationBar.module.css"
-import React from "react"
+import type { IconDefinition }  from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon }      from '@fortawesome/react-fontawesome'
+import { Button, Center }       from "@chakra-ui/react"
+import NextLink                 from "next/link"
+import useURL                   from "../../hooks/useURL"
+import styles                   from "./NavigationBar.module.css"
+import React                    from "react"
 
 interface Props {
-  href: string,
-  text: string,
-  icon: IconDefinition,
+  icon: IconDefinition
   onClick?: () => void
+  href: string
+  text: string
 }
 
 const NavigationBarItem = (props: Props) => {

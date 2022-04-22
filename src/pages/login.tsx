@@ -1,32 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react"
 import {
-  Button,
   Checkbox,
-  Link,
+  useToast, 
+  Button,
   Center,
   Image,
+  Link,
   Box,
-  useToast 
-} from "@chakra-ui/react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { Form, Formik } from "formik";
-import NextLink from "next/link";
-import { useRouter } from 'next/router';
-import { InputField } from "../components/InputField";
-import { useLoginMutation, WhoAmIQuery, WhoAmIDocument } from "../generated/graphql";
-import { convertErrorMsg } from "../utils/convertErrorMsg";
+} from "@chakra-ui/react"
+import { 
+  useLoginMutation, 
+  WhoAmIDocument,
+  useWhoAmIQuery,
+  WhoAmIQuery
+} from "../generated/graphql"
+import { faFacebook, faTwitter }  from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon }        from '@fortawesome/react-fontawesome'
+import { convertErrorMsg }        from "../utils/convertErrorMsg"
+import type { NextPage }          from 'next'
+import { Form, Formik }           from "formik"
+import { useRouter }              from 'next/router'
+import InputField                 from "../components/InputField"
+import NextLink                   from "next/link"
 
-const Login = () => {
-  const h1Style = { fontSize: "1.5rem" };
+const Login: NextPage = () => {
+  // Hooks 
   const router = useRouter()
-  const [login] = useLoginMutation()
   const toast = useToast()
+  
+  // Mutations and Queries
+  const { data: whoAmI } = useWhoAmIQuery()
+  const [login] = useLoginMutation()
 
+  // Effects
+  useEffect(() => {
+    if (whoAmI?.whoami) {
+      router.push("/")
+    }
+  })
+
+  // Render
   return (
     <React.Fragment>
       <Center>
         <Box style={{ width: "28em" }}>
+
+          {/* Empty avatar and sign up link */}
           <Center>
             <Image
               boxSize="150px"
@@ -37,17 +56,20 @@ const Login = () => {
           </Center>
           <Box>
             <br />
-            <h1 style={h1Style}>Login</h1>
+            <h1 style={{ fontSize: "1.5rem" }}>Login</h1>
             <p>
-              Don't have an account?{" "}
+              Don't have an account?
               <NextLink href="/signup">
-                <Link fontStyle="italic" fontWeight="bold">
+                <Link fontStyle="italic" fontWeight="bold" marginLeft="0.5em">
                   Sign Up
                 </Link>
               </NextLink>
             </p>
           </Box>
+
           <br />
+
+          {/* Login form */}
           <Formik
             initialValues={{ username: "", password: "" }}
             onSubmit={async (values, { setErrors }) => {
@@ -64,13 +86,9 @@ const Login = () => {
                 }
               })
 
-              if (response.data?.login.errors) {
-                //handle errors
-                return setErrors(convertErrorMsg(response.data.login.errors));
-              }
-              else if (response.data?.login.user) {
-                //handle success
-                //send notification saying the user logged in
+              if (response.data?.login.errors) // If there are credential errors
+                return setErrors(convertErrorMsg(response.data.login.errors))
+              else if (response.data?.login.user) { // If there are no errors and the user has logged in successfully
                 toast({
                   title: "Success",
                   description: "Login successful",
@@ -95,7 +113,6 @@ const Login = () => {
                 <Center>
                   <Button
                     type="submit"
-                    colorScheme="red"
                     isFullWidth={true}
                     isLoading={isSubmitting}
                     borderRadius="45"
@@ -110,6 +127,7 @@ const Login = () => {
 
           <br />
 
+          {/* Forgot password */}
           <Center>
             <NextLink href="/reset-password/">
               <Link fontWeight="bold" float="right">
@@ -120,6 +138,7 @@ const Login = () => {
 
           <br />
 
+          {/* Social login */}
           <Box style={{ width: "20em", margin: "auto" }}>
             <Box
               style={{
@@ -129,13 +148,7 @@ const Login = () => {
                 textAlign: "center",
               }}
             >
-              <span
-                style={{
-                  fontSize: "1rem",
-                  padding: "0 1rem",
-                  backgroundColor: "grey",
-                }}
-              >
+              <span style={{ fontSize: "1rem", padding: "0 1rem", backgroundColor: "grey"}} >
                 Or login with
               </span>
             </Box>
@@ -166,6 +179,4 @@ const Login = () => {
   )
 }
 
-
-
-export default Login;
+export default Login

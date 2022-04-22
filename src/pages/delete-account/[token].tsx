@@ -1,25 +1,32 @@
 import {
-  Button, Center,
+  Checkbox,
+  useToast,
   Divider,
+  Button, 
+  Center,
   Stack,
   Box,
-  Checkbox,
-  useToast
 } from "@chakra-ui/react"
-import { useRouter } from 'next/router'
-import React, { useState } from "react"
 import { useDeleteAccountMutation } from "../../generated/graphql"
-import { initializeApollo } from "../../utils/apollo"
-import styles from "./styles.module.css"
+import { initializeApollo }         from "../../utils/apollo"
+import React, { useState }          from "react"
+import { useRouter }                from 'next/router'
+import styles                       from "./delete-account.module.css"
 
 const DeleteAccount = () => {
+  // Hooks
   const router = useRouter()
-  const token = router.query.token as string
-  const apolloClient = initializeApollo();
-  const [agreed, setAgreed] = useState(false)
-  const [deleteAccount] = useDeleteAccountMutation();
+  const apolloClient = initializeApollo()
   const toast = useToast()
+  
+  // Mutations
+  const [deleteAccount] = useDeleteAccountMutation()
+  
+  // State
+  const token = router.query.token as string
+  const [agreed, setAgreed] = useState(false)
 
+  // Render
   return (
     <React.Fragment>
       <Center>
@@ -45,12 +52,10 @@ const DeleteAccount = () => {
         </Box>
         <Center>
           <Button disabled={!agreed} colorScheme="red" onClick={() => {
-            deleteAccount({
-                variables: { token: token }
-              }
-            )
+            deleteAccount({ variables: { token: token } })
+            
             //evict cache
-            apolloClient.resetStore();
+            apolloClient.resetStore()
 
             //notify user
             toast({
@@ -62,15 +67,11 @@ const DeleteAccount = () => {
             })
 
             //launch back to home
-            router.replace("/");
+            router.replace("/")
           }}>Yes, delete my account</Button>
         </Center>
 
       </Stack>
-
-
-
-
     </React.Fragment>
   )
 }

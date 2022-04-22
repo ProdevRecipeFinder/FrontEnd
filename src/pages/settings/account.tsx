@@ -1,17 +1,28 @@
 import {
-  Box, Button, Divider, useToast
+  Box, 
+  Button, 
+  Divider, 
+  useToast,
 } from "@chakra-ui/react"
-import { Form, Formik } from 'formik'
-import React from "react"
-import styles from "../../styles/settings.module.css"
-import { InputField } from "../../components/InputField"
-import { useChangeUsernameMutation, WhoAmIQuery, WhoAmIDocument, useRequestDeleteAccountMutation } from "../../generated/graphql"
-import { convertErrorMsg } from "../../utils/convertErrorMsg"
+import { 
+  WhoAmIQuery, 
+  WhoAmIDocument, 
+  useChangeUsernameMutation, 
+  useRequestDeleteAccountMutation 
+} from "../../generated/graphql"
+import { convertErrorMsg }  from "../../utils/convertErrorMsg"
+import { Form, Formik }     from 'formik'
+import InputField           from "../../components/InputField"
+import React                from "react"
+import styles               from "../../styles/settings.module.css"
 
 const account = () => {
+  // Hooks
+  const toast = useToast()
+  
+  // Mutations
   const [changeUsername] = useChangeUsernameMutation()
   const [requestDeleteAccount] = useRequestDeleteAccountMutation()
-  const toast = useToast()
 
   return (
     <React.Fragment>
@@ -59,9 +70,10 @@ const account = () => {
         >
           {
             ({ isSubmitting }) => (
-              <Form style={{ width: "25em" }}>
-                <InputField name="username" label="Username" style={{ width: "75%", float: "left" }} />
-                <Button type="submit" isLoading={isSubmitting} w="20%" float="right">Save</Button>
+              <Form style={{ width: "25em"}}>
+                <InputField name="username" label="Username" />
+                <br />
+                <Button type="submit" isLoading={isSubmitting}>Save</Button>
               </Form>
             )
           }

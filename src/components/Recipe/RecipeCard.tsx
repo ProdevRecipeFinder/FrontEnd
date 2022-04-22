@@ -1,19 +1,14 @@
-import {
-  Center,
-} from '@chakra-ui/react'
-import NextLink from 'next/link'
-import { Recipe } from '../../generated/graphql'
-import Card from '../Card/Card'
-import { useRouter } from 'next/router'
+import { Center }     from '@chakra-ui/react'
+import { Recipe }     from '../../generated/graphql'
+import NextLink       from 'next/link'
+import Card           from '../Card/Card'
 
 interface Props {
-  recipe: Recipe
   showHeart?: boolean
+  recipe: Recipe
 }
 
 const RecipeCard = ({ recipe, showHeart }: Props) => {
-  const router = useRouter()
-
   return (
     <Center>
       <NextLink href={`/recipe/${recipe.id}`}>

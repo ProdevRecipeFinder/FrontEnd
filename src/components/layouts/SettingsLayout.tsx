@@ -1,22 +1,29 @@
-import { Avatar, Box, Button, Divider, Stack } from "@chakra-ui/react";
-import React from "react";
-import SettingsNavigationMenu from "../../components/SettingsNavigationMenu/SettingsNavigationMenu";
-import { useWhoAmIQuery } from "../../generated/graphql";
-import styles from "../../styles/settings.module.css";
-import { checkUserAuth } from "../../utils/checkUserAuth";
-import DefaultLayout from "./DefaultLayout";
-import NextLink from "next/link";
+import {
+  Avatar, 
+  Box, 
+  Button,
+  Divider, 
+  Stack
+} from "@chakra-ui/react"
+import SettingsNavigationMenu from "../../components/SettingsNavigationMenu/SettingsNavigationMenu"
+import { useWhoAmIQuery }     from "../../generated/graphql"
+import { checkUserAuth }      from "../../utils/checkUserAuth"
+import DefaultLayout          from "./DefaultLayout"
+import React                  from "react"
+import styles                 from "./settings.module.css"
+
 
 interface Props {
   children?: React.ReactNode;
 }
 
 const SettingsLayout = ({ children }: Props) => {
-  const { data: userData } = useWhoAmIQuery();
-  checkUserAuth();
+  const { data: userData } = useWhoAmIQuery()
+  checkUserAuth()
 
   return (
     <DefaultLayout>
+      
       {/* Avatar and username at the top of the page */}
       <Box id={styles.account}>
         <Avatar
@@ -40,10 +47,13 @@ const SettingsLayout = ({ children }: Props) => {
         <Box w="15em">
           <SettingsNavigationMenu />
         </Box>
-        <Box w="65em">{children}</Box>
+        <Box w="65em">
+          {children}
+        </Box>
       </Stack>
+
     </DefaultLayout>
   );
 };
 
-export default SettingsLayout;
+export default SettingsLayout

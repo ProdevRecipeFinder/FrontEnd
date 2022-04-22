@@ -1,18 +1,18 @@
-import React from "react";
-import { Box } from '@chakra-ui/react';
-import styles from "./Card.module.scss"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeartCircleCheck } from "@fortawesome/free-solid-svg-icons";
-import { truncateString } from "../../utils/truncString"
+import { faHeartCircleCheck } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon }    from '@fortawesome/react-fontawesome'
+import { truncateString }     from "../../utils/truncString"
+import { Box }                from '@chakra-ui/react'
+import styles                 from "./Card.module.scss"
+import React                  from "react"
 
 interface Props {
+  showHeart?: boolean
   title: string
   desc: string
-  img: string,
-  showHeart?: boolean
+  img: string
 }
 
-const card = ({title, desc, img, showHeart}: Props) => {
+const Card = ({title, desc, img, showHeart}: Props) => {
   return (
     <React.Fragment>
       <Box className={styles.card}>
@@ -41,4 +41,4 @@ const card = ({title, desc, img, showHeart}: Props) => {
   )
 }
 
-export default card;
+export default Card
