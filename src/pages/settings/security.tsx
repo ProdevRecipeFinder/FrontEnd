@@ -3,7 +3,8 @@ import {
   Button,
   Divider, 
   Stack, 
-  useToast
+  useToast,
+  useBreakpointValue,
 } from "@chakra-ui/react"
 import { useChangePasswordMutation }  from "../../generated/graphql"
 import { convertErrorMsg }            from "../../utils/convertErrorMsg"
@@ -59,7 +60,7 @@ const Security = () => {
           }>
           {
             ({ isSubmitting }) => (
-              <Form style={{ width: "25em" }}>
+              <Form style={{width: useBreakpointValue({ sm: "100%", md: "100%", lg: "50%", })}}>
                 <InputField type="password" name="oldPassword" label="Old password" />
                 <br />
                 <InputField type="password" name="password" label="New password" />

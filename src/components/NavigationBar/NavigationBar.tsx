@@ -2,8 +2,8 @@ import {
   DrawerCloseButton, 
   useColorModeValue, 
   InputRightElement,
+  useOutsideClick,
   useDisclosure, 
-  useColorMode, 
   DrawerOverlay, 
   DrawerContent, 
   DrawerHeader,
@@ -32,27 +32,26 @@ import {
   faBars, 
   faCogs, 
   faHome, 
-  faMoon, 
-  faSun
 } from '@fortawesome/free-solid-svg-icons'
 import { useLogoutMutation, useWhoAmIQuery }  from '../../generated/graphql'
+import { useBreakpointValue }                 from '@chakra-ui/media-query'
+import React, { useState }                    from 'react'
 import { useApolloClient }                    from '@apollo/client'
 import { FontAwesomeIcon }                    from '@fortawesome/react-fontawesome'
-import React, { useState }                    from 'react'
 import NavigationBarItem                      from './NavigationBarItem'
 import { useRouter }                          from 'next/router'
 import urlencode                              from 'urlencode'
 import NextLink                               from 'next/link'
 import styles                                 from "./NavigationBar.module.css"
 
+
 const NavigationBar = () => {
   // Hooks
-  const { colorMode, toggleColorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const apolloClient = useApolloClient()
   const router = useRouter()
   const toast = useToast()
-  
+
   // Mutations and Queries
   const { data: userData } = useWhoAmIQuery()
   const [logout] = useLogoutMutation()
@@ -82,6 +81,27 @@ const NavigationBar = () => {
     })
     router.push('/')
   }
+  const searchBar = (customHandleSearch: null | (() => void) = null) => {
+    return (
+      <React.Fragment>
+        <form onSubmit={(e) => {
+            if(customHandleSearch)
+              customHandleSearch()
+            handleSearch(e)
+          }
+        }>
+          <InputGroup>
+            <Input type="search" placeholder="Search" width="18em" value={searchQuery} onChange={onSearchQueryChange} />
+            <InputRightElement _hover={{ cursor: "pointer" }} children={<FontAwesomeIcon icon={faMagnifyingGlass} onClick={(e) => { 
+              if (customHandleSearch)
+                customHandleSearch()
+              handleSearch(e)
+            }} />} />
+          </InputGroup>
+        </form>
+      </React.Fragment>
+    )
+  }
 
   // Render
   return (
@@ -97,6 +117,9 @@ const NavigationBar = () => {
           <DrawerBody>
             <Stack direction={"column"}>
               {/* Sidebar links */}
+              {
+                useBreakpointValue({ sm: true, md: false }) ? searchBar(() => onClose()) : null
+              }
               <NavigationBarItem onClick={onClose} href={"/"} text={"Home"} icon={faHome} />
               {userData?.whoami?.id ?
                 <NavigationBarItem onClick={onClose} href={"/my-cookbook/"} text={"My Cookbook"} icon={faBookOpen} />
@@ -117,27 +140,19 @@ const NavigationBar = () => {
       {/* Navigation Bar. This appears at the top of the page */}
       <Box padding="0.75em 0" bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
 
-        <h1 id={styles.navTitle}>Recipe Finder</h1>
-
         <Flex alignItems={"center"} justifyContent="space-between">
-          <Stack direction={'row'} spacing={5}>
+          <Stack direction={'row'} spacing={5} align="center">
             <Button onClick={onOpen}>
               <FontAwesomeIcon icon={faBars} fontSize="1.3em" />
             </Button>
-
-            <form onSubmit={handleSearch}>
-              <InputGroup>
-                <Input type="search" placeholder="Search" width="20em" value={searchQuery} onChange={onSearchQueryChange} />
-                <InputRightElement _hover={{ cursor: "pointer" }} onClick={handleSearch} children={<FontAwesomeIcon icon={faMagnifyingGlass} />} />
-              </InputGroup>
-            </form>
+            <h1 id={styles.navTitle}>Recipe Finder</h1>
+            {
+              useBreakpointValue({ sm: false, md: true }) ? searchBar() : null
+            }
           </Stack>
 
           <Flex alignItems={"center"}>
             <Stack direction={'row'} spacing={5}>
-              <Button onClick={toggleColorMode}>
-                <FontAwesomeIcon icon={colorMode === 'light' ? faMoon : faSun} />
-              </Button>
               {/*  If the user is logged in, display user menu. If not, display login button */}
               {
                 userData?.whoami?.id ?

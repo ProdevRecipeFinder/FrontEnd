@@ -1,4 +1,5 @@
 import { 
+  useBreakpointValue,
   useToast, 
   Divider, 
   Checkbox, 
@@ -102,10 +103,10 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
 
       <br />
 
-      <Stack direction={"row"}>
+      <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}>
 
         { /* Recipe Image and information summary */}
-        <Stack direction={"column"} width="50%">
+        <Stack direction={"column"} width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <Box>
             <img
               className={styles.recipeImage}
@@ -125,7 +126,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         </Stack>
         
         { /* Recipe Ingredients and switch to save */}
-        <Stack className={styles.ingredientsBox} direction={"column"} width="50%">
+        <Stack className={styles.ingredientsBox} direction={"column"} width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           {
             !(whoAmI?.whoami) ? null :
               <Center>

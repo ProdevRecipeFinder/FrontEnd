@@ -1,8 +1,9 @@
 import {
-  Box, 
-  Button, 
-  Divider, 
+  useBreakpointValue,
   useToast,
+  Divider, 
+  Button, 
+  Box, 
 } from "@chakra-ui/react"
 import { 
   WhoAmIQuery, 
@@ -70,7 +71,7 @@ const account = () => {
         >
           {
             ({ isSubmitting }) => (
-              <Form style={{ width: "25em"}}>
+              <Form style={{ width: useBreakpointValue({ sm: "100%", md: "100%", lg: "50%", })}}>
                 <InputField name="username" label="Username" />
                 <br />
                 <Button type="submit" isLoading={isSubmitting}>Save</Button>

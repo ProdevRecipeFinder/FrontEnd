@@ -51,11 +51,14 @@ const MyCookBook: NextPage = () => {
       {
         recipeData && recipeData.length ?
           <React.Fragment>
-            <SimpleGrid columns={2}>
+            <SimpleGrid minChildWidth='300px' spacing="1em">
               {localSearch().map((recipe: Recipe) => (
                 <RecipeCard key={recipe.recipe_title} recipe={recipe} />
               ))}
             </SimpleGrid>
+
+            <br />
+            
             <Center>
               <Button disabled={!recipeResponse?.getSavedRecipes?.pageInfo.hasNextPage} onClick={() => {
                 fetchMore({
