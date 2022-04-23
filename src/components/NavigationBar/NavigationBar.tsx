@@ -34,7 +34,8 @@ import {
   faHome, 
 } from '@fortawesome/free-solid-svg-icons'
 import { useLogoutMutation, useWhoAmIQuery }  from '../../generated/graphql'
-import React, { useState, useRef }            from 'react'
+import { useBreakpointValue }                 from '@chakra-ui/media-query'
+import React, { useState }                    from 'react'
 import { useApolloClient }                    from '@apollo/client'
 import { FontAwesomeIcon }                    from '@fortawesome/react-fontawesome'
 import NavigationBarItem                      from './NavigationBarItem'
@@ -43,7 +44,6 @@ import urlencode                              from 'urlencode'
 import NextLink                               from 'next/link'
 import styles                                 from "./NavigationBar.module.css"
 
-import { useBreakpointValue } from '@chakra-ui/media-query'
 
 const NavigationBar = () => {
   // Hooks

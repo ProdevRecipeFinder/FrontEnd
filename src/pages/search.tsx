@@ -41,22 +41,19 @@ const Search: NextPage<SearchProps> = () => {
   
   // Handlers
   const displaySearchResults = (searchResults: Recipe[]) => {
+    if (!searchResults || !searchResults.length)
+      return ( <Center> <p>No search results</p> </Center> )
+
     const plainResult = Object.values(searchResults)
     if (plainResult.length) {
       return (
-        <SimpleGrid columns={2}>
+        <SimpleGrid minChildWidth='300px' spacing="1em">
           {
             plainResult.map((recipe: Recipe, index: number) => <RecipeCard recipe={recipe} key={recipe.id} showHeart={!!savedRecipes[index]} />)
           }
         </SimpleGrid>
       )
-    } else {
-      return (
-        <Center>
-          <p>No search results</p>
-        </Center>
-      )
-    }
+    } 
   }
 
   // Effects
@@ -97,8 +94,9 @@ const Search: NextPage<SearchProps> = () => {
     <React.Fragment>
       {/* Grid of recipies */}
       {
-        searchResults ? displaySearchResults(searchResults) : null
+        displaySearchResults(searchResults)
       }
+      <br />
       <Center>
         <Button disabled={!searchResultsData?.searchRecipes.pageInfo.hasNextPage} onClick={() => {
           fetchMore({ // fetch more results

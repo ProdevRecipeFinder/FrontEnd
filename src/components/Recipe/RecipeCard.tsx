@@ -1,9 +1,10 @@
-import { Center }     from '@chakra-ui/react'
-import { Recipe }     from '../../generated/graphql'
-import NextLink       from 'next/link'
-import Card           from '../Card/Card'
+import { InputHTMLAttributes }  from 'react'
+import { Center }               from '@chakra-ui/react'
+import { Recipe }               from '../../generated/graphql'
+import NextLink                 from 'next/link'
+import Card                     from '../Card/Card'
 
-interface Props {
+interface Props extends InputHTMLAttributes<HTMLDivElement>{
   showHeart?: boolean
   recipe: Recipe
 }
