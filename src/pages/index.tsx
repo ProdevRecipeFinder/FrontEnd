@@ -20,12 +20,12 @@ interface Props {
 const Home: NextPage<Props> = ({ initialApolloState }) => {
     return (
         <React.Fragment>
-            {/* <Head>
-        <title>Home</title>
-        <meta name="description" content="Recipe Finder Home" />
+            <Head>
+        <title>Home- Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Home Page" />
       </Head>
 
-      {JSON.stringify(initialApolloState, null, 2)} */}
+      
 
         </React.Fragment>
     )

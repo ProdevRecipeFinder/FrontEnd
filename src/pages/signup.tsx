@@ -7,7 +7,7 @@ import { FaFacebook, FaTwitter } from "react-icons/fa";
 import { InputField } from "../components/InputField";
 import { useRegisterMutation, WhoAmIDocument, WhoAmIQuery } from "../generated/graphql";
 import { convertErrorMsg } from "../utils/convertErrorMsg";
-
+import Head from 'next/head'
 
 const signUp = () => {
   const router = useRouter();
@@ -16,6 +16,11 @@ const signUp = () => {
   const h1Style = { fontSize: "1.5rem" };
   return (
     <React.Fragment>
+      <Head>
+        <title>Signup - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Signup Page" />
+        </Head>
+
       <Center>
         <Box style={{ width: "28em" }}>
           <Center>

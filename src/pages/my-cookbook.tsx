@@ -7,6 +7,7 @@ import RecipeCard from "../components/Recipe/RecipeCard"
 import { SimpleGrid } from '@chakra-ui/react'
 import { Recipe, User, useSavedRecipesQuery } from "../generated/graphql"
 import { NextPage } from "next"
+import Head from 'next/head'
 
 const getAuthor = (authors: [User]) => {
   if (!authors[0].id) {
@@ -22,7 +23,10 @@ const myCookBook: NextPage = () => {
 
 
   const { data: recipe_response, loading } = useSavedRecipesQuery();
-
+        <Head>
+        <title>My Cookbook- Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Cookbook Page" />
+        </Head>
   if (loading) {
     return (
       <>LOADING</>

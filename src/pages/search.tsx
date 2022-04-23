@@ -8,13 +8,17 @@ import { Center, SimpleGrid } from "@chakra-ui/react";
 import { Recipe } from "../generated/graphql";
 import RecipeCard from "../components/Recipe/RecipeCard";
 import { NextPage } from "next";
+import Head from 'next/head'
 
 interface SearchProps {
   searchResults: any
 }
 
 const Search: NextPage<SearchProps> = ({ searchResults }) => {
-
+        < Head>
+        <title>Search  - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Search Page" />
+        </Head>
   console.log(searchResults);
 
   const displaySearchResults = (searchResults: Recipe[]) => {
@@ -22,7 +26,7 @@ const Search: NextPage<SearchProps> = ({ searchResults }) => {
     const queryString = urlencode.decode(router.query.q as string);
 
     const plainResult = Object.values(searchResults);
-
+    
     if (plainResult.length) {
       return (
         <SimpleGrid columns={2}>

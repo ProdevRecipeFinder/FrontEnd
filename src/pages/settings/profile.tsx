@@ -7,6 +7,7 @@ import { InputField } from '../../components/InputField'
 import { useChangeUsernameMutation, WhoAmIDocument, WhoAmIQuery } from "../../generated/graphql"
 import styles from "../../styles/settings.module.css"
 import { convertErrorMsg } from "../../utils/convertErrorMsg"
+import Head from 'next/head'
 
 
 const profile = () => {
@@ -15,6 +16,10 @@ const profile = () => {
 
     return (
         <React.Fragment>
+            <Head>
+        <title>Profile - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Profile Page" />
+            </Head>
             <Box className={styles.container}>
                 <h1 className="title">Public Profile</h1>
 
