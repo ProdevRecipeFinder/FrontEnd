@@ -1,17 +1,18 @@
 import {
-  Avatar, 
-  Box, 
+  useBreakpointValue,
+  Divider,
+  Avatar,
   Button,
-  Divider, 
-  Stack
+  Stack,
+  Box
 } from "@chakra-ui/react"
 import SettingsNavigationMenu from "../../components/SettingsNavigationMenu/SettingsNavigationMenu"
-import { useWhoAmIQuery }     from "../../generated/graphql"
-import { checkUserAuth }      from "../../utils/checkUserAuth"
-import DefaultLayout          from "./DefaultLayout"
-import NextLink               from "next/link"
-import React                  from "react"
-import styles                 from "./settingsLayout.module.css"
+import { useWhoAmIQuery } from "../../generated/graphql"
+import { checkUserAuth } from "../../utils/checkUserAuth"
+import DefaultLayout from "./DefaultLayout"
+import NextLink from "next/link"
+import React from "react"
+import styles from "./settingsLayout.module.css"
 
 interface Props {
   children?: React.ReactNode;
@@ -27,17 +28,20 @@ const SettingsLayout = ({ children }: Props) => {
   // Render
   return (
     <DefaultLayout>
-      
+
       {/* Avatar and username at the top of the page */}
       <Box id={styles.account}>
-        <Avatar
-          size={"md"}
-          src={"https://avatars.dicebear.com/api/male/username.svg"}
-          marginRight={"0.5em"}
-        />
-        <p style={{ fontWeight: "500", fontSize: "1.2em" }}>
-          {userData?.whoami?.user_name}
-        </p>
+        <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}  align="center" >
+          <Avatar
+            size={"md"}
+            src={"https://avatars.dicebear.com/api/male/username.svg"}
+            marginRight={"0.5em"}
+          />
+          <p style={{ fontWeight: "500", fontSize: "1.2em" }}>
+            {userData?.whoami?.user_name}
+          </p>
+        </Stack>
+
         <NextLink passHref href="/my-cookbook">
           <Button marginLeft="auto">Go to My Cookbook</Button>
         </NextLink>
@@ -47,14 +51,31 @@ const SettingsLayout = ({ children }: Props) => {
 
       {/* Settings navigation menu and children.
       This is a layout file, so the children will be whole pages that have the .Layout property set to SettingsLayout (this file)*/}
-      <Stack direction={"row"} justify="space-between">
-        <Box w="15em">
-          <SettingsNavigationMenu />
-        </Box>
-        <Box w="65em">
-          {children}
-        </Box>
-      </Stack>
+
+      {
+        useBreakpointValue({ sm: false, md: true }) ?
+          (
+            <Stack direction={"row"} justify="space-between">
+              <Box w="15em">
+                <SettingsNavigationMenu />
+              </Box>
+              <Box w="65em">
+                {children}
+              </Box>
+            </Stack>
+          )
+          :
+          (
+            <Stack direction={"column"}>
+              <Box w="100%">
+                <SettingsNavigationMenu />
+              </Box>
+              <Box w="100%">
+                {children}
+              </Box>
+            </Stack>
+          )
+      }
 
     </DefaultLayout>
   );
