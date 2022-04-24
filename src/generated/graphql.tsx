@@ -48,18 +48,14 @@ export type Mutation = {
   changeForgotPassword: UserResponse;
   changePassword: UserResponse;
   changeUsername: UserResponse;
-  createIngredient: Ingredient;
-  createStep: Step;
-  createTag: Tag;
-  deleteIngredient: Scalars['Boolean'];
+  deleteAccount: UserResponse;
   deleteOwnedRecipe: Recipe;
   deleteSavedRecipe: Scalars['Boolean'];
-  deleteStep: Scalars['Boolean'];
-  deleteTag: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
+  requestDeleteAccount: Scalars['Boolean'];
   saveRecipeToUser: Scalars['Boolean'];
   updateRecipe: Recipe;
 };
@@ -87,25 +83,8 @@ export type MutationChangeUsernameArgs = {
 };
 
 
-export type MutationCreateIngredientArgs = {
-  ingredient_name: Scalars['String'];
-  ingredient_qty: Scalars['String'];
-};
-
-
-export type MutationCreateStepArgs = {
-  step_desc: Scalars['String'];
-};
-
-
-export type MutationCreateTagArgs = {
-  tag_desc: Scalars['String'];
-  tag_name: Scalars['String'];
-};
-
-
-export type MutationDeleteIngredientArgs = {
-  ingredient_id: Scalars['Float'];
+export type MutationDeleteAccountArgs = {
+  token: Scalars['String'];
 };
 
 
@@ -116,16 +95,6 @@ export type MutationDeleteOwnedRecipeArgs = {
 
 export type MutationDeleteSavedRecipeArgs = {
   recipe_id: Scalars['Float'];
-};
-
-
-export type MutationDeleteStepArgs = {
-  step_id: Scalars['Float'];
-};
-
-
-export type MutationDeleteTagArgs = {
-  tag_id: Scalars['Float'];
 };
 
 
@@ -154,25 +123,26 @@ export type MutationUpdateRecipeArgs = {
   input: RecipeInput;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  getAllIngredients: Array<Ingredient>;
-  getAllRecipes?: Maybe<Array<Recipe>>;
-  getAllSteps: Array<Step>;
-  getAllTags: Array<Tag>;
-  getOneIngredient: Ingredient;
-  getOneRecipe?: Maybe<Recipe>;
-  getOneStep: Step;
-  getOneTag: Tag;
-  getSavedRecipes?: Maybe<User>;
-  getSavedStatus: Scalars['Boolean'];
-  searchRecipes: Array<Recipe>;
-  whoami?: Maybe<User>;
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['Float']>;
+  hasNextPage: Scalars['Boolean'];
 };
 
+export type PaginatedRecipe = {
+  __typename?: 'PaginatedRecipe';
+  pageInfo: PageInfo;
+  recipes: Array<Recipe>;
+};
 
-export type QueryGetOneIngredientArgs = {
-  ingredient_id: Scalars['Float'];
+export type Query = {
+  __typename?: 'Query';
+  getAllRecipes?: Maybe<Array<Recipe>>;
+  getOneRecipe?: Maybe<Recipe>;
+  getSavedRecipes?: Maybe<PaginatedRecipe>;
+  getSavedStatus: Array<Scalars['Boolean']>;
+  searchRecipes: PaginatedRecipe;
+  whoami?: Maybe<User>;
 };
 
 
@@ -181,22 +151,20 @@ export type QueryGetOneRecipeArgs = {
 };
 
 
-export type QueryGetOneStepArgs = {
-  step_id: Scalars['Float'];
-};
-
-
-export type QueryGetOneTagArgs = {
-  tag_id: Scalars['Float'];
+export type QueryGetSavedRecipesArgs = {
+  cursor?: InputMaybe<Scalars['Float']>;
+  limit?: InputMaybe<Scalars['Float']>;
 };
 
 
 export type QueryGetSavedStatusArgs = {
-  recipe_id: Scalars['Float'];
+  recipe_ids: Array<Scalars['Float']>;
 };
 
 
 export type QuerySearchRecipesArgs = {
+  cursor?: InputMaybe<Scalars['Float']>;
+  limit?: InputMaybe<Scalars['Float']>;
   search: Scalars['String'];
 };
 
@@ -211,8 +179,8 @@ export type Recipe = {
   prep_time_minutes: Scalars['Float'];
   rating_stars: Scalars['String'];
   recipeAuthors: Array<User>;
-  recipeIngredients: Array<Ingredient>;
-  recipeSteps: Array<Step>;
+  recipeIngredients?: Maybe<Array<Ingredient>>;
+  recipeSteps?: Maybe<Array<Step>>;
   recipeTags?: Maybe<Array<Tag>>;
   recipe_desc: Scalars['String'];
   recipe_title: Scalars['String'];
@@ -263,7 +231,6 @@ export type User = {
   created_at: Scalars['DateTime'];
   email: Scalars['String'];
   id: Scalars['Float'];
-  savedRecipes?: Maybe<Array<Recipe>>;
   updated_at: Scalars['DateTime'];
   user_name: Scalars['String'];
 };
@@ -274,7 +241,7 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type DisplayRecipeFragment = { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }>, recipeSteps: Array<{ __typename?: 'Step', step_desc: string }> };
+export type DisplayRecipeFragment = { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null };
 
 export type StdUserFragment = { __typename?: 'User', id: number, user_name: string, email: string };
 
@@ -300,6 +267,13 @@ export type ChangeUsernameMutationVariables = Exact<{
 
 
 export type ChangeUsernameMutation = { __typename?: 'Mutation', changeUsername: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, user_name: string, email: string } | null } };
+
+export type DeleteAccountMutationVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+
+export type DeleteAccountMutation = { __typename?: 'Mutation', deleteAccount: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type DeleteSavedRecipeMutationVariables = Exact<{
   recipe_id: Scalars['Float'];
@@ -337,6 +311,11 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, user_name: string, email: string } | null } };
 
+export type RequestDeleteAccountMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RequestDeleteAccountMutation = { __typename?: 'Mutation', requestDeleteAccount: boolean };
+
 export type SaveRecipeToUserMutationVariables = Exact<{
   recipe_id: Scalars['Float'];
 }>;
@@ -349,26 +328,31 @@ export type GetOneRecipeQueryVariables = Exact<{
 }>;
 
 
-export type GetOneRecipeQuery = { __typename?: 'Query', getOneRecipe?: { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }>, recipeSteps: Array<{ __typename?: 'Step', step_desc: string }> } | null };
+export type GetOneRecipeQuery = { __typename?: 'Query', getOneRecipe?: { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null } | null };
 
 export type GetSavedStatusQueryVariables = Exact<{
-  recipe_id: Scalars['Float'];
+  recipe_ids: Array<Scalars['Float']> | Scalars['Float'];
 }>;
 
 
-export type GetSavedStatusQuery = { __typename?: 'Query', getSavedStatus: boolean };
+export type GetSavedStatusQuery = { __typename?: 'Query', getSavedStatus: Array<boolean> };
 
-export type SavedRecipesQueryVariables = Exact<{ [key: string]: never; }>;
+export type SavedRecipesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Float']>;
+  cursor?: InputMaybe<Scalars['Float']>;
+}>;
 
 
-export type SavedRecipesQuery = { __typename?: 'Query', getSavedRecipes?: { __typename?: 'User', savedRecipes?: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }>, recipeSteps: Array<{ __typename?: 'Step', step_desc: string }> }> | null } | null };
+export type SavedRecipesQuery = { __typename?: 'Query', getSavedRecipes?: { __typename?: 'PaginatedRecipe', recipes: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } } | null };
 
 export type SearchRecipesQueryVariables = Exact<{
   query: Scalars['String'];
+  limit?: InputMaybe<Scalars['Float']>;
+  cursor?: InputMaybe<Scalars['Float']>;
 }>;
 
 
-export type SearchRecipesQuery = { __typename?: 'Query', searchRecipes: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }> };
+export type SearchRecipesQuery = { __typename?: 'Query', searchRecipes: { __typename?: 'PaginatedRecipe', recipes: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } } };
 
 export type WhoAmIQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -527,6 +511,42 @@ export function useChangeUsernameMutation(baseOptions?: Apollo.MutationHookOptio
 export type ChangeUsernameMutationHookResult = ReturnType<typeof useChangeUsernameMutation>;
 export type ChangeUsernameMutationResult = Apollo.MutationResult<ChangeUsernameMutation>;
 export type ChangeUsernameMutationOptions = Apollo.BaseMutationOptions<ChangeUsernameMutation, ChangeUsernameMutationVariables>;
+export const DeleteAccountDocument = gql`
+    mutation DeleteAccount($token: String!) {
+  deleteAccount(token: $token) {
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+export type DeleteAccountMutationFn = Apollo.MutationFunction<DeleteAccountMutation, DeleteAccountMutationVariables>;
+
+/**
+ * __useDeleteAccountMutation__
+ *
+ * To run a mutation, you first call `useDeleteAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAccountMutation, { data, loading, error }] = useDeleteAccountMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useDeleteAccountMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAccountMutation, DeleteAccountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAccountMutation, DeleteAccountMutationVariables>(DeleteAccountDocument, options);
+      }
+export type DeleteAccountMutationHookResult = ReturnType<typeof useDeleteAccountMutation>;
+export type DeleteAccountMutationResult = Apollo.MutationResult<DeleteAccountMutation>;
+export type DeleteAccountMutationOptions = Apollo.BaseMutationOptions<DeleteAccountMutation, DeleteAccountMutationVariables>;
 export const DeleteSavedRecipeDocument = gql`
     mutation DeleteSavedRecipe($recipe_id: Float!) {
   deleteSavedRecipe(recipe_id: $recipe_id)
@@ -700,6 +720,36 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const RequestDeleteAccountDocument = gql`
+    mutation RequestDeleteAccount {
+  requestDeleteAccount
+}
+    `;
+export type RequestDeleteAccountMutationFn = Apollo.MutationFunction<RequestDeleteAccountMutation, RequestDeleteAccountMutationVariables>;
+
+/**
+ * __useRequestDeleteAccountMutation__
+ *
+ * To run a mutation, you first call `useRequestDeleteAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRequestDeleteAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [requestDeleteAccountMutation, { data, loading, error }] = useRequestDeleteAccountMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRequestDeleteAccountMutation(baseOptions?: Apollo.MutationHookOptions<RequestDeleteAccountMutation, RequestDeleteAccountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RequestDeleteAccountMutation, RequestDeleteAccountMutationVariables>(RequestDeleteAccountDocument, options);
+      }
+export type RequestDeleteAccountMutationHookResult = ReturnType<typeof useRequestDeleteAccountMutation>;
+export type RequestDeleteAccountMutationResult = Apollo.MutationResult<RequestDeleteAccountMutation>;
+export type RequestDeleteAccountMutationOptions = Apollo.BaseMutationOptions<RequestDeleteAccountMutation, RequestDeleteAccountMutationVariables>;
 export const SaveRecipeToUserDocument = gql`
     mutation SaveRecipeToUser($recipe_id: Float!) {
   saveRecipeToUser(recipe_id: $recipe_id)
@@ -767,8 +817,8 @@ export type GetOneRecipeQueryHookResult = ReturnType<typeof useGetOneRecipeQuery
 export type GetOneRecipeLazyQueryHookResult = ReturnType<typeof useGetOneRecipeLazyQuery>;
 export type GetOneRecipeQueryResult = Apollo.QueryResult<GetOneRecipeQuery, GetOneRecipeQueryVariables>;
 export const GetSavedStatusDocument = gql`
-    query GetSavedStatus($recipe_id: Float!) {
-  getSavedStatus(recipe_id: $recipe_id)
+    query GetSavedStatus($recipe_ids: [Float!]!) {
+  getSavedStatus(recipe_ids: $recipe_ids)
 }
     `;
 
@@ -784,7 +834,7 @@ export const GetSavedStatusDocument = gql`
  * @example
  * const { data, loading, error } = useGetSavedStatusQuery({
  *   variables: {
- *      recipe_id: // value for 'recipe_id'
+ *      recipe_ids: // value for 'recipe_ids'
  *   },
  * });
  */
@@ -800,31 +850,19 @@ export type GetSavedStatusQueryHookResult = ReturnType<typeof useGetSavedStatusQ
 export type GetSavedStatusLazyQueryHookResult = ReturnType<typeof useGetSavedStatusLazyQuery>;
 export type GetSavedStatusQueryResult = Apollo.QueryResult<GetSavedStatusQuery, GetSavedStatusQueryVariables>;
 export const SavedRecipesDocument = gql`
-    query SavedRecipes {
-  getSavedRecipes {
-    savedRecipes {
+    query SavedRecipes($limit: Float, $cursor: Float) {
+  getSavedRecipes(limit: $limit, cursor: $cursor) {
+    recipes {
       id
       recipe_title
       recipe_desc
-      prep_time_minutes
-      cook_time_minutes
-      total_time_minutes
-      footnotes
-      original_url
       photo_url
       rating_stars
       review_count
-      recipeAuthors {
-        user_name
-      }
-      recipeIngredients {
-        ingredient_qty
-        ingredient_unit
-        ingredient_name
-      }
-      recipeSteps {
-        step_desc
-      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
     }
   }
 }
@@ -842,6 +880,8 @@ export const SavedRecipesDocument = gql`
  * @example
  * const { data, loading, error } = useSavedRecipesQuery({
  *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
@@ -857,14 +897,20 @@ export type SavedRecipesQueryHookResult = ReturnType<typeof useSavedRecipesQuery
 export type SavedRecipesLazyQueryHookResult = ReturnType<typeof useSavedRecipesLazyQuery>;
 export type SavedRecipesQueryResult = Apollo.QueryResult<SavedRecipesQuery, SavedRecipesQueryVariables>;
 export const SearchRecipesDocument = gql`
-    query SearchRecipes($query: String!) {
-  searchRecipes(search: $query) {
-    id
-    recipe_title
-    recipe_desc
-    photo_url
-    rating_stars
-    review_count
+    query SearchRecipes($query: String!, $limit: Float, $cursor: Float) {
+  searchRecipes(search: $query, limit: $limit, cursor: $cursor) {
+    recipes {
+      id
+      recipe_title
+      recipe_desc
+      photo_url
+      rating_stars
+      review_count
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
   }
 }
     `;
@@ -882,6 +928,8 @@ export const SearchRecipesDocument = gql`
  * const { data, loading, error } = useSearchRecipesQuery({
  *   variables: {
  *      query: // value for 'query'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */

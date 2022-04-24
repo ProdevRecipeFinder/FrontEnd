@@ -1,46 +1,17 @@
-import type { NextPage } from 'next'
-import React from 'react'
-import Head from 'next/head'
+import { Box } from '@chakra-ui/react'
+import type { NextPage }  from 'next'
+import React              from 'react'
+import Head               from 'next/head'
 
-import { gql, useQuery } from '@apollo/client'
-import { initializeApollo } from '../utils/apollo'
+const Home: NextPage = () => {
 
-const testQuery = gql`
-  query {
-    countries {
-      name
-      code
-    }
-  }
-`
-interface Props {
-    initialApolloState: any
-}
-
-const Home: NextPage<Props> = ({ initialApolloState }) => {
-    return (
-        <React.Fragment>
-            <Head>
+  return (
+    <React.Fragment>
+      <Head>
         <title>Home- Recipe Finder</title>
         <meta name="description" content="Recipe Finder Home Page" />
       </Head>
-
-      
-
-        </React.Fragment>
-    )
+    </React.Fragment>
+  )
 }
-
-// export async function getServerSideProps() {
-//   const apolloClient = initializeApollo()
-//   await apolloClient.query({
-//     query: testQuery
-//   })
-//   return {
-//     props: {
-//       initialApolloState: apolloClient.cache.extract()
-//     }
-//   }
-// }
-
 export default Home
