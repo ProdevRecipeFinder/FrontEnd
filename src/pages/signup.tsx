@@ -21,7 +21,8 @@ import { useRouter }              from 'next/router'
 import InputField                 from "../components/InputField"
 import NextLink                   from "next/link"
 import React                      from "react"
-
+import Head                       from 'next/head'
+        
 const SignUp: NextPage = () => {
   // Hooks
   const router = useRouter()
@@ -33,6 +34,11 @@ const SignUp: NextPage = () => {
   // Render
   return (
     <React.Fragment>
+      <Head>
+        <title>Signup - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Signup Page" />
+      </Head>
+
       <Center>
         <Box style={{ width: "28em" }}>
 

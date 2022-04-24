@@ -9,7 +9,7 @@ import { checkUserAuth }                from "../utils/checkUserAuth"
 import { SimpleGrid }                   from '@chakra-ui/react'
 import { NextPage }                     from "next"
 import RecipeCard                       from "../components/Recipe/RecipeCard"
-import { readyException } from "cypress/types/jquery"
+import Head                             from 'next/head'
 
 const MyCookBook: NextPage = () => {
   // Check authentication
@@ -37,10 +37,14 @@ const MyCookBook: NextPage = () => {
     })
     return filteredData
   }
-
+  
   // Render
   return (
     <React.Fragment>
+      <Head>
+        <title>My Cookbook- Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Cookbook Page" />
+      </Head>
 
       {/* An input search bar */}
       <Input type="search" variant="flushed" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />

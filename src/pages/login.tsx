@@ -22,6 +22,7 @@ import { Form, Formik }           from "formik"
 import { useRouter }              from 'next/router'
 import InputField                 from "../components/InputField"
 import NextLink                   from "next/link"
+import Head                       from 'next/head'
 
 const Login: NextPage = () => {
   // Hooks 
@@ -42,6 +43,10 @@ const Login: NextPage = () => {
   // Render
   return (
     <React.Fragment>
+      <Head>
+        <title>Login - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Login Page" />
+      </Head>
       <Center>
         <Box style={{ width: "28em" }}>
 

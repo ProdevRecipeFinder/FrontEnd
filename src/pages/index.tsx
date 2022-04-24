@@ -1,14 +1,17 @@
 import { Box } from '@chakra-ui/react'
 import type { NextPage }  from 'next'
 import React              from 'react'
+import Head               from 'next/head'
 
 const Home: NextPage = () => {
 
   return (
     <React.Fragment>
-      <Box fontSize={["sm", "md", "lg", "xl"]}>Font Size</Box>
+      <Head>
+        <title>Home- Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Home Page" />
+      </Head>
     </React.Fragment>
   )
 }
-
 export default Home

@@ -16,6 +16,7 @@ import { initializeApollo } from '../utils/apollo'
 import { useRouter }        from "next/router"
 import { NextPage }         from "next"
 import RecipeCard           from "../components/Recipe/RecipeCard"
+import Head                 from 'next/head'
 
 interface SearchProps {
   searchResults: any
@@ -41,10 +42,12 @@ const Search: NextPage<SearchProps> = () => {
   
   // Handlers
   const displaySearchResults = (searchResults: Recipe[]) => {
+    
     if (!searchResults || !searchResults.length)
       return ( <Center> <p>No search results</p> </Center> )
 
     const plainResult = Object.values(searchResults)
+
     if (plainResult.length) {
       return (
         <SimpleGrid minChildWidth='300px' spacing="1em">
@@ -92,6 +95,10 @@ const Search: NextPage<SearchProps> = () => {
     return <Center>Loading...</Center> // if the query is loading, display a loading message
   return (
     <React.Fragment>
+      <Head>
+        <title>Search - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Search Page" />
+      </Head>
       {/* Grid of recipies */}
       {
         displaySearchResults(searchResults)
