@@ -55,7 +55,7 @@ const Login: NextPage = () => {
           <Center>
             <h2 style={{fontSize: "1.4em"}} >Log In to Recipe Finder</h2>
           </Center>
-          <Box width={useBreakpointValue({base: "25em", md: "20em"})} padding="0 2em" borderRadius="0.25em" >
+          <Box width={useBreakpointValue({base: "25em", md: "20em"})} padding="0 2em">
             <Box>
               {/* Empty avatar and sign up link */}
               <Center>
@@ -130,11 +130,11 @@ const Login: NextPage = () => {
                 style={{
                   width: "20em",
                   height: "0.9rem",
-                  borderBottom: "1px solid #2c323d",
+                  borderBottom: useColorModeValue("1px solid lightgray", "1px solid #2c323d"), 
                   textAlign: "center",
                 }}
               >
-                <span style={{ fontSize: "1rem", padding: "0 1rem", backgroundColor: useColorModeValue("red", "#2c323d")}}>
+                <span style={{ fontSize: "1rem", padding: "0 1rem", backgroundColor: useColorModeValue("lightgray", "#2c323d")}}>
                   Or login with
                 </span>
               </Box>
@@ -176,7 +176,7 @@ const Login: NextPage = () => {
 
           <br />
 
-          <Box style={{ width: "20em" }} padding="1em" borderRadius="0.25em">
+          <Box style={{ width: "20em" }} padding="1em">
             <p>
               Don't have an account?
               <NextLink href="/signup">
