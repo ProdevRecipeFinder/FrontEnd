@@ -1,7 +1,7 @@
 import { extendTheme, ThemeConfig } from '@chakra-ui/react'
 
 const config: ThemeConfig = {
-  initialColorMode: 'light',
+  initialColorMode: "light",
   useSystemColorMode: false,
 }
 
@@ -14,11 +14,9 @@ const breakpoints = {
 }
 
 const fontSize = {
-  xs: '0.5rem',
-  sm: '0.75rem',
-  md: '1rem',
-  lg: '1.125rem',
-  xl: '1.2rem',
+  xs: '0.5em',
+  sm: '0.75em',
+  md: '1em',
 }
 
 const theme = extendTheme({ 

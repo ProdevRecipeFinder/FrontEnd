@@ -1,5 +1,5 @@
-import { ApolloProvider } from '@apollo/client'
 import { ChakraProvider } from '@chakra-ui/react'
+import { ApolloProvider } from '@apollo/client'
 import type { AppProps }  from 'next/app'
 import SettingsLayout     from '../components/layouts/SettingsLayout'
 import DefaultLayout      from '../components/layouts/DefaultLayout'
