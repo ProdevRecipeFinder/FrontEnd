@@ -16,7 +16,7 @@ const RecipeCard = ({ recipe, showHeart }: Props) => {
         <a>
           <Card
             title={recipe.recipe_title}
-            desc={recipe.recipe_desc}
+            rating={`${recipe.rating_stars}/5`}
             img={recipe.photo_url}
             showHeart={showHeart ? true : false}
           />

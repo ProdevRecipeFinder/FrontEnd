@@ -157,7 +157,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
             <ul>
               {recipe.recipeIngredients!.map((ingredient, index) => (
                 <Box key={index} style={{ marginBottom: "1em" }}>
-                  <Checkbox size="lg"> {ingredient.ingredient_qty} {ingredient.ingredient_unit} {ingredient.ingredient_name} </Checkbox>
+                  <Checkbox size={useBreakpointValue({base: "md", lg: "lg"})}> {ingredient.ingredient_qty} {ingredient.ingredient_unit} {ingredient.ingredient_name} </Checkbox>
                 </Box>
               ))}
             </ul>
