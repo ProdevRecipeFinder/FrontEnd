@@ -103,6 +103,10 @@ const Search: NextPage<SearchProps> = () => {
         <title>Search - Recipe Finder</title>
         <meta name="description" content="Recipe Finder Search Page" />
       </Head>
+      <Center>
+        <h1>Search Results for "{router.query.q}"</h1>
+      </Center>
+      <br />
       {/* Grid of recipies */}
       { displaySearchResults(searchResults) }
       <br />
