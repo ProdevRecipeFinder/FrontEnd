@@ -12,7 +12,6 @@ const DefaultLayout = ({ children }: Props) => {
       <Box 
         fontSize={['xs', 'sm', 'md', 'lg', 'xl']} 
         color={useColorModeValue("gray.800", "white")}
-        backgroundColor={useColorModeValue("gray.200", "")}
       >
         <NavigationBar />
         <Box 

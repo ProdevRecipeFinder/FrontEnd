@@ -138,7 +138,16 @@ const NavigationBar = () => {
       </Drawer>
 
       {/* Navigation Bar. This appears at the top of the page */}
-      <Box padding="0.75em 0" bg={useColorModeValue('white', 'gray.900')} px={4}>
+      <Box 
+          padding="0.75em 0" 
+          bg={useColorModeValue('white', 'gray.900')} 
+          px={4} 
+          borderBottom={useColorModeValue("2px solid lightgray", "none")}
+          position="fixed" 
+          width="100%" 
+          zIndex={1}
+          top={0}
+        >
 
         <Flex alignItems={"center"} justifyContent="space-between">
           <Stack direction={'row'} spacing={5} align="center">
