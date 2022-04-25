@@ -50,9 +50,12 @@ const Search: NextPage<SearchProps> = () => {
 
     if (plainResult.length) {
       return (
+        
         <SimpleGrid minChildWidth='300px' spacing="1em">
           {
-            plainResult.map((recipe: Recipe, index: number) => <RecipeCard recipe={recipe} key={recipe.id} showHeart={!!savedRecipes[index]} />)
+            plainResult.map((recipe: Recipe, index: number) => (
+              <RecipeCard recipe={recipe} key={recipe.id} showHeart={!!savedRecipes[index]} />
+            ))
           }
         </SimpleGrid>
       )
@@ -100,9 +103,7 @@ const Search: NextPage<SearchProps> = () => {
         <meta name="description" content="Recipe Finder Search Page" />
       </Head>
       {/* Grid of recipies */}
-      {
-        displaySearchResults(searchResults)
-      }
+      { displaySearchResults(searchResults) }
       <br />
       <Center>
         <Button disabled={!searchResultsData?.searchRecipes.pageInfo.hasNextPage} onClick={() => {

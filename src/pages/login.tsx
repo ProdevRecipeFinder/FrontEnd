@@ -109,12 +109,8 @@ const Login: NextPage = () => {
               <Form>
                 <InputField name="username" label="Username or Email" />
                 <br />
-
                 <InputField type="password" name="password" label="Password" />
                 <br />
-                <Checkbox name="rememberMe" defaultChecked>
-                  Remember Me
-                </Checkbox>
                 <Center>
                   <Button
                     type="submit"

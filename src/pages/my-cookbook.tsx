@@ -55,7 +55,7 @@ const MyCookBook: NextPage = () => {
       {
         recipeData && recipeData.length ?
           <React.Fragment>
-            <SimpleGrid minChildWidth='300px' spacing="1em">
+            <SimpleGrid minChildWidth='250px' spacing="1em">
               {localSearch().map((recipe: Recipe) => (
                 <RecipeCard key={recipe.recipe_title} recipe={recipe} />
               ))}

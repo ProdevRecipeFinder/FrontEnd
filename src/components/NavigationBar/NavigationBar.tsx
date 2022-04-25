@@ -118,7 +118,7 @@ const NavigationBar = () => {
             <Stack direction={"column"}>
               {/* Sidebar links */}
               {
-                useBreakpointValue({ sm: true, md: false }) ? searchBar(() => onClose()) : null
+                useBreakpointValue({ base: true, md: false }) ? searchBar(() => onClose()) : null
               }
               <NavigationBarItem onClick={onClose} href={"/"} text={"Home"} icon={faHome} />
               {userData?.whoami?.id ?
@@ -150,7 +150,6 @@ const NavigationBar = () => {
               useBreakpointValue({ sm: false, md: true }) ? searchBar() : null
             }
           </Stack>
-
           <Flex alignItems={"center"}>
             <Stack direction={'row'} spacing={5}>
               {/*  If the user is logged in, display user menu. If not, display login button */}
