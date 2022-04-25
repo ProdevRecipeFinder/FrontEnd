@@ -142,11 +142,12 @@ const NavigationBar = () => {
           padding="0.75em 0" 
           bg={useColorModeValue('white', 'gray.900')} 
           px={4} 
-          borderBottom={useColorModeValue("2px solid lightgray", "none")}
+          borderBottom={useColorModeValue("2px solid lightgray", "2px solid #12141F")}
           position="fixed" 
           width="100%" 
-          zIndex={1}
+          zIndex={5}
           top={0}
+          boxShadow="0px 5px 20px 0px rgba(0,0,0, 0.3)"
         >
 
         <Flex alignItems={"center"} justifyContent="space-between">
