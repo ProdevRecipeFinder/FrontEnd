@@ -18,6 +18,7 @@ import { NextPage }         from "next"
 import RecipeCard           from "../components/Recipe/RecipeCard"
 import Head                 from 'next/head'
 
+
 interface SearchProps {
   searchResults: any
 }

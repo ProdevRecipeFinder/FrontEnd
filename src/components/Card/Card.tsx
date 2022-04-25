@@ -1,9 +1,9 @@
-import { faHeartCircleCheck } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon }    from '@fortawesome/react-fontawesome'
-import { truncateString }     from "../../utils/truncString"
-import { Box, useBreakpointValue }                from '@chakra-ui/react'
-import styles                 from "./Card.module.scss"
-import React                  from "react"
+import { Box, useBreakpointValue }  from '@chakra-ui/react'
+import { faHeartCircleCheck }       from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon }          from '@fortawesome/react-fontawesome'
+import { truncateString }           from "../../utils/truncString"
+import styles                       from "./Card.module.scss"
+import React                        from "react"
 
 interface Props {
   showHeart?: boolean
@@ -15,9 +15,9 @@ interface Props {
 const Card = ({title, rating, img, showHeart}: Props) => {
   return (
     <React.Fragment>
-      <Box className={styles.card} maxWidth={useBreakpointValue({base: "250px", md: "400px"})} height={useBreakpointValue({base: "200px", md: "250px"})}>
+      <Box className={styles.card} maxWidth={useBreakpointValue({base: "250px", md: "400px"})} height={useBreakpointValue({base: "200px", md: "225px"})}>
         
-        <Box className={styles.card_img} height={useBreakpointValue({base: "200px", md: "250px"})}>
+        <Box className={styles.card_img} height={useBreakpointValue({base: "200px", md: "225px"})}>
           <img src={img} className={styles.img} />
           {
             !showHeart ? null :
