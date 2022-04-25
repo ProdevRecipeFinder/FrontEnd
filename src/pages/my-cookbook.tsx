@@ -22,7 +22,7 @@ const MyCookBook: NextPage = () => {
   if (loading)
     return ( <Center>Loading...</Center> )
   if (!loading && !recipeResponse?.getSavedRecipes)
-    return ( <Center>No recipes added to Cookbook</Center> )
+    return ( <Center>No recipes added to Your Cookbook</Center> )
   
   
   let recipeData = recipeResponse!.getSavedRecipes?.recipes as Recipe[];
@@ -46,8 +46,12 @@ const MyCookBook: NextPage = () => {
         <meta name="description" content="Recipe Finder Cookbook Page" />
       </Head>
 
+      <Center>
+        <h1>You have {recipeData.length} {recipeData.length === 1 ? "Recipe" : "Recipes"} saved to Your Cookbook</h1>
+      </Center>
+
       {/* An input search bar */}
-      <Input type="search" variant="flushed" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
+      <Input type="search" variant="flushed" placeholder="Search saved recipes" value={search} onChange={(e) => setSearch(e.target.value)} />
 
       <br /> <br />
 
