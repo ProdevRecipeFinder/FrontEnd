@@ -116,6 +116,7 @@ const NavigationBar = () => {
           <DrawerHeader borderBottomWidth='1px' textAlign="center">Recipe Finder</DrawerHeader>
           <DrawerBody>
             <Stack direction={"column"}>
+            <FontAwesomeIcon icon="fa-regular fa-book-open-cover" />
               {/* Sidebar links */}
               {
                 useBreakpointValue({ base: true, md: false }) ? searchBar(() => onClose()) : null

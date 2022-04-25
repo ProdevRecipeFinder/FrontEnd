@@ -8,13 +8,14 @@ import {
 } from "@chakra-ui/react"
 import { useChangePasswordMutation }  from "../../generated/graphql"
 import { convertErrorMsg }            from "../../utils/convertErrorMsg"
+import type { NextPage }              from 'next'
 import { Form, Formik }               from 'formik'
 import InputField                     from '../../components/InputField'
 import styles                         from "./settings.module.css"
 import React                          from "react"
 import Link                           from "next/link"
 
-const Security = () => {
+const Security: NextPage = () => {
   // Hooks
   const toast = useToast()
   
@@ -60,7 +61,7 @@ const Security = () => {
           }>
           {
             ({ isSubmitting }) => (
-              <Form style={{width: useBreakpointValue({ sm: "100%", md: "100%", lg: "50%", })}}>
+              <Form style={{width: useBreakpointValue({ sm: "100%", md: "100%", xl: "50%", })}}>
                 <InputField type="password" name="oldPassword" label="Old password" />
                 <br />
                 <InputField type="password" name="password" label="New password" />

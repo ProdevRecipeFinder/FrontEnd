@@ -50,6 +50,8 @@ const MyCookBook: NextPage = () => {
         <h1>You have {recipeData.length} {recipeData.length === 1 ? "Recipe" : "Recipes"} saved to Your Cookbook</h1>
       </Center>
 
+      <br />
+
       {/* An input search bar */}
       <Input type="search" variant="flushed" placeholder="Search saved recipes" value={search} onChange={(e) => setSearch(e.target.value)} />
 

@@ -29,7 +29,7 @@ const SettingsLayout = ({ children }: Props) => {
 
       {/* Avatar and username at the top of the page */}
       <Box id={styles.account}>
-        <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}  align="center" >
+        <Stack direction={useBreakpointValue({ sm: "column", md: "row" })} align="center" >
           <Avatar
             size={"md"}
             src={"https://avatars.dicebear.com/api/male/username.svg"}
@@ -46,30 +46,14 @@ const SettingsLayout = ({ children }: Props) => {
       {/* Settings navigation menu and children.
       This is a layout file, so the children will be whole pages that have the .Layout property set to SettingsLayout (this file)*/}
 
-      {
-        useBreakpointValue({ sm: false, md: true }) ?
-          (
-            <Stack direction={"row"} justify="space-between">
-              <Box w="15em">
-                <SettingsNavigationMenu />
-              </Box>
-              <Box w="65em">
-                {children}
-              </Box>
-            </Stack>
-          )
-          :
-          (
-            <Stack direction={"column"}>
-              <Box w="100%">
-                <SettingsNavigationMenu />
-              </Box>
-              <Box w="100%">
-                {children}
-              </Box>
-            </Stack>
-          )
-      }
+      <Stack direction={useBreakpointValue({ base: "column", sm: "row" })}>
+        <Box w={useBreakpointValue({ sm: "100%", md: "15em" })}>
+          <SettingsNavigationMenu />
+        </Box>
+        <Box w={useBreakpointValue({ sm: "100%", md: "65em" })}>
+          {children}
+        </Box>
+      </Stack>
 
     </DefaultLayout>
   );

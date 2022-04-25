@@ -12,12 +12,13 @@ import {
   useRequestDeleteAccountMutation 
 } from "../../generated/graphql"
 import { convertErrorMsg }  from "../../utils/convertErrorMsg"
+import type { NextPage }    from "next"
 import { Form, Formik }     from 'formik'
 import InputField           from "../../components/InputField"
 import styles               from "./settings.module.css"
 import React                from "react"
 
-const account = () => {
+const Account: NextPage = () => {
   // Hooks
   const toast = useToast()
   
@@ -30,8 +31,7 @@ const account = () => {
       <Box className={styles.container}>
         <h1 className="title">Change Username</h1>
 
-        <Divider />
-        <br />
+        <Divider marginBottom="0.75em"/>
 
         <Formik
           initialValues={{ username: "" }}
@@ -72,20 +72,18 @@ const account = () => {
           {
             ({ isSubmitting }) => (
               <Form style={{ width: useBreakpointValue({ sm: "100%", md: "100%", lg: "50%", })}}>
-                <InputField name="username" label="Username" />
-                <br />
+                <InputField name="username" label="Username" style={{marginBottom: "0.5em"}} />
                 <Button type="submit" isLoading={isSubmitting}>Save</Button>
               </Form>
             )
           }
         </Formik>
 
-        <br /><br /><br />
-
-        <h1 className="title" style={{ color: "red" }}>Delete Account</h1>
-
-        <Divider />
         <br />
+
+        <h1 className="title">Delete Account</h1>
+
+        <Divider marginBottom="0.75em"/>
 
         {/* delete account button */}
         <Button variant="outline" colorScheme="red"
@@ -106,4 +104,4 @@ const account = () => {
   )
 }
 
-export default account;
+export default Account

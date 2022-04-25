@@ -5,15 +5,15 @@ import React              from "react"
 import styles             from "./settings.module.css"
 import Head               from 'next/head'
 
-const Profile: NextPage = () => {
+const Appearance: NextPage = () => {
   return (
     <React.Fragment>
       <Head>
-        <title>Profile - Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Profile Page" />
+        <title>Appearance - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Appearance Page" />
       </Head>
       <Box className={styles.container}>
-        <h1 className="title">Profile</h1>
+        <h1 className="title">Appearance</h1>
         <Divider />
         <br />
 
@@ -22,4 +22,4 @@ const Profile: NextPage = () => {
   )
 }
 
-export default Profile;
+export default Appearance
