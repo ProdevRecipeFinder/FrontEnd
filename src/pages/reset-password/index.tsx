@@ -2,7 +2,8 @@ import {
   Button,
   Center,
   VStack,
-  useToast
+  useToast,
+  useColorModeValue
 } from "@chakra-ui/react"
 import { useForgotPasswordMutation }  from "../../generated/graphql"
 import React, { useState }            from "react"
@@ -32,7 +33,7 @@ const verifyEmail = () => {
       </Center>
 
       <Center>
-        <VStack id={styles.resetBox} w="40em">
+        <VStack id={styles.resetBox} w="40em" borderWidth="1px" borderStyle="solid" borderColor={useColorModeValue("lightgray", "gray")}>
           <p>Enter your user account's verified email address and we will send you a password reset link.</p>
           <Formik
             initialValues={{ email: "" }}
@@ -54,7 +55,7 @@ const verifyEmail = () => {
             }
             }>
             {
-              ({ isSubmitting }) => (
+              ({ isSubmitting, values }) => (
                 <Form style={{ width: "100%" }}>
                   <InputField name="email" placeholder="Enter email here" />
                   < br />
@@ -65,7 +66,7 @@ const verifyEmail = () => {
                       /> */}
                   </Center>
                   <br />
-                  <Button type="submit" isLoading={isSubmitting} w="100%">Send password reset email</Button>
+                  <Button disabled={!values.email.length}  type="submit" isLoading={isSubmitting} w="100%">Send password reset email</Button>
                 </Form>
               )
             }

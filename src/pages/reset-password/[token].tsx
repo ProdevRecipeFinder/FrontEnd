@@ -3,6 +3,7 @@ import {
   Button, 
   Center,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { useChangeForgotPasswordMutation }  from "../../generated/graphql"
 import { convertErrorMsg }                  from "../../utils/convertErrorMsg"
@@ -34,7 +35,7 @@ const ResetPassword = () => {
 
       { /* Form */ }
       <Center>
-        <VStack id={styles.resetBox} w="40em">
+        <VStack id={styles.resetBox} w="40em" bg={useColorModeValue("white", "#292b34")} borderWidth="1px" borderStyle="solid" borderColor={useColorModeValue("lightgray", "gray")}>
           <Formik
             initialValues={{ password: "", confirmNewPassword: "" }}
             onSubmit={async (values, { setErrors }) => {

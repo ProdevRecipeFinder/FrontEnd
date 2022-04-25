@@ -22,7 +22,16 @@ const fontSize = {
 const theme = extendTheme({ 
   config,
   breakpoints,
-  fontSize
+  fontSize,
+  // customize button for dark and light theme
+  components: {
+    Button: {
+      baseStyle: ({ colorMode } : any) => ({
+        bg: "", // for some reason this bg is required for the background property to work
+        background: colorMode === 'dark' ? '#3A3C44' : '#D6DEE5',
+      })
+    }
+  }
 })
 
 export default theme

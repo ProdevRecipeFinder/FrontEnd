@@ -12,7 +12,7 @@ const profile = () => {
         <meta name="description" content="Recipe Finder Profile Page" />
       </Head>
       <Box className={styles.container}>
-        <h1 className="title">Public Profile</h1>
+        <h1 className="title">Profile</h1>
         <Divider />
         <br />
 
