@@ -135,7 +135,8 @@ const SignUp: NextPage = () => {
             <Flex direction="row" justifyContent="space-around">
               <Button
                 aria-label="Login with Facebook"
-                colorScheme="facebook"
+                style={{background: "#314E89 !important"}}
+                color="white"
                 borderRadius="90"
                 size="lg"
                 width="5em"
@@ -144,8 +145,10 @@ const SignUp: NextPage = () => {
               </Button>
               <Button
                 aria-label="Login with Twitter"
+                style={{background: "#1A94DA !important"}}
                 colorScheme="twitter"
                 borderRadius="90"
+                color="white"
                 size="lg"
                 width="5em">
                 <FontAwesomeIcon icon={faTwitter} />

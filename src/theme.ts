@@ -28,7 +28,7 @@ const theme = extendTheme({
     Button: {
       baseStyle: ({ colorMode } : any) => ({
         bg: "", // for some reason this bg is required for the background property to work
-        background: colorMode === 'dark' ? '#3A3C44' : '#D6DEE5',
+        background: colorMode === 'dark' ? '#3D4756' : '#D6DEE5',
       })
     }
   }

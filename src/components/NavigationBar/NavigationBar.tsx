@@ -180,7 +180,9 @@ const NavigationBar = () => {
                       </Center>
 
                       <MenuDivider />
-                      <MenuItem>Settings</MenuItem>
+                      <NextLink href="/settings/profile">
+                        <MenuItem>Settings</MenuItem>
+                      </NextLink>
                       <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </MenuList>
                   </Menu>

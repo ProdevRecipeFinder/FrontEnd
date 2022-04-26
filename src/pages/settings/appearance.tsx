@@ -22,7 +22,7 @@ const Appearance: NextPage = () => {
       <Box className={styles.container}>
         <h1 className="title">Appearance</h1>
         <Divider marginBottom="0.5em"/>
-        <p>Choose how RecipeFinder looks to you. Select a single theme, or sync with your system and automatically switch between day and night themes.</p>
+        <p>Choose how RecipeFinder looks to you. Select a single theme, or sync with your system.</p>
         
         <br />
         
