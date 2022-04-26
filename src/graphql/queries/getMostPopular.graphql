@@ -1,0 +1,10 @@
+query GetMostPopular($limit: Float){
+  getMostPopular(limit: $limit){
+      id
+      recipe_title
+      recipe_desc
+      photo_url
+      rating_stars
+      review_count
+  }
+}

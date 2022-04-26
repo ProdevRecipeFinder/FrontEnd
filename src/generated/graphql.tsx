@@ -31,12 +31,6 @@ export type Ingredient = {
   ingredient_unit?: Maybe<Scalars['String']>;
 };
 
-export type IngredientsInput = {
-  ingredient_name: Scalars['String'];
-  ingredient_qty: Scalars['String'];
-  ingredient_unit: Scalars['String'];
-};
-
 export type LoginInfo = {
   password: Scalars['String'];
   username: Scalars['String'];
@@ -44,12 +38,10 @@ export type LoginInfo = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addNewRecipe: Recipe;
   changeForgotPassword: UserResponse;
   changePassword: UserResponse;
   changeUsername: UserResponse;
   deleteAccount: UserResponse;
-  deleteOwnedRecipe: Recipe;
   deleteSavedRecipe: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
   login: UserResponse;
@@ -57,12 +49,6 @@ export type Mutation = {
   register: UserResponse;
   requestDeleteAccount: Scalars['Boolean'];
   saveRecipeToUser: Scalars['Boolean'];
-  updateRecipe: Recipe;
-};
-
-
-export type MutationAddNewRecipeArgs = {
-  input: RecipeInput;
 };
 
 
@@ -85,11 +71,6 @@ export type MutationChangeUsernameArgs = {
 
 export type MutationDeleteAccountArgs = {
   token: Scalars['String'];
-};
-
-
-export type MutationDeleteOwnedRecipeArgs = {
-  id: Scalars['Float'];
 };
 
 
@@ -117,12 +98,6 @@ export type MutationSaveRecipeToUserArgs = {
   recipe_id: Scalars['Float'];
 };
 
-
-export type MutationUpdateRecipeArgs = {
-  id: Scalars['Float'];
-  input: RecipeInput;
-};
-
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['Float']>;
@@ -138,11 +113,23 @@ export type PaginatedRecipe = {
 export type Query = {
   __typename?: 'Query';
   getAllRecipes?: Maybe<Array<Recipe>>;
+  getHomePage: PaginatedRecipe;
+  getMostPopular: Array<Recipe>;
   getOneRecipe?: Maybe<Recipe>;
   getSavedRecipes?: Maybe<PaginatedRecipe>;
   getSavedStatus: Array<Scalars['Boolean']>;
   searchRecipes: PaginatedRecipe;
   whoami?: Maybe<User>;
+};
+
+
+export type QueryGetHomePageArgs = {
+  limit?: InputMaybe<Scalars['Float']>;
+};
+
+
+export type QueryGetMostPopularArgs = {
+  limit?: InputMaybe<Scalars['Float']>;
 };
 
 
@@ -189,15 +176,6 @@ export type Recipe = {
   updated_at: Scalars['DateTime'];
 };
 
-export type RecipeInput = {
-  ingredients: Array<IngredientsInput>;
-  recipe_desc: Scalars['String'];
-  recipe_img?: InputMaybe<Scalars['String']>;
-  recipe_name: Scalars['String'];
-  steps: Array<StepsInput>;
-  tags?: InputMaybe<Array<TagsInput>>;
-};
-
 export type RegInfo = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -210,19 +188,10 @@ export type Step = {
   step_desc: Scalars['String'];
 };
 
-export type StepsInput = {
-  step_desc: Scalars['String'];
-};
-
 export type Tag = {
   __typename?: 'Tag';
   id: Scalars['Float'];
   tag_desc: Scalars['String'];
-  tag_name: Scalars['String'];
-};
-
-export type TagsInput = {
-  tag_desc: Array<Scalars['String']>;
   tag_name: Scalars['String'];
 };
 
@@ -322,6 +291,20 @@ export type SaveRecipeToUserMutationVariables = Exact<{
 
 
 export type SaveRecipeToUserMutation = { __typename?: 'Mutation', saveRecipeToUser: boolean };
+
+export type GetHomePageQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Float']>;
+}>;
+
+
+export type GetHomePageQuery = { __typename?: 'Query', getHomePage: { __typename?: 'PaginatedRecipe', recipes: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } } };
+
+export type GetMostPopularQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Float']>;
+}>;
+
+
+export type GetMostPopularQuery = { __typename?: 'Query', getMostPopular: Array<{ __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, photo_url: string, rating_stars: string, review_count: string }> };
 
 export type GetOneRecipeQueryVariables = Exact<{
   id: Scalars['Float'];
@@ -781,6 +764,92 @@ export function useSaveRecipeToUserMutation(baseOptions?: Apollo.MutationHookOpt
 export type SaveRecipeToUserMutationHookResult = ReturnType<typeof useSaveRecipeToUserMutation>;
 export type SaveRecipeToUserMutationResult = Apollo.MutationResult<SaveRecipeToUserMutation>;
 export type SaveRecipeToUserMutationOptions = Apollo.BaseMutationOptions<SaveRecipeToUserMutation, SaveRecipeToUserMutationVariables>;
+export const GetHomePageDocument = gql`
+    query GetHomePage($limit: Float) {
+  getHomePage(limit: $limit) {
+    recipes {
+      id
+      recipe_title
+      recipe_desc
+      photo_url
+      rating_stars
+      review_count
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetHomePageQuery__
+ *
+ * To run a query within a React component, call `useGetHomePageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHomePageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHomePageQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetHomePageQuery(baseOptions?: Apollo.QueryHookOptions<GetHomePageQuery, GetHomePageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetHomePageQuery, GetHomePageQueryVariables>(GetHomePageDocument, options);
+      }
+export function useGetHomePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHomePageQuery, GetHomePageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetHomePageQuery, GetHomePageQueryVariables>(GetHomePageDocument, options);
+        }
+export type GetHomePageQueryHookResult = ReturnType<typeof useGetHomePageQuery>;
+export type GetHomePageLazyQueryHookResult = ReturnType<typeof useGetHomePageLazyQuery>;
+export type GetHomePageQueryResult = Apollo.QueryResult<GetHomePageQuery, GetHomePageQueryVariables>;
+export const GetMostPopularDocument = gql`
+    query GetMostPopular($limit: Float) {
+  getMostPopular(limit: $limit) {
+    id
+    recipe_title
+    recipe_desc
+    photo_url
+    rating_stars
+    review_count
+  }
+}
+    `;
+
+/**
+ * __useGetMostPopularQuery__
+ *
+ * To run a query within a React component, call `useGetMostPopularQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostPopularQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMostPopularQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetMostPopularQuery(baseOptions?: Apollo.QueryHookOptions<GetMostPopularQuery, GetMostPopularQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMostPopularQuery, GetMostPopularQueryVariables>(GetMostPopularDocument, options);
+      }
+export function useGetMostPopularLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMostPopularQuery, GetMostPopularQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMostPopularQuery, GetMostPopularQueryVariables>(GetMostPopularDocument, options);
+        }
+export type GetMostPopularQueryHookResult = ReturnType<typeof useGetMostPopularQuery>;
+export type GetMostPopularLazyQueryHookResult = ReturnType<typeof useGetMostPopularLazyQuery>;
+export type GetMostPopularQueryResult = Apollo.QueryResult<GetMostPopularQuery, GetMostPopularQueryVariables>;
 export const GetOneRecipeDocument = gql`
     query GetOneRecipe($id: Float!) {
   getOneRecipe(id: $id) {
