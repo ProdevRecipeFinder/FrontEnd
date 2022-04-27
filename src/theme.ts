@@ -1,4 +1,5 @@
 import { extendTheme, ThemeConfig } from '@chakra-ui/react'
+import _ from 'cypress/types/lodash'
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -28,10 +29,26 @@ const theme = extendTheme({
     Button: {
       baseStyle: ({ colorMode } : any) => ({
         bg: "", // for some reason this bg is required for the background property to work
-        background: colorMode === 'dark' ? '#3D4756' : '#D6DEE5',
+        background: '#D17B69',
+        color: "white",
+        _hover: {
+          bg: "", 
+          background: '#AE6657',
+        },
+        _active: {
+          bg: "",
+          background: '#D28878',
+        }
       })
     }
-  }
+  },
+  styles: {
+    global: ({colorMode}: any) => ({
+      body: {
+        bg: colorMode === 'dark' ? '#171717' : 'white',
+      }
+    })
+  },
 })
 
 export default theme

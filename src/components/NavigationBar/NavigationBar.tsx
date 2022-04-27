@@ -115,12 +115,12 @@ const NavigationBar = () => {
         <DrawerContent>
           <DrawerCloseButton />
             
-          <DrawerHeader borderBottomWidth='1px' textAlign="center">
+          <DrawerHeader borderBottomWidth='1px' textAlign="center" bg={useColorModeValue("white", "#252525")}>
             <NextLink href="/">
               Recipe Finder
             </NextLink>
           </DrawerHeader>
-          <DrawerBody>
+          <DrawerBody bg={useColorModeValue("white", "#171717")}>
             <Stack direction={"column"}>
               {/* Sidebar links */}
               {
@@ -150,7 +150,7 @@ const NavigationBar = () => {
       {/* Navigation Bar. This appears at the top of the page */}
       <Box 
           padding="0.75em 0" 
-          bg={useColorModeValue('white', 'gray.900')} 
+          bg={useColorModeValue('white', '#252525')} 
           px={4} 
           borderBottom={useColorModeValue("2px solid lightgray", "2px solid #12141F")}
           position="fixed" 
@@ -180,11 +180,11 @@ const NavigationBar = () => {
               {/*  If the user is logged in, display user menu. If not, display login button */}
               {
                 userData?.whoami?.id ?
-                  <Menu>
+                  <Menu >
                     <MenuButton>
                       <Avatar size={'sm'} src={'https://avatars.dicebear.com/api/male/username.svg'} />
                     </MenuButton>
-                    <MenuList alignItems={'center'}>
+                    <MenuList alignItems={'center'} background={useColorModeValue("white", "#252525")}>
                       <br />
                       <Center>
                         <Avatar size={'xl'} src={'https://avatars.dicebear.com/api/male/username.svg'} />
