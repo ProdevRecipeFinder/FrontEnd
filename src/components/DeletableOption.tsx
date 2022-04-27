@@ -21,7 +21,7 @@ const DeletableOption = ({text, onDelete}: Props) => {
         }}
       >
         {text}
-        <FontAwesomeIcon icon={faXmark} style={{float: "right", color: "red", marginRight: "0.5em", padding:"0.25em" }} onClick={() => onDelete(text)}/>
+        <FontAwesomeIcon icon={faXmark} style={{cursor: "pointer", float: "right", color: "red", marginRight: "0.5em", padding:"0.25em" }} onClick={() => onDelete(text)}/>
       </Flex>
     </React.Fragment>
   )
