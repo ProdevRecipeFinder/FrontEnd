@@ -1,4 +1,4 @@
-import { Center, Stack, Input, Box, useBreakpointValue, Textarea, Divider, Button, Checkbox, Flex } from "@chakra-ui/react"
+import { Center, Stack, Input, Box, useBreakpointValue, Textarea, Divider, Button, Flex } from "@chakra-ui/react"
 import Head from "next/head"
 import React, { useState } from "react"
 import styles from "../styles/create-recipe.module.css"
@@ -11,6 +11,13 @@ type Ingredient = {
 }
 
 const CreateRecipe = () => {
+  const [recipeName, setRecipeName] = useState("")
+  const [recipeAuthor, setRecipeAuthor] = useState("")
+  const [recipeDescription, setRecipeDescription] = useState("")
+  const [cookTime, setCookTime] = useState("")
+  const [prepTime, setPrepTime] = useState("")
+
+
   const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [quantity, setQuantity] = useState("")
   const [ingredientName, setIngredientName] = useState("")
@@ -66,6 +73,26 @@ const CreateRecipe = () => {
     setFootnotes(footnotes.filter(footnote => footnote !== text))
   }
 
+  const addRecipe = () => {
+
+  }
+
+  const clearInputs = () => {
+    setRecipeName("")
+    setRecipeAuthor("")
+    setRecipeDescription("")
+    setCookTime("")
+    setPrepTime("")
+    setIngredients([])
+    setQuantity("")
+    setIngredientName("")
+    setUnit("")
+    setInstructions([])
+    setStep("")
+    setFootnotes([])
+    setFootnote("")
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -82,12 +109,12 @@ const CreateRecipe = () => {
       { /* Page Title */}
       <Stack direction={"column"} textAlign="center" w="100%">
         <Center>
-          <Input placeholder="Recipe Name" w="30em" />
+          <Input placeholder="Recipe Name" w="30em" value={recipeName} onChange={(e) => setRecipeName(e.target.value)}/>
         </Center>
         <Center>
           <Stack direction="row" align="center" w="10em">
             <p style={{ color: "grey", textAlign: "center" }}>By</p>
-            <Input placeholder="Author Name" />
+            <Input placeholder="Author Name" value={recipeAuthor} onChange={(e) => setRecipeAuthor(e.target.value)}/>
           </Stack>
         </Center>
       </Stack>
@@ -105,32 +132,17 @@ const CreateRecipe = () => {
         </Box>
         <Box width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <Stack className={styles.summaryBox} direction={"column"}>
-            <Textarea placeholder="Recipe description" />
+            <Textarea placeholder="Recipe description" h="15em" value={recipeDescription} onChange={(e) => setRecipeDescription(e.target.value)}/>
             <br />
-            <Stack direction="row" align="center" w="100%">
+            <Stack direction="row" align="center" w="100%"> 
               <p><b>Cook time: </b></p>
-              <Input w="4em" float="right" type="number" />
+              <Input w="4em" float="right" type="number" value={cookTime} onChange={(e) => setCookTime(e.target.value)}/>
               <p>mins</p>
             </Stack>
             <Stack direction="row" align="center">
               <p><b>Prep time: </b></p>
-              <Input w="4em" float="right" type="number" />
+              <Input w="4em" float="right" type="number" value={prepTime} onChange={(e) => setPrepTime(e.target.value)}/>
               <p>mins</p>
-            </Stack>
-            <Stack direction="row" align="center">
-              <p><b>Total time: </b></p>
-              <Input w="4em" float="right" type="number" />
-              <p>mins</p>
-            </Stack>
-            <Stack direction="row" align="center">
-              <p><b>Steps: </b></p>
-              <Input w="4em" float="right" type="number" />
-              <p>step(s)</p>
-            </Stack>
-            <Stack direction="row" align="center">
-              <p><b>Rating: </b></p>
-              <Input w="4em" float="right" type="number" />
-              <p>/5</p>
             </Stack>
           </Stack>
         </Box>
@@ -214,6 +226,15 @@ const CreateRecipe = () => {
           </form>
         </Stack>
       </Stack>
+
+      <br />
+
+      <Center>
+        <Stack direction="row">
+          <Button size="lg" variant="outline" colorScheme="red" background="transparent" onClick={clearInputs}>Clear</Button>
+          <Button size="lg" onClick={addRecipe}>Create Recipe</Button>
+        </Stack>
+      </Center>
 
     </React.Fragment>
   )
