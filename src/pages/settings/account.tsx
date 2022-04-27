@@ -16,6 +16,7 @@ import { Form, Formik }     from 'formik'
 import InputField           from "../../components/InputField"
 import styles               from "./settings.module.css"
 import React                from "react"
+import Head                 from "next/head"
 
 const account = () => {
   // Hooks
@@ -27,6 +28,10 @@ const account = () => {
 
   return (
     <React.Fragment>
+      <Head>
+        <title>Account - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Home Page" />
+      </Head>
       <Box className={styles.container}>
         <h1 className="title">Change Username</h1>
 
@@ -85,7 +90,7 @@ const account = () => {
         <Divider marginBottom="0.75em"/>
 
         {/* delete account button */}
-        <Button variant="outline" colorScheme="red" style={{background: "transparent !important"}}
+        <Button variant="outline" colorScheme="red" style={{background: "transparent"}}
           onClick={() => {
             requestDeleteAccount()
             toast({

@@ -41,6 +41,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
 
   // State
   const [isSaved, setIsSaved] = useState<boolean>(false);
+  const [rating, setRating] = useState<number>(parseInt(recipe.rating_stars));
 
   // Effects
   useEffect(() => { // Get saved status of this recipe
@@ -102,7 +103,9 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           <p style={{ color: "grey", textAlign: "center" }}>By {recipe.recipeAuthors![0].user_name}</p>
           <Center>
             <Box marginRight="0.5em" fontSize="1.2em">
-              <StarRatingComponent name="rate1" starCount={5} value={parseInt(recipe.rating_stars)} editing={false}/>
+              <StarRatingComponent name="rate1" starCount={5} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
+                setRating(nextValue)
+              }}/>
             </Box>
             { recipe.review_count } ratings
           </Center>
@@ -115,7 +118,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
             <br/>
             <Alert status='warning' variant='left-accent'>
             <AlertIcon />
-              You are not logged in! You will not be able to save this recipe
+              You are not logged in! You will not be able to save or review this recipe
             </Alert>
           </Box>
       }

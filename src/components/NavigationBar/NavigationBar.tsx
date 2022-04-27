@@ -32,6 +32,7 @@ import {
   faBars, 
   faCogs, 
   faHome, 
+  faPlus
 } from '@fortawesome/free-solid-svg-icons'
 import { useLogoutMutation, useWhoAmIQuery }  from '../../generated/graphql'
 import { useBreakpointValue }                 from '@chakra-ui/media-query'
@@ -126,15 +127,19 @@ const NavigationBar = () => {
                 useBreakpointValue({ base: true, md: false }) ? searchBar(() => onClose()) : null
               }
               <NavigationBarItem onClick={onClose} href={"/"} text={"Home"} icon={faHome} />
-              {userData?.whoami?.id ?
+              {
+                !userData?.whoami?.id ? null :
                 <NavigationBarItem onClick={onClose} href={"/my-cookbook/"} text={"My Cookbook"} icon={faBookOpen} />
-                : null
               }
-              <NavigationBarItem onClick={onClose} href={"/"} text={"About"} icon={faCircleInfo} />
-              <NavigationBarItem onClick={onClose} href={"/"} text={"Contact Us"} icon={faEnvelope} />
-              {userData?.whoami?.id ?
-                <NavigationBarItem onClick={onClose} href={"/settings/profile"} text={"Settings"} icon={faCogs} />
-                : null
+              {
+                !userData?.whoami?.id ? null :
+                <NavigationBarItem onClick={onClose} href={"/create-recipe/"} text={"Create Recipe"} icon={faPlus} />
+              }
+              <NavigationBarItem onClick={onClose} href={"/about-us/"} text={"About"} icon={faCircleInfo} />
+              <NavigationBarItem onClick={onClose} href={"/contact-us/"} text={"Contact Us"} icon={faEnvelope} />
+              {
+                !userData?.whoami?.id ? null :
+                <NavigationBarItem onClick={onClose} href={"/settings/profile/"} text={"Settings"} icon={faCogs} />
               }
             </Stack>
           </DrawerBody>

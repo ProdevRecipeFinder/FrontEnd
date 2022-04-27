@@ -13,6 +13,7 @@ import InputField                     from '../../components/InputField'
 import styles                         from "./settings.module.css"
 import React                          from "react"
 import Link                           from "next/link"
+import Head from "next/head"
 
 const Security = () => {
   // Hooks
@@ -24,6 +25,11 @@ const Security = () => {
   // Render
   return (
     <React.Fragment>
+      <Head>
+        <title>Security - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Home Page" />
+      </Head>
+      
       <Box className={styles.container}>
         <h1 className="title">Change Password</h1>
 

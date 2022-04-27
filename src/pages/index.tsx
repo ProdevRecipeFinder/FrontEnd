@@ -95,7 +95,6 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
         <meta name="description" content="Recipe Finder Home Page" />
       </Head>
 
-
       <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}>
         <Box w={useBreakpointValue({ sm: "100%", md: "40%" })}>
           <Center>
