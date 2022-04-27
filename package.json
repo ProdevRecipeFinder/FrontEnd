@@ -27,6 +27,7 @@
         "@types/react-stack-grid": "^0.7.3",
         "@types/react-star-rating-component": "^1.4.1",
         "@types/react-stonecutter": "^0.3.1",
+        "@types/swiper": "^6.0.0",
         "cypress": "^9.5.4",
         "dotenv": "^16.0.0",
         "formik": "^2.2.9",
@@ -49,6 +50,7 @@
         "react-star-rating-component": "^1.4.1",
         "react-stonecutter": "^0.3.10",
         "sass": "^1.50.1",
+        "swiper": "^8.1.4",
         "urlencode": "^1.1.0"
     },
     "devDependencies": {

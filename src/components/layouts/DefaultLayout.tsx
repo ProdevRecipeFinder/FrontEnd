@@ -16,7 +16,7 @@ const DefaultLayout = ({ children }: Props) => {
         <NavigationBar />
         <Box 
           className="container" 
-          width={useBreakpointValue({base: "95%", sm: "90%", md: "80%", lg: "70%", xl: "60%"})}
+          width={useBreakpointValue({base: "95%", sm: "90%", md: "80%", lg: "70%", xl: "70%"})}
           backgroundColor={useColorModeValue("white", "none")}
         >
           {children}

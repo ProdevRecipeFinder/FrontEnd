@@ -55,7 +55,7 @@ const Search: NextPage<SearchProps> = () => {
         <SimpleGrid minChildWidth='300px' spacing="1em">
           {
             plainResult.map((recipe: Recipe, index: number) => (
-              <RecipeCard recipe={recipe} key={recipe.id} showHeart={!!savedRecipes[index]} />
+              <RecipeCard recipe={recipe} key={recipe.id} showHeart={!!savedRecipes[index]} maxWidth={400} height={225}/>
             ))
           }
         </SimpleGrid>

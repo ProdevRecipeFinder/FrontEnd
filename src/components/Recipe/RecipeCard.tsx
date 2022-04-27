@@ -6,10 +6,12 @@ import Card                     from '../Card/Card'
 
 interface Props extends InputHTMLAttributes<HTMLDivElement>{
   showHeart?: boolean
-  recipe: Recipe
+  recipe: Recipe,
+  maxWidth: number
+  height: number
 }
 
-const RecipeCard = ({ recipe, showHeart }: Props) => {
+const RecipeCard = ({ recipe, showHeart, maxWidth, height }: Props) => {
   return (
     <Center>
       <NextLink href={`/recipe/${recipe.id}`}>
@@ -19,6 +21,8 @@ const RecipeCard = ({ recipe, showHeart }: Props) => {
             rating={`${recipe.rating_stars}/5`}
             img={recipe.photo_url}
             showHeart={showHeart ? true : false}
+            maxWidth={maxWidth}
+            height={height}
           />
         </a>
       </NextLink>

@@ -1,10 +1,16 @@
-import { Box, Center, Divider, Flex, SimpleGrid } from '@chakra-ui/react'
+import { Box, Center, Divider, Flex, SimpleGrid, Stack, useBreakpointValue } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import React from 'react'
 import Head from 'next/head'
 import RecipeCard from '../components/Recipe/RecipeCard'
 import { GetHomePageDocument, GetMostPopularDocument, PaginatedRecipe, Recipe } from '../generated/graphql'
 import { initializeApollo } from '../utils/apollo'
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css"
+import "swiper/css/pagination"
+import "swiper/css/navigation"
+import { Pagination, Navigation, Autoplay } from 'swiper'
 
 interface Props {
   mostPopular: Recipe[];
@@ -15,21 +21,70 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
 
   const homepageRecipes: Recipe[] = homepageData.recipes
 
-
   const displayHomepageSelection = (homepageRecipes: Recipe[]) => {
     if (!homepageRecipes || !homepageRecipes.length)
       return (<Center> <p>No search results</p> </Center>)
-
     const plainResult = Object.values(homepageRecipes)
     if (plainResult.length) {
       return (
-        <SimpleGrid minChildWidth='300px' spacing="1em">
+        <Swiper
+          slidesPerView={useBreakpointValue({ base: 1, lg: 2, xl: 3 })}
+          spaceBetween={20}
+          loop={true}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Pagination, Navigation, Autoplay]}
+          style={{ padding: "1em" }}
+        >
           {
-            plainResult.map((recipe: Recipe, index: number) => <RecipeCard recipe={recipe} key={recipe.id} showHeart={false} />)
+            plainResult.map((recipe: Recipe, index: number) => (
+              <SwiperSlide style={{ padding: "1em" }}>
+                <RecipeCard recipe={recipe} key={recipe.id} showHeart={false} height={250} maxWidth={400} />
+              </SwiperSlide>
+            ))
           }
-        </SimpleGrid>
+        </Swiper>
       )
     }
+  }
+
+  const displayMostPopualrRecipes = (mostPopular: Recipe[]) => {
+    if (mostPopular.length > 6)
+      return null
+
+    return (
+      <React.Fragment>
+        <Swiper
+          slidesPerView={useBreakpointValue({ base: 1, xl: 2, })}
+          spaceBetween={50}
+          loop={true}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Pagination, Navigation, Autoplay]}
+          style={{ padding: "0em 1em 1em 1em" }}
+        >
+          {
+            mostPopular.map((recipe: Recipe, index: number) => (
+              <SwiperSlide>
+                <RecipeCard recipe={recipe} key={recipe.id} showHeart={false} height={250} maxWidth={400} />
+              </SwiperSlide>
+            ))
+          }
+        </Swiper>
+      </React.Fragment>
+    )
   }
 
 
@@ -40,44 +95,34 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
         <meta name="description" content="Recipe Finder Home Page" />
       </Head>
 
-      {mostPopular.length < 6 ?
-        <Center> <p>No Recommended results</p> </Center>
-        :
-        <>
-          <Center>Recommended</Center>
-          <Flex>
-            <Flex>
-              <Flex flexDirection={'column'}>
-                <Box mt={5}>
-                  <RecipeCard key={mostPopular[2].id} recipe={mostPopular[2]} />
-                </Box>
-                <Box mt={5}>
-                  <RecipeCard key={mostPopular[3].id} recipe={mostPopular[3]} />
-                </Box>
-              </Flex>
-              <Box ml={10} mt={5}>
-                <Center m={2}>Recipe of the Day</Center>
-                <RecipeCard key={mostPopular[1].id} recipe={mostPopular[1]} />
-              </Box>
-            </Flex>
-            <Flex flexDirection={'column'}>
-              <Box>
-                <RecipeCard key={mostPopular[4].id} recipe={mostPopular[4]} />
-                <RecipeCard key={mostPopular[5].id} recipe={mostPopular[5]} />
-                <RecipeCard key={mostPopular[6].id} recipe={mostPopular[6]} />
-              </Box>
-            </Flex>
-          </Flex>
-        </>}
 
-      <Divider orientation='horizontal' mt={10} mb={10} />
+      <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}>
+        <Box w={useBreakpointValue({ sm: "100%", md: "40%" })}>
+          <Center>
+            <h1 className="title">Recipe of the Day</h1>
+          </Center>
+          <br />
+          <RecipeCard recipe={mostPopular[0]} key={mostPopular[0].id} showHeart={false} height={250} maxWidth={600} />
+        </Box>
+        <Box w={useBreakpointValue({ sm: "100%", md: "60%" })}>
+          <Center>
+            <h1 className="title">Most Popular Recipes</h1>
+          </Center>
+          <br />
+          {
+            displayMostPopualrRecipes(mostPopular)
+          }
+        </Box>
+      </Stack>
 
-      {
-        displayHomepageSelection(homepageRecipes)
-      }
+      <br />
 
-
-
+      <Center>
+        <h1 className="title">Our Reccommended Recipes</h1>
+        </Center>
+        {
+          displayHomepageSelection(homepageRecipes)
+        }
 
     </React.Fragment>
   )

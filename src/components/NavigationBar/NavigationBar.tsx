@@ -113,7 +113,12 @@ const NavigationBar = () => {
 
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth='1px' textAlign="center">Recipe Finder</DrawerHeader>
+            
+          <DrawerHeader borderBottomWidth='1px' textAlign="center">
+            <NextLink href="/">
+              Recipe Finder
+            </NextLink>
+          </DrawerHeader>
           <DrawerBody>
             <Stack direction={"column"}>
               {/* Sidebar links */}
@@ -155,7 +160,12 @@ const NavigationBar = () => {
             <Button onClick={onOpen}>
               <FontAwesomeIcon icon={faBars} fontSize="1.3em" />
             </Button>
-            <h1 id={styles.navTitle}>Recipe Finder</h1>
+              
+            <h1 id={styles.navTitle}>
+            <NextLink href="/">
+              Recipe Finder  
+            </NextLink>
+            </h1>
             {
               useBreakpointValue({ sm: false, md: true }) ? searchBar() : null
             }

@@ -10,14 +10,16 @@ interface Props {
   title: string
   rating: string
   img: string,
+  maxWidth: number
+  height: number
 }
 
-const Card = ({title, rating, img, showHeart}: Props) => {
+const Card = ({title, rating, img, showHeart, maxWidth, height}: Props) => {
   return (
     <React.Fragment>
-      <Box className={styles.card} maxWidth={useBreakpointValue({base: "250px", md: "400px"})} height={useBreakpointValue({base: "200px", md: "225px"})}>
+      <Box className={styles.card} maxWidth={useBreakpointValue({base: `${maxWidth/1.6}px`, md: `${maxWidth}px`})} height={useBreakpointValue({base: `${height/1.125}px`, md: `${height}px`})}>
         
-        <Box className={styles.card_img} height={useBreakpointValue({base: "200px", md: "225px"})}>
+        <Box className={styles.card_img} height={useBreakpointValue({base: `${height/1.125}px`, md: `${height}px`})}>
           <img src={img} className={styles.img} />
           {
             !showHeart ? null :
