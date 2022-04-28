@@ -31,6 +31,16 @@ export type Ingredient = {
   ingredient_unit?: Maybe<Scalars['String']>;
 };
 
+export type IngredientInputType = {
+  ingredient: Scalars['String'];
+  quantity: Scalars['String'];
+  unit: Scalars['String'];
+};
+
+export type InstructionInputType = {
+  step_desc: Scalars['String'];
+};
+
 export type LoginInfo = {
   password: Scalars['String'];
   username: Scalars['String'];
@@ -38,6 +48,7 @@ export type LoginInfo = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addNewRecipe: Recipe;
   changeForgotPassword: UserResponse;
   changePassword: UserResponse;
   changeUsername: UserResponse;
@@ -49,6 +60,11 @@ export type Mutation = {
   register: UserResponse;
   requestDeleteAccount: Scalars['Boolean'];
   saveRecipeToUser: Scalars['Boolean'];
+};
+
+
+export type MutationAddNewRecipeArgs = {
+  input: RecipeInput;
 };
 
 
@@ -176,6 +192,18 @@ export type Recipe = {
   updated_at: Scalars['DateTime'];
 };
 
+export type RecipeInput = {
+  cook_time_minutes: Scalars['Float'];
+  footnotes: Array<Scalars['String']>;
+  ingredients: Array<IngredientInputType>;
+  instructions: Array<InstructionInputType>;
+  original_url: Scalars['String'];
+  photo_url: Scalars['String'];
+  prep_time_minutes: Scalars['Float'];
+  recipe_desc: Scalars['String'];
+  recipe_title: Scalars['String'];
+};
+
 export type RegInfo = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -200,6 +228,7 @@ export type User = {
   created_at: Scalars['DateTime'];
   email: Scalars['String'];
   id: Scalars['Float'];
+  theme: Scalars['String'];
   updated_at: Scalars['DateTime'];
   user_name: Scalars['String'];
 };
@@ -213,6 +242,13 @@ export type UserResponse = {
 export type DisplayRecipeFragment = { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null };
 
 export type StdUserFragment = { __typename?: 'User', id: number, user_name: string, email: string };
+
+export type AddNewRecipeMutationVariables = Exact<{
+  input: RecipeInput;
+}>;
+
+
+export type AddNewRecipeMutation = { __typename?: 'Mutation', addNewRecipe: { __typename?: 'Recipe', id: number } };
 
 export type ChangeForgotPasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -375,6 +411,39 @@ export const StdUserFragmentDoc = gql`
   email
 }
     `;
+export const AddNewRecipeDocument = gql`
+    mutation AddNewRecipe($input: RecipeInput!) {
+  addNewRecipe(input: $input) {
+    id
+  }
+}
+    `;
+export type AddNewRecipeMutationFn = Apollo.MutationFunction<AddNewRecipeMutation, AddNewRecipeMutationVariables>;
+
+/**
+ * __useAddNewRecipeMutation__
+ *
+ * To run a mutation, you first call `useAddNewRecipeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddNewRecipeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addNewRecipeMutation, { data, loading, error }] = useAddNewRecipeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddNewRecipeMutation(baseOptions?: Apollo.MutationHookOptions<AddNewRecipeMutation, AddNewRecipeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddNewRecipeMutation, AddNewRecipeMutationVariables>(AddNewRecipeDocument, options);
+      }
+export type AddNewRecipeMutationHookResult = ReturnType<typeof useAddNewRecipeMutation>;
+export type AddNewRecipeMutationResult = Apollo.MutationResult<AddNewRecipeMutation>;
+export type AddNewRecipeMutationOptions = Apollo.BaseMutationOptions<AddNewRecipeMutation, AddNewRecipeMutationVariables>;
 export const ChangeForgotPasswordDocument = gql`
     mutation ChangeForgotPassword($token: String!, $newpass: String!) {
   changeForgotPassword(token: $token, newPass: $newpass) {

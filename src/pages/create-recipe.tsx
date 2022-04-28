@@ -3,22 +3,19 @@ import Head from "next/head"
 import React, { useState } from "react"
 import styles from "../styles/create-recipe.module.css"
 import DeletableOption from "../components/DeletableOption"
-
-type Ingredient = {
-  name: string,
-  unit: string,
-  quantity: string,
-}
+import { useWhoAmIQuery, useAddNewRecipeMutation, IngredientInputType, InstructionInputType } from "../generated/graphql"
 
 const CreateRecipe = () => {
+  const { data: whoami } = useWhoAmIQuery()
+  const [addNewRecipe] = useAddNewRecipeMutation()
+
   const [recipeName, setRecipeName] = useState("")
-  const [recipeAuthor, setRecipeAuthor] = useState("")
   const [recipeDescription, setRecipeDescription] = useState("")
   const [cookTime, setCookTime] = useState("")
   const [prepTime, setPrepTime] = useState("")
 
 
-  const [ingredients, setIngredients] = useState<Ingredient[]>([])
+  const [ingredients, setIngredients] = useState<IngredientInputType[]>([])
   const [quantity, setQuantity] = useState("")
   const [ingredientName, setIngredientName] = useState("")
   const [unit, setUnit] = useState("")
@@ -27,16 +24,16 @@ const CreateRecipe = () => {
     if (ingredientName === "" || quantity === "" || unit === "") {
       return
     }
-    if (ingredients.find(ingredient => ingredient.name === ingredientName)) {
+    if (ingredients.find(ingredient => ingredient.ingredient === ingredientName)) {
       return
     }
-    setIngredients([...ingredients, { name: ingredientName, unit, quantity }])
+    setIngredients([...ingredients, { ingredient: ingredientName, unit, quantity }])
     setQuantity("")
     setIngredientName("")
     setUnit("")
   }
   const deleteIngredient = (text: string) => {
-    setIngredients(ingredients.filter(ingredient => `${ingredient.quantity} ${ingredient.unit} ${ingredient.name}` !== text))
+    setIngredients(ingredients.filter(ingredient => `${ingredient.quantity} ${ingredient.unit} ${ingredient.ingredient}` !== text))
   }
 
   const [instructions, setInstructions] = useState<string[]>([])
@@ -73,13 +70,32 @@ const CreateRecipe = () => {
     setFootnotes(footnotes.filter(footnote => footnote !== text))
   }
 
-  const addRecipe = () => {
+  const input = {
+    recipe_title: recipeName,
+    recipe_desc: recipeDescription,
+    prep_time_minutes: parseFloat(prepTime),
+    cook_time_minutes: parseFloat(cookTime),
+    ingredients: ingredients.map(ingredient => ({
+      ingredient: ingredient.ingredient,
+      unit: ingredient.unit,
+      quantity: ingredient.quantity
+    })),
+    instructions: [], //not working here. For some reason instructions.map keeps returning void
+    footnotes,
+    original_url: "balls",
+    photo_url: "https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg",
+  }
 
+  const addRecipe = async () => {
+    await addNewRecipe({
+      variables: {
+        input
+      }
+    })
   }
 
   const clearInputs = () => {
     setRecipeName("")
-    setRecipeAuthor("")
     setRecipeDescription("")
     setCookTime("")
     setPrepTime("")
@@ -112,10 +128,7 @@ const CreateRecipe = () => {
           <Input placeholder="Recipe Name" w="30em" value={recipeName} onChange={(e) => setRecipeName(e.target.value)}/>
         </Center>
         <Center>
-          <Stack direction="row" align="center" w="10em">
-            <p style={{ color: "grey", textAlign: "center" }}>By</p>
-            <Input placeholder="Author Name" value={recipeAuthor} onChange={(e) => setRecipeAuthor(e.target.value)}/>
-          </Stack>
+        <p style={{ color: "grey", textAlign: "center" }}>By {whoami?.whoami?.user_name}</p>
         </Center>
       </Stack>
 
@@ -162,7 +175,7 @@ const CreateRecipe = () => {
               {
                 ingredients.map((ingredient, index) => (
                   <Box key={index} style={{ marginBottom: "1em" }}>
-                    <DeletableOption text={`${ingredient.quantity} ${ingredient.unit} ${ingredient.name}`} onDelete={deleteIngredient}/>
+                    <DeletableOption text={`${ingredient.quantity} ${ingredient.unit} ${ingredient.ingredient}`} onDelete={deleteIngredient}/>
                   </Box>
                 ))}
             </ul>
