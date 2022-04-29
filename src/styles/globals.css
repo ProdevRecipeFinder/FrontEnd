@@ -19,3 +19,13 @@ body {
   font-size: 1.5em;
   margin-right: 0.5em;
 }
+
+.chat-body {
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+  padding-top: 4.5em !important;
+}
+
+.chat-header__minimize {
+  cursor: pointer;
+}
