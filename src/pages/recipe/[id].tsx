@@ -105,19 +105,19 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
             <Box marginRight="0.5em" fontSize="1.2em">
               <StarRatingComponent name="rate1" starCount={5} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
                 setRating(nextValue)
-              }}/>
+              }} />
             </Box>
-            { recipe.review_count } ratings
+            {recipe.review_count} ratings
           </Center>
         </Stack >
       </Center >
 
       {
-        whoAmI?.whoami ? null : 
+        whoAmI?.whoami ? null :
           <Box>
-            <br/>
+            <br />
             <Alert status='warning' variant='left-accent'>
-            <AlertIcon />
+              <AlertIcon />
               You are not logged in! You will not be able to save or review this recipe
             </Alert>
           </Box>
@@ -172,12 +172,12 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         { /* Recipe Ingredients */}
         <Stack width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <h2 className="title">Ingredients</h2>
-          <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })}/>
+          <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })} />
 
           <ul>
             {recipe.recipeIngredients!.map((ingredient, index) => (
               <Box key={index} style={{ marginBottom: "1em" }}>
-                <Checkbox size={useBreakpointValue({ base: "sm", md:"md", lg: "lg" })}> {ingredient.ingredient_qty} {ingredient.ingredient_unit} {ingredient.ingredient_name} </Checkbox>
+                <Checkbox size={useBreakpointValue({ base: "sm", md: "md", lg: "lg" })}> {ingredient.ingredient_qty} {ingredient.ingredient_unit} {ingredient.ingredient_name} </Checkbox>
               </Box>
             ))}
           </ul>
@@ -186,7 +186,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         { /* Recipe Steps */}
         <Stack width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <h2 className="title">Instructions</h2>
-          <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })}/>
+          <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })} />
           {
             recipe.recipeSteps!.map((instruction, index) => (
               <Box key={index} style={{ marginBottom: "1em" }}>
@@ -206,13 +206,17 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           <Stack>
             <h2 className="title">Footnotes</h2>
             <Divider />
-            {
-              recipe.footnotes?.map((footnote, index) => (
-                <Box key={index}>
-                  <p>{footnote}</p>
-                </Box>
-              ))
-            }
+            <ul>
+              {
+                recipe.footnotes?.map((footnote, index) => (
+                  <li key={index}>
+                    <Box>
+                      <p>{footnote}</p>
+                    </Box>
+                  </li>
+                ))
+              }
+            </ul>
           </Stack>
           :
           null
@@ -225,12 +229,31 @@ export async function getServerSideProps(context: any) { // Get recipe from url 
   const apolloClient = initializeApollo();
   const recipeId = context.query.id;
 
+  // redirect if recipeId is not a number
+  if (isNaN(Number(recipeId))) {
+    return {
+      redirect: {
+        destination: '/404',
+        permanent: false
+      }
+    }
+  }
+
   const recipeData = await apolloClient.query({
     query: GetOneRecipeDocument,
     variables: {
       id: parseInt(recipeId)
     }
   })
+
+  if (!recipeData.data.getOneRecipe) {
+    return {
+      redirect: {
+        destination: '/404',
+        permanent: false
+      }
+    }
+  }
 
   return {
     props: {

@@ -44,8 +44,8 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
         >
           {
             plainResult.map((recipe: Recipe, index: number) => (
-              <SwiperSlide style={{ padding: "1em" }}>
-                <RecipeCard recipe={recipe} key={recipe.id} showHeart={false} height={250} maxWidth={400} />
+              <SwiperSlide key={recipe.id} style={{ padding: "1em" }}>
+                <RecipeCard recipe={recipe} showHeart={false} height={250} maxWidth={400} />
               </SwiperSlide>
             ))
           }
@@ -77,8 +77,8 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
         >
           {
             mostPopular.map((recipe: Recipe, index: number) => (
-              <SwiperSlide>
-                <RecipeCard recipe={recipe} key={recipe.id} showHeart={false} height={250} maxWidth={400} />
+              <SwiperSlide key={recipe.id}>
+                <RecipeCard recipe={recipe} showHeart={false} height={250} maxWidth={400} />
               </SwiperSlide>
             ))
           }

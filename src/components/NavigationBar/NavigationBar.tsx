@@ -128,12 +128,11 @@ const NavigationBar = () => {
               }
               <NavigationBarItem onClick={onClose} href={"/"} text={"Home"} icon={faHome} />
               {
-                !userData?.whoami?.id ? null :
-                <NavigationBarItem onClick={onClose} href={"/my-cookbook/"} text={"My Cookbook"} icon={faBookOpen} />
-              }
-              {
-                !userData?.whoami?.id ? null :
-                <NavigationBarItem onClick={onClose} href={"/create-recipe/"} text={"Create Recipe"} icon={faPlus} />
+                !userData?.whoami?.id ? null : 
+                  <React.Fragment>
+                    <NavigationBarItem onClick={onClose} href={"/my-cookbook/"} text={"My Cookbook"} icon={faBookOpen} />
+                    <NavigationBarItem onClick={onClose} href={"/create-recipe/"} text={"Create Recipe"} icon={faPlus} />
+                  </React.Fragment>
               }
               <NavigationBarItem onClick={onClose} href={"/about-us/"} text={"About"} icon={faCircleInfo} />
               <NavigationBarItem onClick={onClose} href={"/contact-us/"} text={"Contact Us"} icon={faEnvelope} />
