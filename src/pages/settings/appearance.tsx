@@ -27,8 +27,12 @@ const Appearance: NextPage = () => {
         <br />
 
         <Stack direction="row" spacing="1em">
-          <ThemeCard setter={setTheme} name="dark" imageUrl="https://github.githubassets.com/images/modules/settings/color_modes/dark_preview.svg" isChecked={"dark" === theme} />
-          <ThemeCard setter={setTheme} name="light" imageUrl="https://github.githubassets.com/images/modules/settings/color_modes/light_preview.svg" isChecked={"light" === theme} />
+          <Box id="darkThemeButton">
+            <ThemeCard setter={setTheme} name="dark" imageUrl="https://github.githubassets.com/images/modules/settings/color_modes/dark_preview.svg" isChecked={"dark" === theme} />
+          </Box>
+          <Box id="lightThemeButton">
+            <ThemeCard setter={setTheme} name="light" imageUrl="https://github.githubassets.com/images/modules/settings/color_modes/light_preview.svg" isChecked={"light" === theme} />
+          </Box>
         </Stack>
 
       </Box>
