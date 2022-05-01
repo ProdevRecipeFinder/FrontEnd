@@ -1,9 +1,10 @@
-import { Box, useBreakpointValue }  from '@chakra-ui/react'
+import { Box, Flex, useBreakpointValue }  from '@chakra-ui/react'
 import { faHeartCircleCheck }       from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon }          from '@fortawesome/react-fontawesome'
 import { truncateString }           from "../../utils/truncString"
 import styles                       from "./Card.module.scss"
 import React                        from "react"
+import StarRatingComponent          from "react-star-rating-component"
 
 interface Props {
   showHeart?: boolean
@@ -33,9 +34,12 @@ const Card = ({title, rating, img, showHeart, maxWidth, height}: Props) => {
           <Box className={styles.card_title}>
             <h3>{truncateString(title, 30)}</h3>
           </Box>
-          <p>
-            {rating}
-          </p>
+          <Flex direction="row" align="center">
+            <StarRatingComponent name="rate1" starCount={5} value={parseFloat(rating)} editing={false}/>
+            <Box marginLeft="0.5em">
+              {rating}
+            </Box>
+          </Flex>
         </Box>
 
       </Box>
