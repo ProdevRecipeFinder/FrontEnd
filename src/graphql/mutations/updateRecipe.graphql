@@ -1,0 +1,3 @@
+mutation UpdateRecipe($id: Float!, $input: RecipeInput!){
+  updateRecipe(id: $id, input: $input)
+}
