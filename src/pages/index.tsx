@@ -1,30 +1,47 @@
-import { Box, Center, Divider, Flex, SimpleGrid, Stack, useBreakpointValue } from '@chakra-ui/react'
-import type { NextPage } from 'next'
-import React from 'react'
-import Head from 'next/head'
-import RecipeCard from '../components/Recipe/RecipeCard'
-import { GetHomePageDocument, GetMostPopularDocument, PaginatedRecipe, Recipe } from '../generated/graphql'
-import { initializeApollo } from '../utils/apollo'
+import {
+  Box,
+  Center,
+  Divider,
+  Flex,
+  SimpleGrid,
+  Stack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import type { NextPage } from "next";
+import React from "react";
+import Head from "next/head";
+import RecipeCard from "../components/Recipe/RecipeCard";
+import {
+  GetHomePageDocument,
+  GetMostPopularDocument,
+  PaginatedRecipe,
+  Recipe,
+} from "../generated/graphql";
+import { initializeApollo } from "../utils/apollo";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css"
-import "swiper/css/pagination"
-import "swiper/css/navigation"
-import { Pagination, Navigation, Autoplay } from 'swiper'
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Pagination, Navigation, Autoplay } from "swiper";
 
 interface Props {
   mostPopular: Recipe[];
-  homepageData: PaginatedRecipe
+  homepageData: PaginatedRecipe;
 }
 
 const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
-
-  const homepageRecipes: Recipe[] = homepageData.recipes
+  const homepageRecipes: Recipe[] = homepageData.recipes;
 
   const displayHomepageSelection = (homepageRecipes: Recipe[]) => {
     if (!homepageRecipes || !homepageRecipes.length)
-      return (<Center> <p>No search results</p> </Center>)
-    const plainResult = Object.values(homepageRecipes)
+      return (
+        <Center>
+          {" "}
+          <p>No search results</p>{" "}
+        </Center>
+      );
+    const plainResult = Object.values(homepageRecipes);
     if (plainResult.length) {
       return (
         <Swiper
@@ -50,18 +67,17 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
             ))
           }
         </Swiper>
-      )
+      );
     }
-  }
+  };
 
   const displayMostPopualrRecipes = (mostPopular: Recipe[]) => {
-    if (mostPopular.length > 6)
-      return null
+    if (mostPopular.length > 6) return null;
 
     return (
       <React.Fragment>
         <Swiper
-          slidesPerView={useBreakpointValue({ base: 1, xl: 2, })}
+          slidesPerView={useBreakpointValue({ base: 1, xl: 2 })}
           spaceBetween={50}
           loop={true}
           autoplay={{
@@ -84,9 +100,8 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
           }
         </Swiper>
       </React.Fragment>
-    )
-  }
-
+    );
+  };
 
   return (
     <React.Fragment>
@@ -101,16 +116,22 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
             <h1 className="title">Recipe of the Day</h1>
           </Center>
           <br />
-          <RecipeCard recipe={mostPopular[0]} key={mostPopular[0].id} showHeart={false} height={250} maxWidth={600} />
+          {mostPopular.length > 6 ? null : (
+            <RecipeCard
+              recipe={mostPopular[0]}
+              key={mostPopular[0].id}
+              showHeart={false}
+              height={250}
+              maxWidth={600}
+            />
+          )}
         </Box>
         <Box w={useBreakpointValue({ sm: "100%", md: "60%" })}>
           <Center>
             <h1 className="title">Most Popular Recipes</h1>
           </Center>
           <br />
-          {
-            displayMostPopualrRecipes(mostPopular)
-          }
+          {/* {displayMostPopualrRecipes(mostPopular)} */}
         </Box>
       </Stack>
 
@@ -118,38 +139,38 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
 
       <Center>
         <h1 className="title">Our Reccommended Recipes</h1>
-        </Center>
-        {
-          displayHomepageSelection(homepageRecipes)
-        }
-
+      </Center>
+      {displayHomepageSelection(homepageRecipes)}
     </React.Fragment>
-  )
-}
+  );
+};
 
-export async function getServerSideProps(context: any) { // Get recipe from url id parameter
+export async function getServerSideProps(context: any) {
+  // Get recipe from url id parameter
   const apolloClient = initializeApollo();
 
   const mostPopularData = await apolloClient.query({
     query: GetMostPopularDocument,
     variables: {
-      limit: 7
-    }
-  })
+      limit: 7,
+    },
+  });
+
+  console.log(mostPopularData);
 
   const homepageRecipeData = await apolloClient.query({
     query: GetHomePageDocument,
     variables: {
-      limit: 10
-    }
-  })
+      limit: 10,
+    },
+  });
 
   return {
     props: {
       mostPopular: mostPopularData.data.getMostPopular,
       homepageData: homepageRecipeData.data.getHomePage,
-    }
-  }
+    },
+  };
 }
 
-export default Home
+export default Home;
