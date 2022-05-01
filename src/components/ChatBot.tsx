@@ -85,15 +85,16 @@ const ChatBot = () => {
         inputStyle={{ backgroundColor: useColorModeValue('white', '#252525')}}
         backgroundColor={useColorModeValue('white', '#171717')}
         containerStyle={{
-          boxShadow: useColorModeValue("0px 0px 10px 0 rgba(0, 0, 0, 0.8)", "0px 0px 10px 0 rgba(255, 255, 255, 0.8)"),
+          boxShadow: useColorModeValue("0px 0px 20px 0 rgba(0, 0, 0, 0.8)", "0px 0px 20px 0 rgba(255, 255, 255, 0.8)"),
           position: "fixed",
           bottom: useBreakpointValue({ base: undefined, md: "1em" }),
           right: useBreakpointValue({ base: undefined, md: "1em" }),
           borderRadius: "1em",
           zIndex: "100",
         }}
-        chatIcon="./chatOpenIcon.png"
-        minimizeIcon="./chatCloseIcon.png"
+        chatIcon="./chatIcon.png"
+        minimizeIcon="./minimizeIcon.png"
+        sendIcon="./sendIcon.png"
         isTyping={typing}
         messages={messages}
         onSend={message => handleSendMessage(message)}
