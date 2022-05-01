@@ -262,7 +262,10 @@ const CreateRecipe = () => {
             </form>
           </Stack>
           <Center>
-            <Button isLoading={autoIngredienstLoading} disabled={!recipeName.length || !recipeDescription.length} onClick={generateIngredients}>Auto Generate Ingredients</Button>
+            <Stack direction={useBreakpointValue({sm: "column", md: "row"})} justify="space-evenly" width="100%">
+              <Button isLoading={autoIngredienstLoading} disabled={!recipeName.length || !recipeDescription.length} onClick={generateIngredients}>Auto Generate Ingredients</Button>
+              <Button disabled={!ingredients.length} onClick={() => setIngredients([])}>Clear</Button>
+            </Stack>
           </Center>
         </Stack>
 
@@ -288,7 +291,10 @@ const CreateRecipe = () => {
             </form>
           </Stack>
           <Center>
-            <Button isLoading={autoInstructionsLoading} disabled={!recipeName.length || !recipeDescription.length} onClick={generateInstructions}>Auto Generate Instructions</Button>
+            <Stack direction={useBreakpointValue({sm: "column", md: "row"})} justify="space-evenly" width="100%">
+              <Button isLoading={autoInstructionsLoading} disabled={!recipeName.length || !recipeDescription.length} onClick={generateInstructions}>Auto Generate Instructions</Button>
+              <Button  disabled={!instructions.length}  onClick={() => setInstructions([])}>Clear</Button>
+            </Stack>
           </Center>
         </Stack>
       </Stack>
