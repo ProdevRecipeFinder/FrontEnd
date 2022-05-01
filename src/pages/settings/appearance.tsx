@@ -17,7 +17,7 @@ const Appearance: NextPage = () => {
     <React.Fragment>
       <Head>
         <title>Appearance - Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Appearance Page" />
+        <meta name="description" content="Recipe Finder Appearance" />
       </Head>
       <Box className={styles.container}>
         <h1 className="title">Appearance</h1>
@@ -27,8 +27,12 @@ const Appearance: NextPage = () => {
         <br />
 
         <Stack direction="row" spacing="1em">
-          <ThemeCard setter={setTheme} name="dark" imageUrl="https://github.githubassets.com/images/modules/settings/color_modes/dark_preview.svg" isChecked={"dark" === theme} />
-          <ThemeCard setter={setTheme} name="light" imageUrl="https://github.githubassets.com/images/modules/settings/color_modes/light_preview.svg" isChecked={"light" === theme} />
+          <Box id="darkThemeButton">
+            <ThemeCard setter={setTheme} name="dark" imageUrl="https://github.githubassets.com/images/modules/settings/color_modes/dark_preview.svg" isChecked={"dark" === theme} />
+          </Box>
+          <Box id="lightThemeButton">
+            <ThemeCard setter={setTheme} name="light" imageUrl="https://github.githubassets.com/images/modules/settings/color_modes/light_preview.svg" isChecked={"light" === theme} />
+          </Box>
         </Stack>
 
       </Box>

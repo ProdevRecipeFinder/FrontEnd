@@ -48,7 +48,7 @@ const Login: NextPage = () => {
     <React.Fragment>
       <Head>
         <title>Login - Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Login Page" />
+        <meta name="description" content="Recipe Finder Login" />
       </Head>
       <Center>
         <Stack direction="column" textAlign="center">

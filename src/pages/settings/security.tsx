@@ -27,7 +27,7 @@ const Security = () => {
     <React.Fragment>
       <Head>
         <title>Security - Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Home Page" />
+        <meta name="description" content="Recipe Finder Security" />
       </Head>
       
       <Box className={styles.container}>
