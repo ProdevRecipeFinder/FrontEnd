@@ -229,7 +229,8 @@ const CreateRecipe = () => {
   const generateSubstitute = async (input: string) => {
     const response = await openai.createCompletion("text-davinci-002", {
       prompt: `Generate a list of substitutes for ${input} in a ${recipeName} recipe. This recipe is described as "${recipeDescription}". \n\n
-      1.
+      The list must be in the format of: 1. ingredientName 2. ingredientName 3. ingredientName \n\n
+      List:
       `,
       temperature: 0.7,
       max_tokens: 500,
