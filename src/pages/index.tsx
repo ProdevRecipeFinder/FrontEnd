@@ -59,17 +59,13 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
           modules={[Pagination, Navigation, Autoplay]}
           style={{ padding: "1em" }}
         >
-          {plainResult.map((recipe: Recipe, index: number) => (
-            <SwiperSlide style={{ padding: "1em" }}>
-              <RecipeCard
-                recipe={recipe}
-                key={recipe.id}
-                showHeart={false}
-                height={250}
-                maxWidth={400}
-              />
-            </SwiperSlide>
-          ))}
+          {
+            plainResult.map((recipe: Recipe, index: number) => (
+              <SwiperSlide key={recipe.id} style={{ padding: "1em" }}>
+                <RecipeCard recipe={recipe} showHeart={false} height={250} maxWidth={400} />
+              </SwiperSlide>
+            ))
+          }
         </Swiper>
       );
     }
@@ -95,17 +91,13 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
           modules={[Pagination, Navigation, Autoplay]}
           style={{ padding: "0em 1em 1em 1em" }}
         >
-          {mostPopular.map((recipe: Recipe, index: number) => (
-            <SwiperSlide>
-              <RecipeCard
-                recipe={recipe}
-                key={recipe.id}
-                showHeart={false}
-                height={250}
-                maxWidth={400}
-              />
-            </SwiperSlide>
-          ))}
+          {
+            mostPopular.map((recipe: Recipe, index: number) => (
+              <SwiperSlide key={recipe.id}>
+                <RecipeCard recipe={recipe} showHeart={false} height={250} maxWidth={400} />
+              </SwiperSlide>
+            ))
+          }
         </Swiper>
       </React.Fragment>
     );
@@ -114,8 +106,8 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
   return (
     <React.Fragment>
       <Head>
-        <title>Home- Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Home Page" />
+        <title>Home - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Home" />
       </Head>
 
       <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}>

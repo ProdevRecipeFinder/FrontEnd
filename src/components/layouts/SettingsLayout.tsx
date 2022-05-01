@@ -29,7 +29,7 @@ const SettingsLayout = ({ children }: Props) => {
 
       {/* Avatar and username at the top of the page */}
       <Box id={styles.account}>
-        <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}  align="center" >
+        <Stack direction={useBreakpointValue({ base: "column", md: "row" })}  align="center" >
           <Avatar
             size={"md"}
             src={"https://avatars.dicebear.com/api/male/username.svg"}

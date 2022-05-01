@@ -42,8 +42,8 @@ const MyCookBook: NextPage = () => {
   return (
     <React.Fragment>
       <Head>
-        <title>My Cookbook- Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Cookbook Page" />
+        <title>My Cookbook - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder My Cookbook" />
       </Head>
 
       <Center>

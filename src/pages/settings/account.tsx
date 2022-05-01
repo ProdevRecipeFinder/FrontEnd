@@ -30,7 +30,7 @@ const account = () => {
     <React.Fragment>
       <Head>
         <title>Account - Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Home Page" />
+        <meta name="description" content="Recipe Finder Account" />
       </Head>
       <Box className={styles.container}>
         <h1 className="title">Change Username</h1>

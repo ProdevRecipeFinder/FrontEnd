@@ -9,7 +9,6 @@ import '../styles/globals.css'
 import theme from '../theme'
 import { useApollo } from "../utils/apollo"
 
-
 function MyApp({ Component, pageProps }: AppProps) {
   const client = useApollo(pageProps)
   const router = useRouter()
