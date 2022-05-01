@@ -4,6 +4,14 @@ import React, { useState } from "react"
 import styles from "../styles/create-recipe.module.css"
 import DeletableOption from "../components/DeletableOption"
 import { useWhoAmIQuery, useAddNewRecipeMutation, IngredientInputType, InstructionInputType } from "../generated/graphql"
+import { Configuration, OpenAIApi } from "openai";
+import getIngredientsData from "../utils/getIngredientsData"
+
+const config = new Configuration({
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
+})
+
+const openai = new OpenAIApi(config)
 
 const CreateRecipe = () => {
   const { data: whoami } = useWhoAmIQuery()
@@ -35,6 +43,7 @@ const CreateRecipe = () => {
   const deleteIngredient = (text: string) => {
     setIngredients(ingredients.filter(ingredient => `${ingredient.quantity} ${ingredient.unit} ${ingredient.ingredient}` !== text))
   }
+  const [autoIngredienstLoading, setAutoIngredienstLoading] = useState(false)
 
   const [instructions, setInstructions] = useState<string[]>([])
   const [step, setStep] = useState("")
@@ -52,6 +61,7 @@ const CreateRecipe = () => {
   const deleteStep = (text: string) => {
     setInstructions(instructions.filter(i => i !== text))
   }
+  const [autoInstructionsLoading, setAutoInstructionsLoading] = useState(false)
 
   const [footnotes, setFootnotes] = useState<string[]>([])
   const [footnote, setFootnote] = useState("")
@@ -109,11 +119,71 @@ const CreateRecipe = () => {
     setFootnote("")
   }
 
+  const generateIngredients = async () => {
+    const prompt = `Generate ingredients for the following recipe, in the following format:\n
+      quantity unit(grams, ounces, lbs, etc.) ingredientName
+      ${recipeName}\n
+      ${recipeDescription}\n
+      ${instructions.length ? instructions.map(i => i + "\n") : ""} \n
+      ${ingredients.length ? ingredients.map(i => `${i.quantity} ${i.unit} ${i.ingredient}`).join("\n") : ""} \n
+
+      Output: 
+      `
+
+    setAutoIngredienstLoading(true)
+    const response = await openai.createCompletion("text-davinci-002", {
+      prompt,
+      temperature: 0.7,
+      max_tokens: 500,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    })
+    setAutoIngredienstLoading(false)
+
+    //@ts-ignore
+    const output = response.data.choices[0].text.trim().split("\n")
+    const tempIngredients: IngredientInputType[] = getIngredientsData(output)
+    
+    setIngredients([...ingredients, ...tempIngredients])
+  }
+
+  const generateInstructions = async () => {
+    const prompt = `Generate instructions for the following recipe:
+    ${recipeName}\n
+    ${recipeDescription}\n
+    ${instructions.length ? instructions.map(i => i + "\n") : ""} \n
+    ${ingredients.length ? ingredients.map(i => `${i.quantity} ${i.unit} ${i.ingredient}`).join("\n") : ""} \n
+
+    Output: 
+    `
+
+    setAutoInstructionsLoading(true)
+    const response = await openai.createCompletion("text-davinci-002", {
+      prompt,
+      temperature: 0.7,
+      max_tokens: 500,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    })
+    setAutoInstructionsLoading(false)
+
+    //@ts-ignore
+    const output = response.data.choices[0].text.trim().split("\n").filter(i => i !== "")
+
+    setInstructions([...instructions, ...output.map(i => {
+      const instruction = i.split(" ")
+      instruction.shift()
+      return instruction.join(" ")
+    })])
+  }
+
   return (
     <React.Fragment>
       <Head>
-        <title>Account - Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Home Page" />
+        <title>Create Recipe - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Create Recipe" />
       </Head>
 
       <Center>
@@ -125,10 +195,10 @@ const CreateRecipe = () => {
       { /* Page Title */}
       <Stack direction={"column"} textAlign="center" w="100%">
         <Center>
-          <Input placeholder="Recipe Name" w="30em" value={recipeName} onChange={(e) => setRecipeName(e.target.value)}/>
+          <Input placeholder="Recipe Name" w="30em" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} />
         </Center>
         <Center>
-        <p style={{ color: "grey", textAlign: "center" }}>By {whoami?.whoami?.user_name}</p>
+          <p style={{ color: "grey", textAlign: "center" }}>By {whoami?.whoami?.user_name}</p>
         </Center>
       </Stack>
 
@@ -145,16 +215,16 @@ const CreateRecipe = () => {
         </Box>
         <Box width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <Stack className={styles.summaryBox} direction={"column"}>
-            <Textarea placeholder="Recipe description" h="15em" value={recipeDescription} onChange={(e) => setRecipeDescription(e.target.value)}/>
+            <Textarea placeholder="Recipe description" h="15em" value={recipeDescription} onChange={(e) => setRecipeDescription(e.target.value)} />
             <br />
-            <Stack direction="row" align="center" w="100%"> 
+            <Stack direction="row" align="center" w="100%">
               <p><b>Cook time: </b></p>
-              <Input w="4em" float="right" type="number" value={cookTime} onChange={(e) => setCookTime(e.target.value)}/>
+              <Input w="4em" float="right" type="number" value={cookTime} onChange={(e) => setCookTime(e.target.value)} />
               <p>mins</p>
             </Stack>
             <Stack direction="row" align="center">
               <p><b>Prep time: </b></p>
-              <Input w="4em" float="right" type="number" value={prepTime} onChange={(e) => setPrepTime(e.target.value)}/>
+              <Input w="4em" float="right" type="number" value={prepTime} onChange={(e) => setPrepTime(e.target.value)} />
               <p>mins</p>
             </Stack>
           </Stack>
@@ -168,17 +238,17 @@ const CreateRecipe = () => {
         <Stack width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <h2 className="title">Ingredients</h2>
           <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })} />
-          
+
           {
-            !ingredients.length ? null :  
-            <ul>
-              {
-                ingredients.map((ingredient, index) => (
-                  <Box key={index} style={{ marginBottom: "1em" }}>
-                    <DeletableOption text={`${ingredient.quantity} ${ingredient.unit} ${ingredient.ingredient}`} onDelete={deleteIngredient}/>
-                  </Box>
-                ))}
-            </ul>
+            !ingredients.length ? null :
+              <ul>
+                {
+                  ingredients.map((ingredient, index) => (
+                    <Box key={index} style={{ marginBottom: "1em" }}>
+                      <DeletableOption text={`${ingredient.quantity} ${ingredient.unit} ${ingredient.ingredient}`} onDelete={deleteIngredient} />
+                    </Box>
+                  ))}
+              </ul>
           }
 
           <Stack direction="row" align="center" w="100%">
@@ -191,6 +261,9 @@ const CreateRecipe = () => {
               </Flex>
             </form>
           </Stack>
+          <Center>
+            <Button isLoading={autoIngredienstLoading} disabled={!recipeName.length || !recipeDescription.length} onClick={generateIngredients}>Auto Generate Ingredients</Button>
+          </Center>
         </Stack>
 
         { /* Recipe Steps */}
@@ -201,20 +274,22 @@ const CreateRecipe = () => {
             instructions.map((step, index) => (
               <Box key={index} style={{ marginBottom: "1em" }}>
                 <b><p>Step {index + 1}</p></b>
-                <DeletableOption text={step} onDelete={deleteStep}/>
+                <DeletableOption text={step} onDelete={deleteStep} />
               </Box>
             ))
           }
 
           <Stack direction="row" align="center" w="100%">
-            <form style={{width: "100%"}}>
+            <form style={{ width: "100%" }}>
               <Flex justify="space-around">
                 <Input placeholder="Step" value={step} onChange={(e) => setStep(e.target.value)} w="75%" />
                 <Button w="20%" onClick={addStep} type="submit">Add</Button>
               </Flex>
             </form>
           </Stack>
-
+          <Center>
+            <Button isLoading={autoInstructionsLoading} disabled={!recipeName.length || !recipeDescription.length} onClick={generateInstructions}>Auto Generate Instructions</Button>
+          </Center>
         </Stack>
       </Stack>
 
@@ -231,7 +306,7 @@ const CreateRecipe = () => {
           ))
         }
         <Stack direction="row" align="center" w="100%">
-          <form style={{width: "100%"}}>
+          <form style={{ width: "100%" }}>
             <Flex justify="space-around">
               <Input placeholder="Footnote" value={footnote} onChange={(e) => setFootnote(e.target.value)} w="75%" />
               <Button w="20%" onClick={addFootnote} type="submit">Add</Button>

@@ -91,8 +91,8 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
   return (
     <React.Fragment>
       <Head>
-        <title>Home- Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Home Page" />
+        <title>Home - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Home" />
       </Head>
 
       <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}>

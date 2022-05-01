@@ -17,7 +17,7 @@ const Appearance: NextPage = () => {
     <React.Fragment>
       <Head>
         <title>Appearance - Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Appearance Page" />
+        <meta name="description" content="Recipe Finder Appearance" />
       </Head>
       <Box className={styles.container}>
         <h1 className="title">Appearance</h1>
