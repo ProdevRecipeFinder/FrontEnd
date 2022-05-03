@@ -44,6 +44,8 @@
         "next-apollo": "^5.0.8",
         "openai": "^2.0.5",
         "password-validator": "^5.2.1",
+        "patch-package": "^6.4.7",
+        "postinstall-postinstall": "^2.1.0",
         "react": "^18.0.0",
         "react-dom": "18.0.0",
         "react-google-recaptcha": "^2.1.0",

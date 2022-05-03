@@ -1,20 +1,18 @@
 
-import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
+import { Dropzone, FileItem, FileValidated, FullScreenPreview } from "@dropzone-ui/react";
 import { useState } from "react";
 
 export const ImageUpload = () => {
 
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<FileValidated[]>([]);
   const [imageSrc, setImageSrc] = useState(undefined);
 
   const updateFiles = (incommingFiles: any) => {
     console.log("incomming files", incommingFiles);
     setFiles(incommingFiles);
   };
-  const onDelete = (id: number) => {
-    if (files[0]) {
-      setFiles(files.filter((x) => x.id !== id));
-    }
+  const onDelete = (id: number | string | undefined) => {
+    setFiles(files.filter((x) => x.id !== id));
   };
   const handleSee = (imageSource: any) => {
     setImageSrc(imageSource);
@@ -26,34 +24,28 @@ export const ImageUpload = () => {
   return (
     <Dropzone
       style={{ minWidth: "550px" }}
-      //view={"list"}
+      view={"list"}
       onChange={updateFiles}
       minHeight="195px"
       onClean={handleClean}
       value={files}
       maxFiles={1}
-      //header={false}
-      // footer={false}
+      // header={false}
+      footer={false}
       maxFileSize={2998000}
-      //label="Drag'n drop files here or click to browse"
-      //label="Suleta tus archivos aquí"
+      label="Drag'n drop files here or click to browse"
       accept=".png,image/*"
-      // uploadingMessage={"Uploading..."}
-      url="https://my-awsome-server/upload-my-file"
-      //of course this url doens´t work, is only to make upload button visible
-      //uploadOnDrop
-      //clickable={false}
-      fakeUploading
-      //localization={"FR-fr"}
+      uploadingMessage={"Uploading..."}
+      url="http://localhost:4000/image-upload"
+      fakeUploading // Only for development
       disableScroll
     >
-      {files.map((file) => (
+      {files.map((file: FileValidated) => (
         <FileItem
           {...file}
           key={file.id}
           onDelete={onDelete}
           onSee={handleSee}
-          //localization={"ES-es"}
           resultOnTooltip
           preview
           info
@@ -63,7 +55,7 @@ export const ImageUpload = () => {
       <FullScreenPreview
         imgSource={imageSrc}
         openImage={imageSrc}
-        onClose={(e) => handleSee(undefined)}
+        onClose={(e: Event) => handleSee(undefined)}
       />
     </Dropzone>
   );
