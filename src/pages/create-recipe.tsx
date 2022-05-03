@@ -8,6 +8,8 @@ import { Configuration, OpenAIApi } from "openai";
 import getIngredientsData from "../utils/getIngredientsData"
 import { ImageUpload } from "../components/ImageUpload/ImageUpload"
 import { v4 } from 'uuid';
+import { useRouter } from 'next/router'
+import { initializeApollo } from "../utils/apollo"
 
 const config = new Configuration({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
@@ -18,6 +20,8 @@ const openai = new OpenAIApi(config)
 const CreateRecipe = () => {
   // Hooks
   const toast = useToast()
+  const router = useRouter()
+  const apolloClient = initializeApollo()
 
   // Queries and Mutations
   const { data: whoami } = useWhoAmIQuery()
@@ -176,6 +180,19 @@ const CreateRecipe = () => {
         uuid: uuidState
       }
     })
+
+    apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedRecipes"})
+    apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedStatus"})
+
+    toast({
+      title: "Recipe Added",
+      description: "Your recipe has been added to your cookbook",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    })
+
+    router.push("/my-cookbook")
   }
   const clearInputs = () => {
     setRecipeName("")

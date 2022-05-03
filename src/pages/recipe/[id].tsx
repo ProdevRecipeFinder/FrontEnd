@@ -8,9 +8,21 @@ import {
   Alert,
   Stack,
   Box,
+  useDisclosure,
+  Button,
+} from '@chakra-ui/react'
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from '@chakra-ui/react'
 import {
   useDeleteSavedRecipeMutation,
+  useDeleteRecipeMutation,
   useSaveRecipeToUserMutation,
   GetSavedStatusDocument,
   GetOneRecipeDocument,
@@ -23,6 +35,7 @@ import { HeartSwitch } from '@anatoliygatt/heart-switch'
 import { NextPage } from 'next'
 import styles from "./Recipe.module.css"
 import StarRatingComponent from "react-star-rating-component"
+import { useRouter } from 'next/router'
 
 interface Props {
   recipe: Recipe,
@@ -33,11 +46,14 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   // Hooks
   const apolloClient = initializeApollo();
   const toast = useToast()
+  const router = useRouter()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   // Queries and Mutations
   const { data: whoAmI } = useWhoAmIQuery()
   const [saveRecipe] = useSaveRecipeToUserMutation();
   const [unsaveRecipe] = useDeleteSavedRecipeMutation();
+  const [deleteRecipe] = useDeleteRecipeMutation();
 
   // State
   const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -59,8 +75,31 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       getIsSaved()
   }, [])
 
+  const deleteRecipeFunction = async () => {
+    await deleteRecipe({
+      variables: {
+        id: recipe.id
+      }
+    })
+    toast({
+      title: "Recipe Deleted",
+      description: "Your recipe has been deleted.",
+      status: "success",
+      duration: 5000,
+      isClosable: true
+    })
+    apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedRecipes"})
+    apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedStatus"})
+    router.push("/my-cookbook")
+  }
+
   async function updateSaveStatus() {
     if (isSaved) {
+      if (whoAmI?.whoami?.user_name === recipe.recipeAuthors[0].user_name) {
+        onOpen()
+        return
+      }
+
       await unsaveRecipe({
         variables: {
           recipe_id: recipe.id
@@ -96,6 +135,25 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   // Render
   return (
     <React.Fragment>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Delete Recipe</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            Unsaving this recipe has the affect of deleting it, because you created it. Are you sure?
+          </ModalBody>
+
+          <ModalFooter>
+            <Button  mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="outline" colorScheme="red" style={{background: "transparent"}} onClick={deleteRecipeFunction}>Yes, delete recipe</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       { /* Page Title */}
       <Center>
         <Stack direction={"column"} textAlign="center">
