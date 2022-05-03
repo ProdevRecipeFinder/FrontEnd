@@ -155,9 +155,9 @@ const CreateRecipe = () => {
             unit: ingredient.unit,
             quantity: ingredient.quantity
           })),
-          instructions: [], //not working here. For some reason instructions.map keeps returning void
+          instructions: instructions.map(instruction => { return { step_desc: instruction } }), //not working here. For some reason instructions.map keeps returning void
           footnotes,
-          original_url: "balls",
+          original_url: "N/A",
           photo_url: "https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg",
         },
         uuid: uuidState
