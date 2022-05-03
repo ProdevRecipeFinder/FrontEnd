@@ -58,7 +58,8 @@
         "react-stonecutter": "^0.3.10",
         "sass": "^1.50.1",
         "swiper": "^8.1.4",
-        "urlencode": "^1.1.0"
+        "urlencode": "^1.1.0",
+        "uuid": "^8.3.2"
     },
     "devDependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -70,6 +71,7 @@
         "@types/react": "17.0.43",
         "@types/react-dom": "17.0.14",
         "@types/urlencode": "^1.1.2",
+        "@types/uuid": "^8.3.4",
         "eslint": "8.12.0",
         "eslint-config-next": "12.1.4",
         "typescript": "4.6.3"

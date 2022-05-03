@@ -2,7 +2,11 @@
 import { Dropzone, FileItem, FileValidated, FullScreenPreview } from "@dropzone-ui/react";
 import { useState } from "react";
 
-export const ImageUpload = () => {
+type Props = {
+  uuid: string
+}
+
+export const ImageUpload = ({ uuid }: Props) => {
 
   const [files, setFiles] = useState<FileValidated[]>([]);
   const [imageSrc, setImageSrc] = useState(undefined);
@@ -31,13 +35,14 @@ export const ImageUpload = () => {
       value={files}
       maxFiles={1}
       // header={false}
+      uploadOnDrop={true}
       footer={false}
       maxFileSize={2998000}
       label="Drag'n drop files here or click to browse"
       accept=".png,image/*"
       uploadingMessage={"Uploading..."}
-      url="http://localhost:4000/image-upload"
-      fakeUploading // Only for development
+      url={`http://localhost:4000/image-upload/${uuid}`}
+      // fakeUploading // Only for development
       disableScroll
     >
       {files.map((file: FileValidated) => (

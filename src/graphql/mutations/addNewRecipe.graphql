@@ -1,5 +1,3 @@
-mutation AddNewRecipe($input: RecipeInput!) {
-  addNewRecipe(input: $input) {
-    id
-  }
+mutation AddNewRecipe($input: RecipeInput!, $uuid: String!) {
+  addNewRecipe(input: $input, uuid: $uuid)
 }
