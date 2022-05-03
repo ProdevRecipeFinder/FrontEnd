@@ -13,9 +13,10 @@ interface Props {
   img: string,
   maxWidth: number
   height: number
+  showStars?: boolean
 }
 
-const Card = ({title, rating, img, showHeart, maxWidth, height}: Props) => {
+const Card = ({title, rating, img, showHeart, maxWidth, height, showStars}: Props) => {
   return (
     <React.Fragment>
       <Box className={styles.card} maxWidth={useBreakpointValue({base: `${maxWidth/1.6}px`, md: `${maxWidth}px`})} height={useBreakpointValue({base: `${height/1.125}px`, md: `${height}px`})}>
@@ -35,8 +36,10 @@ const Card = ({title, rating, img, showHeart, maxWidth, height}: Props) => {
             <h3>{truncateString(title, 30)}</h3>
           </Box>
           <Flex direction="row" align="center">
-            <StarRatingComponent name="rate1" starCount={5} value={parseFloat(rating)} editing={false}/>
-            <Box marginLeft="0.5em">
+            {
+              !showStars ? null : <StarRatingComponent name="rate1" starCount={5} value={parseFloat(rating)} editing={false}/>
+            }
+            <Box marginLeft={showStars ? "0.5em" : undefined}>
               {rating}
             </Box>
           </Flex>

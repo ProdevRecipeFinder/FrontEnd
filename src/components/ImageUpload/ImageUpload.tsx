@@ -5,9 +5,10 @@ import { Box } from "@chakra-ui/react";
 
 type Props = {
   uuid: string
+  setImageUploaded: (uploaded: boolean) => void
 }
 
-export const ImageUpload = ({ uuid }: Props) => {
+export const ImageUpload = ({ uuid, setImageUploaded }: Props) => {
 
   const [files, setFiles] = useState<FileValidated[]>([]);
   const [imageSrc, setImageSrc] = useState(undefined);
@@ -25,6 +26,9 @@ export const ImageUpload = ({ uuid }: Props) => {
   const handleClean = (files: any) => {
     console.log("list cleaned", files);
   };
+  const onUploadFinish = () => {
+    setImageUploaded(true)
+  }
 
   return (
     <Dropzone
@@ -33,6 +37,7 @@ export const ImageUpload = ({ uuid }: Props) => {
       onChange={updateFiles}
       minHeight="195px"
       onClean={handleClean}
+      onUploadFinish={onUploadFinish}
       value={files}
       maxFiles={1}
       // header={false}

@@ -18,7 +18,8 @@ const RecipeCard = ({ recipe, showHeart, maxWidth, height }: Props) => {
         <a>
           <Card
             title={recipe.recipe_title}
-            rating={`${recipe.rating_stars}/5`}
+            rating={recipe.rating_stars !== "0" ? `${recipe.rating_stars}/5` : "No rating"}
+            showStars={recipe.rating_stars !== "0"}
             img={recipe.photo_url}
             showHeart={showHeart ? true : false}
             maxWidth={maxWidth}

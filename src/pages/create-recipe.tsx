@@ -3,7 +3,7 @@ import Head from "next/head"
 import React, { useState } from "react"
 import styles from "../styles/create-recipe.module.css"
 import DeletableOption from "../components/DeletableOption"
-import { useWhoAmIQuery, useAddNewRecipeMutation, IngredientInputType } from "../generated/graphql"
+import { useWhoAmIQuery, useAddNewRecipeMutation, IngredientInputType, useSaveRecipeToUserMutation } from "../generated/graphql"
 import { Configuration, OpenAIApi } from "openai";
 import getIngredientsData from "../utils/getIngredientsData"
 import { ImageUpload } from "../components/ImageUpload/ImageUpload"
@@ -22,6 +22,7 @@ const CreateRecipe = () => {
   // Queries and Mutations
   const { data: whoami } = useWhoAmIQuery()
   const [addNewRecipe] = useAddNewRecipeMutation()
+  const [saveRecipe] = useSaveRecipeToUserMutation();
 
 
   // Manual State
@@ -29,7 +30,7 @@ const CreateRecipe = () => {
   const [recipeDescription, setRecipeDescription] = useState("")
   const [cookTime, setCookTime] = useState("")
   const [prepTime, setPrepTime] = useState("")
-
+  const [imageUploaded, setImageUploaded] = useState(false)
 
   // Manual / Automatic State
   const [ingredients, setIngredients] = useState<IngredientInputType[]>([])
@@ -123,6 +124,7 @@ const CreateRecipe = () => {
   // Footnotes Functions
   const addFootnote = (event: any) => {
     event.preventDefault()
+
     if (footnote === "") {
       return
     }
@@ -143,6 +145,17 @@ const CreateRecipe = () => {
 
   // Add Recipe Functions
   const addRecipe = async () => {
+    // Check for empty fields
+    if (recipeName === "" || recipeDescription === "" || cookTime === "" || prepTime === "" || ingredients.length === 0 || instructions.length === 0 || !imageUploaded) {
+      return toast({
+        title: "Missing Fields",
+        description: "Please fill out all fields and upload a valid image",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      })
+    }
+
     await addNewRecipe({
       variables: {
         input: {
@@ -155,7 +168,7 @@ const CreateRecipe = () => {
             unit: ingredient.unit,
             quantity: ingredient.quantity
           })),
-          instructions: instructions.map(instruction => { return { step_desc: instruction } }), //not working here. For some reason instructions.map keeps returning void
+          instructions: instructions.map(instruction => { return { step_desc: instruction } }),
           footnotes,
           original_url: "N/A",
           photo_url: "https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg",
@@ -299,7 +312,7 @@ const CreateRecipe = () => {
             className={styles.recipeImage}
             src={"https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"}
           /> */}
-          <ImageUpload uuid={uuidState} />
+          <ImageUpload uuid={uuidState} setImageUploaded={setImageUploaded}/>
         </Box>
         <Box width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <Stack className={styles.summaryBox} direction={"column"}>
