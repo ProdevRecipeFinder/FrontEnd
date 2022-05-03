@@ -1,4 +1,4 @@
-import { Flex, Box, Input, Button, Stack } from "@chakra-ui/react"
+import { Flex, Box, Input, Button, Stack, Select, Center } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faPen, faCheck, faArrowsSpin } from '@fortawesome/free-solid-svg-icons'
@@ -9,7 +9,7 @@ interface Props {
   index: number
   onDelete: (input: any) => void
   onEdit: (input: any) => void
-  generateSubstitute?: (ingredient: string) => Promise<string[]>
+  generateSubstitute?: (ingredient: string) => Promise<IngredientInputType[]>
 }
 
 const isIngredientInputType = (data: any): data is IngredientInputType => {
@@ -18,6 +18,22 @@ const isIngredientInputType = (data: any): data is IngredientInputType => {
 
 const DeletableOption = ({ data, onDelete, onEdit, index, generateSubstitute }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
+  const [isSubstituting, setIsSubstituting] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [substitutions, setSubstitutions] = useState<IngredientInputType[]>([])
+  const [substitution, setSubstitution] = useState<string | undefined>(undefined)
+
+  const handleSubstitution = async () => {
+    if (generateSubstitute === undefined)
+      return
+
+    setIsLoading(true)
+    const sub = (await generateSubstitute((`${(data as IngredientInputType).quantity} ${(data as IngredientInputType).unit} ${(data as IngredientInputType).ingredient}`)))
+    console.log(sub)
+    setSubstitutions(sub)
+    setIsLoading(false)
+    setIsSubstituting(true)
+  }
 
   const display = () => {
     // if statement to check if the data is an ingredient or an instruction
@@ -34,7 +50,29 @@ const DeletableOption = ({ data, onDelete, onEdit, index, generateSubstitute }: 
             </form>
           </Stack>
         )
-      } else {
+      }
+      else if (isSubstituting) {
+        return (
+          <Select placeholder="Substitutions..." w="70%" size="sm" value={substitution} onChange={e => setSubstitution(e.target.value)}>
+            {
+              substitutions.length ? 
+                substitutions.map((substitution, i) =>
+                  <option style={{width:"70%"}} key={i} value={JSON.stringify({index, substitution})}>{substitution.quantity} {substitution.unit} {substitution.ingredient}</option>
+                )
+              :
+                <option>No substitutions found</option>
+            }
+          </Select>
+        )
+      }
+      else if (isLoading) {
+        return (
+          <Center>
+            <p>Loading...</p>
+          </Center>
+        )
+      }
+      else {
         return (
           <Box>
             {`${(data as IngredientInputType).quantity} ${(data as IngredientInputType).unit} ${(data as IngredientInputType).ingredient}`}
@@ -78,14 +116,30 @@ const DeletableOption = ({ data, onDelete, onEdit, index, generateSubstitute }: 
         }
         <Stack direction="row" float="right">
           {
-            !isEditing && generateSubstitute && <FontAwesomeIcon icon={faArrowsSpin} style={{cursor: "pointer", marginRight: "0.5", padding: "0.25em"}} onClick={() => {
-              generateSubstitute((`${(data as IngredientInputType).quantity} ${(data as IngredientInputType).unit} ${(data as IngredientInputType).ingredient}`))
-              
-            }} />
+            !isEditing && !isSubstituting && generateSubstitute && <FontAwesomeIcon icon={faArrowsSpin} style={{ cursor: "pointer", marginRight: "0.5", padding: "0.25em" }} onClick={handleSubstitution} />
           }
-          <FontAwesomeIcon icon={isEditing ? faCheck : faPen} style={{ cursor: "pointer", color: isEditing ? "green" : "dodgerblue", marginRight: "0.5em", padding: "0.25em" }} onClick={() => setIsEditing(!isEditing)} />
           {
-            !isEditing && <FontAwesomeIcon icon={faXmark} style={{ cursor: "pointer", color: "red", marginRight: "0.5em", padding: "0.25em" }} onClick={() => onDelete(data)} />
+            !isEditing && !isSubstituting && <FontAwesomeIcon icon={faPen} style={{ cursor: "pointer", color: "dodgerblue", marginRight: "0.5em", padding: "0.25em" }} onClick={() => setIsEditing(!isEditing)} />
+          }
+          {
+            (isEditing || isSubstituting) && <FontAwesomeIcon icon={faCheck} style={{ cursor: "pointer", color: "green", marginRight: "0.5em", padding: "0.25em" }} onClick={() => {
+              if (isEditing) 
+                setIsEditing(!isEditing)
+              if (isSubstituting) {
+                setIsSubstituting(!isSubstituting)
+                if (substitution !== "No substitutions found")
+                  onEdit(substitution)
+              }
+            }}/>
+          }
+          {
+            !isEditing && <FontAwesomeIcon icon={faXmark} style={{ cursor: "pointer", color: "red", marginRight: "0.5em", padding: "0.25em" }} onClick={() => {
+              if (isSubstituting) {
+                setIsSubstituting(false)
+                return 
+              }
+              onDelete(data)
+            }} />
           }
         </Stack>
       </Flex>

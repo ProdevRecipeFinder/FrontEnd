@@ -109,38 +109,39 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
         <title>Home - Recipe Finder</title>
         <meta name="description" content="Recipe Finder Home" />
       </Head>
+      {!mostPopular[0] || !homepageRecipes
+        ?
+        <>Nothing to see here lol</>
+        :
+        <>
+          <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}>
+            <Box w={useBreakpointValue({ sm: "100%", md: "40%" })}>
+              <Center>
+                <h1 className="title">Recipe of the Day</h1>
+              </Center>
+              <br />
+              <RecipeCard recipe={mostPopular[0]} key={mostPopular[0].id} showHeart={false} height={250} maxWidth={600} />
+            </Box>
+            <Box w={useBreakpointValue({ sm: "100%", md: "60%" })}>
+              <Center>
+                <h1 className="title">Most Popular Recipes</h1>
+              </Center>
+              <br />
+              {
+                displayMostPopualrRecipes(mostPopular)
+              }
+            </Box>
+          </Stack>
 
-      <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}>
-        <Box w={useBreakpointValue({ sm: "100%", md: "40%" })}>
-          <Center>
-            <h1 className="title">Recipe of the Day</h1>
-          </Center>
           <br />
-          {mostPopular.length > 6 ? null : (
-            <RecipeCard
-              recipe={mostPopular[0]}
-              key={mostPopular[0].id}
-              showHeart={false}
-              height={250}
-              maxWidth={600}
-            />
-          )}
-        </Box>
-        <Box w={useBreakpointValue({ sm: "100%", md: "60%" })}>
           <Center>
-            <h1 className="title">Most Popular Recipes</h1>
+            <h1 className="title">Our Reccommended Recipes</h1>
           </Center>
-          <br />
-          {/* {displayMostPopualrRecipes(mostPopular)} */}
-        </Box>
-      </Stack>
-
-      <br />
-
-      <Center>
-        <h1 className="title">Our Reccommended Recipes</h1>
-      </Center>
-      {displayHomepageSelection(homepageRecipes)}
+          {
+            displayHomepageSelection(homepageRecipes)
+          }
+        </>
+      }
     </React.Fragment>
   );
 };
