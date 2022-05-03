@@ -28,6 +28,9 @@ import {
   GetOneRecipeDocument,
   useWhoAmIQuery,
   Recipe,
+  useGetVoteStatusQuery,
+  useVoteOnRecipeMutation,
+  GetVoteStatusDocument,
 } from '../../generated/graphql'
 import React, { useEffect, useState } from "react"
 import { initializeApollo } from '../../utils/apollo'
@@ -50,14 +53,16 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   // Queries and Mutations
-  const { data: whoAmI } = useWhoAmIQuery()
+  const { data: whoAmI } = useWhoAmIQuery();
   const [saveRecipe] = useSaveRecipeToUserMutation();
   const [unsaveRecipe] = useDeleteSavedRecipeMutation();
   const [deleteRecipe] = useDeleteRecipeMutation();
+  const [voteOnRecipe] = useVoteOnRecipeMutation();
 
   // State
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [rating, setRating] = useState<number>(parseInt(recipe.rating_stars));
+  const [hasVoted, setHasVoted] = useState<boolean>(false);
 
   // Effects
   useEffect(() => { // Get saved status of this recipe
@@ -71,8 +76,21 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       setIsSaved(savedStatus.getSavedStatus[0])
     }
 
-    if (whoAmI?.whoami) // Only run if user is logged in
+    const getVoteStatus = async () => {
+      const { data: voteStatus } = await apolloClient.query({
+        query: GetVoteStatusDocument,
+        variables: {
+          recipe_id: recipe.id
+        }
+      });
+      setHasVoted(voteStatus.getVoteStatus === -1 ? false : true);
+      setRating(voteStatus.getVoteStatus);
+    }
+
+    if (whoAmI?.whoami) { // Only run if user is logged in
       getIsSaved()
+      getVoteStatus()
+    }
   }, [])
 
   const deleteRecipeFunction = async () => {
@@ -88,8 +106,8 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       duration: 5000,
       isClosable: true
     })
-    apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedRecipes"})
-    apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedStatus"})
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes" })
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedStatus" })
     router.push("/my-cookbook")
   }
 
@@ -146,10 +164,10 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button  mr={3} onClick={onClose}>
+            <Button mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="outline" colorScheme="red" style={{background: "transparent"}} onClick={deleteRecipeFunction}>Yes, delete recipe</Button>
+            <Button variant="outline" colorScheme="red" style={{ background: "transparent" }} onClick={deleteRecipeFunction}>Yes, delete recipe</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -161,9 +179,18 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           <p style={{ color: "grey", textAlign: "center" }}>By {recipe.recipeAuthors![0].user_name}</p>
           <Center>
             <Box marginRight="0.5em" fontSize="1.2em">
-              <StarRatingComponent name="rate1" starCount={5} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
-                setRating(nextValue)
-                console.log(prevValue + " -> " + nextValue)
+              <StarRatingComponent name="rate1" starCount={5} starColor={hasVoted ? 'red' : 'gold'} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
+                setRating(nextValue);
+                voteOnRecipe({
+                  variables: {
+                    voteParams: {
+                      newStars: rating,
+                      prevVote: hasVoted,
+                      prevVoteValue: hasVoted ? prevValue : undefined,
+                      recipe_id: recipe.id
+                    }
+                  }
+                })
               }} />
             </Box>
             {recipe.review_count} ratings
