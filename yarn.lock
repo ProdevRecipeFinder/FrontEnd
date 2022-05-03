@@ -1092,6 +1092,19 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@dropzone-ui/react@dropzone-ui/react":
+  version "6.5.5"
+  resolved "https://codeload.github.com/dropzone-ui/react/tar.gz/fef7ec8523f9e13abeafbf86d0b24f0539150533"
+  dependencies:
+    "@dynamicss/dynamicss" "^2.2.0"
+    "@unlimited-react-components/kernel" "^1.0.2"
+    "@unlimited-react-components/material-button" "^1.2.8"
+
+"@dynamicss/dynamicss@^2.0.3", "@dynamicss/dynamicss@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@dynamicss/dynamicss/-/dynamicss-2.2.0.tgz#3356f88591522f387688651fd1603ef7a8da9b19"
+  integrity sha512-74nARZcYDAtCGyE/rvVowFKvnbWAqmkX1u2gcCNT9SeV3wE8huT5UAcQ0wJIovS7xOQcHvSXZduGQ+CM3nZnwQ==
+
 "@emotion/babel-plugin@^11.7.1":
   version "11.7.2"
   resolved "https://registry.npmjs.org/@emotion/babel-plugin/-/babel-plugin-11.7.2.tgz"
@@ -2052,6 +2065,19 @@
   dependencies:
     "@typescript-eslint/types" "5.10.1"
     eslint-visitor-keys "^3.0.0"
+
+"@unlimited-react-components/kernel@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@unlimited-react-components/kernel/-/kernel-1.0.2.tgz#e3e51f91583deae0ee41a48c7f5be40f9bd38ca0"
+  integrity sha512-yzTua10xjcLDOR/jMXdyPKjzsWDxsez6aE7QTFa16FtGqeU/jhBxzoxsopPJa+Lu3dtu4siSG6xIE52YLu7bZw==
+
+"@unlimited-react-components/material-button@^1.2.8":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@unlimited-react-components/material-button/-/material-button-1.2.8.tgz#a31f81f7f8aafe1ef533f5908bc4edd4c00b0543"
+  integrity sha512-gKSKysNUFWG774mV6NhAvbx8Fzv+QqO6DRs61k3N+M0pf5AueADpnJMgChIPLJvhjfWEoU3Z9K84lVrpWftACg==
+  dependencies:
+    "@dynamicss/dynamicss" "^2.0.3"
+    "@unlimited-react-components/kernel" "^1.0.2"
 
 "@wry/context@^0.6.0":
   version "0.6.1"
@@ -5874,13 +5900,6 @@ react-transition-group@^1.2.0:
     loose-envify "^1.3.1"
     prop-types "^15.5.6"
     warning "^3.0.0"
-
-react@^18.0.0:
-  version "18.0.0"
-  resolved "https://registry.npmjs.org/react/-/react-18.0.0.tgz"
-  integrity sha512-x+VL6wbT4JRVPm7EGxXhZ8w8LTROaxPXOqhlGyVSrv0sB1jkyFGgXxJ8LVoPRLvPR6/CIZGFmfzqUa2NYeMr2A==
-  dependencies:
-    loose-envify "^1.1.0"
 
 readable-stream@^3.4.0:
   version "3.6.0"
