@@ -163,6 +163,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
             <Box marginRight="0.5em" fontSize="1.2em">
               <StarRatingComponent name="rate1" starCount={5} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
                 setRating(nextValue)
+                console.log(prevValue + " -> " + nextValue)
               }} />
             </Box>
             {recipe.review_count} ratings
