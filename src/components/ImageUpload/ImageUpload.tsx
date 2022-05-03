@@ -1,6 +1,7 @@
 
 import { Dropzone, FileItem, FileValidated, FullScreenPreview } from "@dropzone-ui/react";
 import { useState } from "react";
+import { Box } from "@chakra-ui/react";
 
 export const ImageUpload = () => {
 
@@ -23,7 +24,7 @@ export const ImageUpload = () => {
 
   return (
     <Dropzone
-      style={{ minWidth: "550px" }}
+      style={{ width: "100%", height: "100%" }}
       view={"list"}
       onChange={updateFiles}
       minHeight="195px"
@@ -40,18 +41,20 @@ export const ImageUpload = () => {
       fakeUploading // Only for development
       disableScroll
     >
-      {files.map((file: FileValidated) => (
-        <FileItem
-          {...file}
-          key={file.id}
-          onDelete={onDelete}
-          onSee={handleSee}
-          resultOnTooltip
-          preview
-          info
-          hd
-        />
-      ))}
+      {
+        files.map((file: FileValidated) => (
+          <FileItem
+            {...file}
+            key={file.id}
+            onDelete={onDelete}
+            onSee={handleSee}
+            resultOnTooltip
+            preview
+            info
+            hd
+          />
+        ))
+      }
       <FullScreenPreview
         imgSource={imageSrc}
         openImage={imageSrc}
