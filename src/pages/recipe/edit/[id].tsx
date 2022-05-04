@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { v4 } from 'uuid';
 import DeletableOption from "../../../components/DeletableOption";
 import { ImageUpload } from "../../../components/ImageUpload/ImageUpload";
-import { GetOneRecipeDocument, IngredientInputType, Recipe, useAddNewRecipeMutation, useGetOneRecipeQuery, useWhoAmIQuery } from "../../../generated/graphql";
+import { GetOneRecipeDocument, IngredientInputType, Recipe, useAddNewRecipeMutation, useGetOneRecipeQuery, useUpdateRecipeMutation, useWhoAmIQuery } from "../../../generated/graphql";
 import { initializeApollo } from "../../../utils/apollo";
 import getIngredientsData from "../../../utils/getIngredientsData";
 import styles from "../../../styles/create-recipe.module.css";
@@ -31,7 +31,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
 
   // Queries and Mutations
   const { data: whoami } = useWhoAmIQuery();
-  const [addNewRecipe] = useAddNewRecipeMutation();
+  const [updateRecipe] = useUpdateRecipeMutation();
 
 
   // Manual State
@@ -174,8 +174,9 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
       })
     }
 
-    await addNewRecipe({
+    await updateRecipe({
       variables: {
+        id: recipe.id,
         input: {
           recipe_title: recipeName,
           recipe_desc: recipeDescription,

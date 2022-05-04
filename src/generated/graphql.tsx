@@ -127,6 +127,7 @@ export type MutationSaveRecipeToUserArgs = {
 export type MutationUpdateRecipeArgs = {
   id: Scalars['Float'];
   input: RecipeInput;
+  uuid: Scalars['String'];
 };
 
 
@@ -364,6 +365,7 @@ export type SaveRecipeToUserMutation = { __typename?: 'Mutation', saveRecipeToUs
 export type UpdateRecipeMutationVariables = Exact<{
   id: Scalars['Float'];
   input: RecipeInput;
+  uuid: Scalars['String'];
 }>;
 
 
@@ -919,8 +921,8 @@ export type SaveRecipeToUserMutationHookResult = ReturnType<typeof useSaveRecipe
 export type SaveRecipeToUserMutationResult = Apollo.MutationResult<SaveRecipeToUserMutation>;
 export type SaveRecipeToUserMutationOptions = Apollo.BaseMutationOptions<SaveRecipeToUserMutation, SaveRecipeToUserMutationVariables>;
 export const UpdateRecipeDocument = gql`
-    mutation UpdateRecipe($id: Float!, $input: RecipeInput!) {
-  updateRecipe(id: $id, input: $input)
+    mutation UpdateRecipe($id: Float!, $input: RecipeInput!, $uuid: String!) {
+  updateRecipe(id: $id, input: $input, uuid: $uuid)
 }
     `;
 export type UpdateRecipeMutationFn = Apollo.MutationFunction<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
@@ -940,6 +942,7 @@ export type UpdateRecipeMutationFn = Apollo.MutationFunction<UpdateRecipeMutatio
  *   variables: {
  *      id: // value for 'id'
  *      input: // value for 'input'
+ *      uuid: // value for 'uuid'
  *   },
  * });
  */

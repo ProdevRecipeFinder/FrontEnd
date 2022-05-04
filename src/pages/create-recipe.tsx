@@ -26,7 +26,7 @@ const CreateRecipe = () => {
   // Queries and Mutations
   const { data: whoami } = useWhoAmIQuery()
   const [addNewRecipe] = useAddNewRecipeMutation()
-  const [saveRecipe] = useSaveRecipeToUserMutation();
+
 
 
   // Manual State
@@ -181,8 +181,8 @@ const CreateRecipe = () => {
       }
     })
 
-    apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedRecipes"})
-    apolloClient.cache.evict({id: "ROOT_QUERY", fieldName: "getSavedStatus"})
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes" })
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedStatus" })
 
     toast({
       title: "Recipe Added",
@@ -329,7 +329,7 @@ const CreateRecipe = () => {
             className={styles.recipeImage}
             src={"https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"}
           /> */}
-          <ImageUpload uuid={uuidState} setImageUploaded={setImageUploaded}/>
+          <ImageUpload uuid={uuidState} setImageUploaded={setImageUploaded} />
         </Box>
         <Box width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <Stack className={styles.summaryBox} direction={"column"}>
