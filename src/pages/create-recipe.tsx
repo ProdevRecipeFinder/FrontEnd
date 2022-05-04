@@ -132,7 +132,8 @@ const CreateRecipe = () => {
     if (footnote === "") {
       return
     }
-    if (footnotes.find(footnote => footnote === footnote)) {
+
+    if (footnotes.find(i => i === footnote)) {
       return
     }
     setFootnotes([...footnotes, footnote])

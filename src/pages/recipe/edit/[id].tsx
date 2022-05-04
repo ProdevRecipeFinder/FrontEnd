@@ -146,7 +146,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
     if (footnote === "") {
       return
     }
-    if (footnotes.find(footnote => footnote === footnote)) {
+    if (footnotes.find(i => i === footnote)) {
       return
     }
     setFootnotes([...footnotes, footnote])
@@ -164,7 +164,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
   // Add Recipe Functions
   const addRecipe = async () => {
     // Check for empty fields
-    if (recipeName === "" || recipeDescription === "" || cookTime === "" || prepTime === "" || ingredients.length === 0 || instructions.length === 0 || !imageUploaded) {
+    if (recipeName === "" || recipeDescription === "" || cookTime === "" || prepTime === "" || ingredients.length === 0 || instructions.length === 0) {
       return toast({
         title: "Missing Fields",
         description: "Please fill out all fields and upload a valid image",
@@ -190,7 +190,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
           instructions: instructions.map(instruction => { return { step_desc: instruction } }),
           footnotes,
           original_url: "N/A",
-          photo_url: "https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg",
+          photo_url: recipe.photo_url,
         },
         uuid: uuidState
       }
@@ -463,7 +463,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
       <Center>
         <Stack direction="row">
           <Button size="lg" variant="outline" colorScheme="red" background="transparent" onClick={clearInputs}>Clear</Button>
-          <Button size="lg" onClick={addRecipe}>Create Recipe</Button>
+          <Button size="lg" onClick={addRecipe}>Edit Recipe</Button>
         </Stack>
       </Center>
 
