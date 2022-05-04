@@ -43,11 +43,19 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
   const [imageChange, setImageChange] = useState(false);
 
   // Manual / Automatic State
-  const [ingredients, setIngredients] = useState<IngredientInputType[]>([])
+  // @ts-ignore
+  const [ingredients, setIngredients] = useState<IngredientInputType[]>(recipe.recipeIngredients?.map(i => {
+    return {
+      ingredient: i.ingredient_name,
+      quantity: i.ingredient_qty,
+      unit: i.ingredient_unit,
+    }
+  }))
   const [quantity, setQuantity] = useState("")
   const [ingredientName, setIngredientName] = useState("")
   const [unit, setUnit] = useState("")
-  const [instructions, setInstructions] = useState<string[]>([])
+  // @ts-ignore
+  const [instructions, setInstructions] = useState<string[]>(recipe.recipeSteps?.map(i => i.step_desc))
   const [step, setStep] = useState("")
   const [footnotes, setFootnotes] = useState<string[]>(recipe.footnotes)
   const [footnote, setFootnote] = useState("")
@@ -335,7 +343,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
           {!imageChange
             ? <Box>
               <Image src={recipe.photo_url} />
-              <Button onClick={() => setImageChange(true)}>Replace Image</Button>
+              <Button style={{position: "absolute", top: "1em", right: "1em"}} onClick={() => setImageChange(true)}>Replace Image</Button>
             </Box>
             : <ImageUpload uuid={uuidState} setImageUploaded={setImageUploaded} />}
         </Box>
@@ -364,7 +372,6 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
         <Stack width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <h2 className="title">Ingredients</h2>
           <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })} />
-
           {
             !ingredients.length ? null :
               <ul>
