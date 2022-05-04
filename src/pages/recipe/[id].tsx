@@ -69,10 +69,10 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   const [prevRating, setPrevRating] = useState<number>(0);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [reviewCount, setReviewCount] = useState<string>(recipe.review_count);
 
   // Effects
   useEffect(() => { // Get saved status of this recipe
-    console.log("USE EFFECT RAN")
     const getIsSaved = async () => {
       const { data: savedStatus } = await apolloClient.query({
         query: GetSavedStatusDocument,
@@ -84,7 +84,6 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
     }
 
     const getVoteStatus = async () => {
-      console.log("ran")
       const { data: voteStatus } = await apolloClient.query({
         query: GetVoteStatusDocument,
         variables: {
@@ -92,18 +91,12 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         }
       });
       setHasVoted(voteStatus.getVoteStatus === -1 ? false : true);
-      console.log("hasVoted set to " + (voteStatus.getVoteStatus === -1 ? false : true))
-      console.log(voteStatus.getVoteStatus)
       setRating(voteStatus.getVoteStatus === -1 ? parseInt(recipe.rating_stars) : voteStatus.getVoteStatus)
     }
 
     if (whoAmI?.whoami) { // Only run if user is logged in
       getIsSaved()
-      console.log("a")
       getVoteStatus()
-    }
-    else {
-      console.log("b")
     }
   }, [whoAmI?.whoami])
 
@@ -177,14 +170,6 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes" })
   }
   async function updateVoteStatus(next: number, prev: number) {
-
-    console.log({
-      newStars: rating,
-      prevVote: hasVoted,
-      prevVoteValue: hasVoted ? prevRating : undefined,
-      recipe_id: recipe.id
-    })
-
     voteOnRecipe({
       variables: {
         voteParams: {
@@ -237,7 +222,10 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           <Center>
             <Box marginRight="0.5em" fontSize="1.2em">
               <StarRatingComponent name="rate1" starCount={5} starColor={hasVoted ? 'red' : 'gold'} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
-                console.log(prevValue + " -> " + nextValue)
+
+                if (!hasVoted) {
+                  setReviewCount((parseInt(reviewCount) + 1).toString())
+                }
 
                 setHasVoted(true);
                 setRating(nextValue);
@@ -245,7 +233,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
                 updateVoteStatus(nextValue, prevValue);
               }} />
             </Box>
-            {recipe.review_count} ratings
+            { reviewCount } ratings
           </Center>
         </Stack >
       </Center >
@@ -299,7 +287,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
             <p><b>Prep time: </b> {recipe.prep_time_minutes} mins</p>
             <p><b>Total time: </b> {recipe.total_time_minutes} mins</p>
             <p><b>Steps: </b> {recipe.recipeSteps?.length} step(s)</p>
-            <p><b>Rating: </b> {recipe.rating_stars}/5</p>
+            <p><b>Average Rating: </b> {recipe.rating_stars}/5</p>
           </Stack>
         </Box>
       </Stack>
