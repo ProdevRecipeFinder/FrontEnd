@@ -192,7 +192,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
           original_url: "N/A",
           photo_url: recipe.photo_url,
         },
-        uuid: uuidState
+        uuid: imageUploaded ? uuidState : "no-update"
       }
     })
 
@@ -344,7 +344,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
           {!imageChange
             ? <Box>
               <Image src={recipe.photo_url} />
-              <Button style={{position: "absolute", top: "1em", right: "1em"}} onClick={() => setImageChange(true)}>Replace Image</Button>
+              <Button style={{ position: "absolute", top: "1em", right: "1em" }} onClick={() => setImageChange(true)}>Replace Image</Button>
             </Box>
             : <ImageUpload uuid={uuidState} setImageUploaded={setImageUploaded} />}
         </Box>
