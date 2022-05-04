@@ -55,21 +55,21 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   const toast = useToast()
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  
+
   // Queries and Mutations
   const { data: whoAmI } = useWhoAmIQuery();
   const [saveRecipe] = useSaveRecipeToUserMutation();
   const [unsaveRecipe] = useDeleteSavedRecipeMutation();
   const [deleteRecipe] = useDeleteRecipeMutation();
   const [voteOnRecipe] = useVoteOnRecipeMutation();
-  
+
   // State
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [rating, setRating] = useState<number>(parseInt(recipe.rating_stars));
   const [prevRating, setPrevRating] = useState<number>(0);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-  
+
   // Effects
   useEffect(() => { // Get saved status of this recipe
     const getIsSaved = async () => {
@@ -81,7 +81,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       })
       setIsSaved(savedStatus.getSavedStatus[0])
     }
-    
+
     const getVoteStatus = async () => {
       const { data: voteStatus } = await apolloClient.query({
         query: GetVoteStatusDocument,
@@ -90,22 +90,19 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         }
       });
       setHasVoted(voteStatus.getVoteStatus === -1 ? false : true);
-<<<<<<< Updated upstream
       console.log(voteStatus.getVoteStatus === -1)
       setRating(voteStatus.getVoteStatus);
-=======
->>>>>>> Stashed changes
     }
-    
+
     if (whoAmI?.whoami) { // Only run if user is logged in
       getIsSaved()
       getVoteStatus()
     }
   }, [])
-  
+
   const say = async (text: string) => {
     const audioReply = await axios.post(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${process.env.NEXT_PUBLIC_TTS_KEY}`, {
-      input: { text},
+      input: { text },
       voice: { languageCode: "en-US", ssmlGender: "MALE" },
       audioConfig: { audioEncoding: "OGG_OPUS" },
     })
@@ -227,23 +224,8 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
               <StarRatingComponent name="rate1" starCount={5} starColor={hasVoted ? 'red' : 'gold'} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
                 setHasVoted(true);
                 setRating(nextValue);
-<<<<<<< Updated upstream
-                console.log(hasVoted)
-                console.log(prevValue)
-                voteOnRecipe({
-                  variables: {
-                    voteParams: {
-                      newStars: rating,
-                      prevVote: hasVoted,
-                      prevVoteValue: hasVoted ? prevValue : undefined,
-                      recipe_id: recipe.id
-                    }
-                  }
-                })
-=======
                 setPrevRating(prevValue);
                 updateVoteStatus();
->>>>>>> Stashed changes
               }} />
             </Box>
             {recipe.review_count} ratings
@@ -312,11 +294,11 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         <Stack width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <Stack direction="row" align="center">
             <h2 className="title">Ingredients</h2>
-            <FontAwesomeIcon icon={faVolumeHigh} style={{ cursor: isSpeaking ? undefined : "pointer", color: isSpeaking ? "gray" : undefined }}  onClick={() => {
+            <FontAwesomeIcon icon={faVolumeHigh} style={{ cursor: isSpeaking ? undefined : "pointer", color: isSpeaking ? "gray" : undefined }} onClick={() => {
               if (isSpeaking)
                 return
               say(`Ingredients: ${recipe.recipeIngredients!.map(ingredient => `${ingredient.ingredient_qty} ${ingredient.ingredient_unit} ${ingredient.ingredient_name}`).join(", ")}`)
-            }}/>
+            }} />
           </Stack>
           <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })} />
 
@@ -338,7 +320,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
                 return
               say(`Instructions: ${recipe.recipeSteps!.map((instruction, index) => `Step ${index + 1}: ${instruction.step_desc}`).join(", ")}`)
             }
-            }/>
+            } />
           </Stack>
           <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })} />
           {
@@ -360,12 +342,12 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           <Stack>
             <Stack direction="row" align="center">
               <h2 className="title">Footnotes</h2>
-              <FontAwesomeIcon icon={faVolumeHigh} style={{ cursor: isSpeaking ? undefined : "pointer", color: isSpeaking ? "gray" : undefined }}  onClick={() => {
+              <FontAwesomeIcon icon={faVolumeHigh} style={{ cursor: isSpeaking ? undefined : "pointer", color: isSpeaking ? "gray" : undefined }} onClick={() => {
                 if (isSpeaking)
                   return
                 say(`Footnotes: ${recipe.footnotes!.join(", ")}`)
               }} />
-            </Stack>            
+            </Stack>
             <Divider />
             <ul>
               {
