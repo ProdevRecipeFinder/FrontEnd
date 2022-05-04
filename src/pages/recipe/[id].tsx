@@ -39,10 +39,23 @@ import { NextPage } from 'next'
 import styles from "./Recipe.module.css"
 import StarRatingComponent from "react-star-rating-component"
 import { useRouter } from 'next/router'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
+import axios from "axios"
 
 interface Props {
   recipe: Recipe,
   savedStatus: boolean
+}
+
+const say = async (text: string) => {
+  const audioReply = await axios.post(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${process.env.NEXT_PUBLIC_TTS_KEY}`, {
+    input: { text},
+    voice: { languageCode: "en-US", ssmlGender: "MALE" },
+    audioConfig: { audioEncoding: "OGG_OPUS" },
+  })
+  const audio = new Audio("data:audio/ogg;base64," + audioReply.data.audioContent)
+  audio.play()
 }
 
 const Recipe: NextPage<Props> = ({ recipe }) => {
@@ -84,6 +97,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         }
       });
       setHasVoted(voteStatus.getVoteStatus === -1 ? false : true);
+      console.log(voteStatus.getVoteStatus === -1)
       setRating(voteStatus.getVoteStatus);
     }
 
@@ -181,6 +195,8 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
             <Box marginRight="0.5em" fontSize="1.2em">
               <StarRatingComponent name="rate1" starCount={5} starColor={hasVoted ? 'red' : 'gold'} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
                 setRating(nextValue);
+                console.log(hasVoted)
+                console.log(prevValue)
                 voteOnRecipe({
                   variables: {
                     voteParams: {
@@ -257,7 +273,12 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}>
         { /* Recipe Ingredients */}
         <Stack width={useBreakpointValue({ sm: "100%", md: "50%" })}>
-          <h2 className="title">Ingredients</h2>
+          <Stack direction="row" align="center">
+            <h2 className="title">Ingredients</h2>
+            <FontAwesomeIcon icon={faVolumeHigh} style={{ cursor: "pointer" }} onClick={() => 
+                say(`Ingredients: ${recipe.recipeIngredients!.map(ingredient => `${ingredient.ingredient_qty} ${ingredient.ingredient_unit} ${ingredient.ingredient_name}`).join(", ")}`)
+              }/>
+          </Stack>
           <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })} />
 
           <ul>
@@ -271,7 +292,12 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
 
         { /* Recipe Steps */}
         <Stack width={useBreakpointValue({ sm: "100%", md: "50%" })}>
-          <h2 className="title">Instructions</h2>
+          <Stack direction="row" align="center">
+            <h2 className="title">Instructions</h2>
+            <FontAwesomeIcon icon={faVolumeHigh} style={{ cursor: "pointer" }} onClick={() =>
+              say(`Instructions: ${recipe.recipeSteps!.map((instruction, index) => `Step ${index + 1}: ${instruction.step_desc}`).join(", ")}`)
+            }/>
+          </Stack>
           <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })} />
           {
             recipe.recipeSteps!.map((instruction, index) => (
@@ -290,7 +316,12 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
       {
         recipe.footnotes?.length ?
           <Stack>
-            <h2 className="title">Footnotes</h2>
+            <Stack direction="row" align="center">
+              <h2 className="title">Footnotes</h2>
+              <FontAwesomeIcon icon={faVolumeHigh} style={{ cursor: "pointer" }} onClick={() => {
+                say(`Footnotes: ${recipe.footnotes!.join(", ")}`)
+              }} />
+            </Stack>            
             <Divider />
             <ul>
               {
