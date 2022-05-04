@@ -258,7 +258,7 @@ export type UserResponse = {
 };
 
 export type VoteParams = {
-  newStars: Scalars['Float'];
+  new_stars: Scalars['Float'];
   prevVote: Scalars['Boolean'];
   prevVoteValue?: InputMaybe<Scalars['Float']>;
   recipe_id: Scalars['Float'];

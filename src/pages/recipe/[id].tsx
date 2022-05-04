@@ -178,7 +178,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   }
   async function updateVoteStatus(next: number, prev: number) {
 
-    console.log( {
+    console.log({
       newStars: rating,
       prevVote: hasVoted,
       prevVoteValue: hasVoted ? prevRating : undefined,
@@ -188,7 +188,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
     voteOnRecipe({
       variables: {
         voteParams: {
-          newStars: next,
+          new_stars: next,
           prevVote: hasVoted,
           prevVoteValue: hasVoted ? prev : undefined,
           recipe_id: recipe.id
@@ -238,7 +238,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
             <Box marginRight="0.5em" fontSize="1.2em">
               <StarRatingComponent name="rate1" starCount={5} starColor={hasVoted ? 'red' : 'gold'} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
                 console.log(prevValue + " -> " + nextValue)
-                
+
                 setHasVoted(true);
                 setRating(nextValue);
                 setPrevRating(prevValue);
