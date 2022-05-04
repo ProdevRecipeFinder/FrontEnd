@@ -42,6 +42,7 @@ import { useRouter } from 'next/router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 import axios from "axios"
+import NextLink from 'next/link'
 
 interface Props {
   recipe: Recipe,
@@ -221,7 +222,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           <p style={{ color: "grey", textAlign: "center" }}>By {recipe.recipeAuthors![0].user_name}</p>
           <Center>
             <Box marginRight="0.5em" fontSize="1.2em">
-              <StarRatingComponent name="rate1" starCount={5} starColor={hasVoted ? 'red' : 'gold'} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
+              <StarRatingComponent name="rate1" starCount={5} starColor={hasVoted ? '#D28878' : 'gold'} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
 
                 if (!hasVoted) {
                   setReviewCount((parseInt(reviewCount) + 1).toString())
@@ -281,13 +282,22 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         </Box>
         <Box width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <Stack className={styles.summaryBox} direction={"column"}>
+            {
+              whoAmI?.whoami && whoAmI?.whoami?.user_name === recipe.recipeAuthors[0].user_name ?
+              <NextLink href={`/recipe/edit/${recipe.id}`}>
+                <Button w="10em" variant="outline" color="#D17B69" borderColor="#D17B69" style={{background: "transparent"}}>
+                  Edit Recipe
+                </Button> 
+              </NextLink>
+              : null
+            }
             <p>{recipe.recipe_desc}</p>
             <br />
             <p><b>Cook time: </b> {recipe.cook_time_minutes} mins</p>
             <p><b>Prep time: </b> {recipe.prep_time_minutes} mins</p>
             <p><b>Total time: </b> {recipe.total_time_minutes} mins</p>
             <p><b>Steps: </b> {recipe.recipeSteps?.length} step(s)</p>
-            <p><b>Average Rating: </b> {recipe.rating_stars}/5</p>
+            <p><b>Average Rating: </b> {parseFloat(recipe.rating_stars).toFixed(2)}/5</p>
           </Stack>
         </Box>
       </Stack>
