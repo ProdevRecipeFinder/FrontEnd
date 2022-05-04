@@ -35,7 +35,7 @@ import {
 import React, { useEffect, useState } from "react"
 import { initializeApollo } from '../../utils/apollo'
 import { HeartSwitch } from '@anatoliygatt/heart-switch'
-import { NextPage } from 'next'
+import next, { NextPage } from 'next'
 import styles from "./Recipe.module.css"
 import StarRatingComponent from "react-star-rating-component"
 import { useRouter } from 'next/router'
@@ -72,6 +72,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
 
   // Effects
   useEffect(() => { // Get saved status of this recipe
+    console.log("USE EFFECT RAN")
     const getIsSaved = async () => {
       const { data: savedStatus } = await apolloClient.query({
         query: GetSavedStatusDocument,
@@ -83,6 +84,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
     }
 
     const getVoteStatus = async () => {
+      console.log("ran")
       const { data: voteStatus } = await apolloClient.query({
         query: GetVoteStatusDocument,
         variables: {
@@ -90,15 +92,20 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         }
       });
       setHasVoted(voteStatus.getVoteStatus === -1 ? false : true);
-      console.log(voteStatus.getVoteStatus === -1)
-      setRating(voteStatus.getVoteStatus);
+      console.log("hasVoted set to " + (voteStatus.getVoteStatus === -1 ? false : true))
+      console.log(voteStatus.getVoteStatus)
+      setRating(voteStatus.getVoteStatus === -1 ? parseInt(recipe.rating_stars) : voteStatus.getVoteStatus)
     }
 
     if (whoAmI?.whoami) { // Only run if user is logged in
       getIsSaved()
+      console.log("a")
       getVoteStatus()
     }
-  }, [])
+    else {
+      console.log("b")
+    }
+  }, [whoAmI?.whoami])
 
   const say = async (text: string) => {
     const audioReply = await axios.post(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${process.env.NEXT_PUBLIC_TTS_KEY}`, {
@@ -169,13 +176,21 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedStatus" })
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes" })
   }
-  async function updateVoteStatus() {
+  async function updateVoteStatus(next: number, prev: number) {
+
+    console.log( {
+      newStars: rating,
+      prevVote: hasVoted,
+      prevVoteValue: hasVoted ? prevRating : undefined,
+      recipe_id: recipe.id
+    })
+
     voteOnRecipe({
       variables: {
         voteParams: {
-          newStars: rating,
+          newStars: next,
           prevVote: hasVoted,
-          prevVoteValue: hasVoted ? prevRating : undefined,
+          prevVoteValue: hasVoted ? prev : undefined,
           recipe_id: recipe.id
         }
       }
@@ -222,10 +237,12 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           <Center>
             <Box marginRight="0.5em" fontSize="1.2em">
               <StarRatingComponent name="rate1" starCount={5} starColor={hasVoted ? 'red' : 'gold'} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
+                console.log(prevValue + " -> " + nextValue)
+                
                 setHasVoted(true);
                 setRating(nextValue);
                 setPrevRating(prevValue);
-                updateVoteStatus();
+                updateVoteStatus(nextValue, prevValue);
               }} />
             </Box>
             {recipe.review_count} ratings
