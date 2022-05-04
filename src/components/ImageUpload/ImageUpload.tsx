@@ -1,97 +1,75 @@
-import { Box, Image } from '@chakra-ui/react'
-import { url } from 'inspector';
-import { useEffect, useState } from 'react';
-import Dropzone, {
-  defaultClassNames,
-  IDropzoneProps,
-  ILayoutProps,
-  IPreviewProps,
-  IInputProps,
-} from 'react-dropzone-uploader'
-import 'react-dropzone-uploader/dist/styles.css'
 
-export type ImageUploadType = {
-  passImageProps: any;
+import { Dropzone, FileItem, FileValidated, FullScreenPreview } from "@dropzone-ui/react";
+import { useState } from "react";
+import { Box } from "@chakra-ui/react";
+
+type Props = {
+  uuid: string
+  setImageUploaded: (uploaded: boolean) => void
 }
 
-const ImageUpload = ({ passImageProps }: ImageUploadType) => {
+export const ImageUpload = ({ uuid, setImageUploaded }: Props) => {
 
-  const [imageState, setImageState] = useState({ imageState: "", uploadState: "none" });
+  const [files, setFiles] = useState<FileValidated[]>([]);
+  const [imageSrc, setImageSrc] = useState(undefined);
 
-  const getUploadParams: IDropzoneProps['getUploadParams'] = ({ meta }) => {
-    const url = 'http://localhost:4000/upload-image'
-    const fileUrl = `${url}/${encodeURIComponent(meta.name)}`
-    return { url, meta: { fileUrl } }
-  }
-
-  const handleChangeStatus: IDropzoneProps['onChangeStatus'] = ({ meta }, status,) => {
-    setImageState({
-      imageState: meta.previewUrl!,
-      uploadState: status
-    })
-    console.log("this happened");
-    if (status === "done") {
-      console.log(meta);
-    }
-    passImageProps(meta.name)
-
-  }
-
-  const handleSubmit: IDropzoneProps['onSubmit'] = (files) => {
-    console.log(files.map(f => f.meta))
-    console.log("OnSubmit called");
-
-    setImageState({
-      ...imageState,
-      uploadState: "uploaded"
-    })
-
-    console.log(files)
-  }
-
-  const Preview = ({ meta }: IPreviewProps) => {
-    const { name, percent, status, previewUrl } = meta
-    if (status !== 'done') {
-      return (
-        <Box>
-          <span style={{ alignSelf: 'flex-start', margin: '10px 3%' }}>
-            {name}, {Math.round(percent)}%, {status}
-          </span>
-        </Box>
-      )
-    }
-    else {
-      return (
-        <Box>
-          <Image
-            src={previewUrl}
-            width={'300px'}
-            height={'300px'}
-          />
-        </Box>
-      )
-    }
+  const updateFiles = (incommingFiles: any) => {
+    console.log("incomming files", incommingFiles);
+    setFiles(incommingFiles);
+  };
+  const onDelete = (id: number | string | undefined) => {
+    setFiles(files.filter((x) => x.id !== id));
+  };
+  const handleSee = (imageSource: any) => {
+    setImageSrc(imageSource);
+  };
+  const handleClean = (files: any) => {
+    console.log("list cleaned", files);
+  };
+  const onUploadFinish = () => {
+    setImageUploaded(true)
   }
 
   return (
     <Dropzone
-      accept='image/jpg,image/png,image/jpeg'
-      multiple={false}
+      style={{ width: "100%", height: "100%" }}
+      view={"list"}
+      onChange={updateFiles}
+      minHeight="195px"
+      onClean={handleClean}
+      onUploadFinish={onUploadFinish}
+      value={files}
       maxFiles={1}
-      getUploadParams={getUploadParams}
-      onChangeStatus={handleChangeStatus}
-      onSubmit={handleSubmit}
-      autoUpload={true}
-      PreviewComponent={Preview}
-      disabled={files => files.some(f => ['preparing', 'getting_upload_params', 'uploading'].includes(f.meta.status))}
-      styles={{
-        dropzone: { width: 450, height: 450, overflow: 'hidden' },
-        dropzoneActive: { borderColor: 'green' },
-        submitButton: { display: "none" }
-      }}
+      // header={false}
+      uploadOnDrop={true}
+      footer={false}
+      maxFileSize={2998000}
+      label="Drag'n drop files here or click to browse"
+      accept=".png,image/*"
+      uploadingMessage={"Uploading..."}
+      url={`http://localhost:4000/image-upload/${uuid}`}
+      // fakeUploading // Only for development
+      disableScroll
     >
+      {
+        files.map((file: FileValidated) => (
+          <FileItem
+            {...file}
+            key={file.id}
+            onDelete={onDelete}
+            onSee={handleSee}
+            resultOnTooltip
+            preview
+            info
+            hd
+          />
+        ))
+      }
+      <FullScreenPreview
+        imgSource={imageSrc}
+        openImage={imageSrc}
+        onClose={(e: Event) => handleSee(undefined)}
+      />
     </Dropzone>
-  )
-}
-
-export default ImageUpload;
+  );
+};

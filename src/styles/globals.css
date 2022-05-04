@@ -29,3 +29,14 @@ body {
 .chat-header__minimize {
   cursor: pointer;
 }
+
+.dropzone-ui span {
+  padding-top: 2em !important;
+  margin: 0 auto;
+}
+.file-status {
+  width: 100% !important;
+}
+.status-icon {
+  margin: 0.2em !important;
+}

@@ -48,11 +48,12 @@ export type LoginInfo = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addNewRecipe: Recipe;
+  addNewRecipe: Scalars['Boolean'];
   changeForgotPassword: UserResponse;
   changePassword: UserResponse;
   changeUsername: UserResponse;
   deleteAccount: UserResponse;
+  deleteOwnedRecipe: Scalars['Boolean'];
   deleteSavedRecipe: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
   login: UserResponse;
@@ -60,11 +61,14 @@ export type Mutation = {
   register: UserResponse;
   requestDeleteAccount: Scalars['Boolean'];
   saveRecipeToUser: Scalars['Boolean'];
+  updateRecipe: Scalars['Boolean'];
+  voteOnRecipe: Scalars['Boolean'];
 };
 
 
 export type MutationAddNewRecipeArgs = {
   input: RecipeInput;
+  uuid: Scalars['String'];
 };
 
 
@@ -87,6 +91,11 @@ export type MutationChangeUsernameArgs = {
 
 export type MutationDeleteAccountArgs = {
   token: Scalars['String'];
+};
+
+
+export type MutationDeleteOwnedRecipeArgs = {
+  recipe_id: Scalars['Float'];
 };
 
 
@@ -114,6 +123,17 @@ export type MutationSaveRecipeToUserArgs = {
   recipe_id: Scalars['Float'];
 };
 
+
+export type MutationUpdateRecipeArgs = {
+  id: Scalars['Float'];
+  input: RecipeInput;
+};
+
+
+export type MutationVoteOnRecipeArgs = {
+  vote_params: VoteParams;
+};
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['Float']>;
@@ -134,6 +154,7 @@ export type Query = {
   getOneRecipe?: Maybe<Recipe>;
   getSavedRecipes?: Maybe<PaginatedRecipe>;
   getSavedStatus: Array<Scalars['Boolean']>;
+  getVoteStatus: Scalars['Float'];
   searchRecipes: PaginatedRecipe;
   whoami?: Maybe<User>;
 };
@@ -165,6 +186,11 @@ export type QueryGetSavedStatusArgs = {
 };
 
 
+export type QueryGetVoteStatusArgs = {
+  recipe_id: Scalars['Float'];
+};
+
+
 export type QuerySearchRecipesArgs = {
   cursor?: InputMaybe<Scalars['Float']>;
   limit?: InputMaybe<Scalars['Float']>;
@@ -184,7 +210,6 @@ export type Recipe = {
   recipeAuthors: Array<User>;
   recipeIngredients?: Maybe<Array<Ingredient>>;
   recipeSteps?: Maybe<Array<Step>>;
-  recipeTags?: Maybe<Array<Tag>>;
   recipe_desc: Scalars['String'];
   recipe_title: Scalars['String'];
   review_count: Scalars['String'];
@@ -216,13 +241,6 @@ export type Step = {
   step_desc: Scalars['String'];
 };
 
-export type Tag = {
-  __typename?: 'Tag';
-  id: Scalars['Float'];
-  tag_desc: Scalars['String'];
-  tag_name: Scalars['String'];
-};
-
 export type User = {
   __typename?: 'User';
   created_at: Scalars['DateTime'];
@@ -239,16 +257,24 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
+export type VoteParams = {
+  new_stars: Scalars['Float'];
+  prevVote: Scalars['Boolean'];
+  prevVoteValue?: InputMaybe<Scalars['Float']>;
+  recipe_id: Scalars['Float'];
+};
+
 export type DisplayRecipeFragment = { __typename?: 'Recipe', id: number, recipe_title: string, recipe_desc: string, prep_time_minutes: number, cook_time_minutes: number, total_time_minutes: number, footnotes: Array<string>, original_url: string, photo_url: string, rating_stars: string, review_count: string, recipeAuthors: Array<{ __typename?: 'User', user_name: string }>, recipeIngredients?: Array<{ __typename?: 'Ingredient', ingredient_qty: string, ingredient_unit?: string | null, ingredient_name?: string | null }> | null, recipeSteps?: Array<{ __typename?: 'Step', step_desc: string }> | null };
 
 export type StdUserFragment = { __typename?: 'User', id: number, user_name: string, email: string };
 
 export type AddNewRecipeMutationVariables = Exact<{
   input: RecipeInput;
+  uuid: Scalars['String'];
 }>;
 
 
-export type AddNewRecipeMutation = { __typename?: 'Mutation', addNewRecipe: { __typename?: 'Recipe', id: number } };
+export type AddNewRecipeMutation = { __typename?: 'Mutation', addNewRecipe: boolean };
 
 export type ChangeForgotPasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -279,6 +305,13 @@ export type DeleteAccountMutationVariables = Exact<{
 
 
 export type DeleteAccountMutation = { __typename?: 'Mutation', deleteAccount: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
+export type DeleteRecipeMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeleteRecipeMutation = { __typename?: 'Mutation', deleteOwnedRecipe: boolean };
 
 export type DeleteSavedRecipeMutationVariables = Exact<{
   recipe_id: Scalars['Float'];
@@ -328,6 +361,21 @@ export type SaveRecipeToUserMutationVariables = Exact<{
 
 export type SaveRecipeToUserMutation = { __typename?: 'Mutation', saveRecipeToUser: boolean };
 
+export type UpdateRecipeMutationVariables = Exact<{
+  id: Scalars['Float'];
+  input: RecipeInput;
+}>;
+
+
+export type UpdateRecipeMutation = { __typename?: 'Mutation', updateRecipe: boolean };
+
+export type VoteOnRecipeMutationVariables = Exact<{
+  voteParams: VoteParams;
+}>;
+
+
+export type VoteOnRecipeMutation = { __typename?: 'Mutation', voteOnRecipe: boolean };
+
 export type GetHomePageQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Float']>;
 }>;
@@ -355,6 +403,13 @@ export type GetSavedStatusQueryVariables = Exact<{
 
 
 export type GetSavedStatusQuery = { __typename?: 'Query', getSavedStatus: Array<boolean> };
+
+export type GetVoteStatusQueryVariables = Exact<{
+  recipe_id: Scalars['Float'];
+}>;
+
+
+export type GetVoteStatusQuery = { __typename?: 'Query', getVoteStatus: number };
 
 export type SavedRecipesQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Float']>;
@@ -412,10 +467,8 @@ export const StdUserFragmentDoc = gql`
 }
     `;
 export const AddNewRecipeDocument = gql`
-    mutation AddNewRecipe($input: RecipeInput!) {
-  addNewRecipe(input: $input) {
-    id
-  }
+    mutation AddNewRecipe($input: RecipeInput!, $uuid: String!) {
+  addNewRecipe(input: $input, uuid: $uuid)
 }
     `;
 export type AddNewRecipeMutationFn = Apollo.MutationFunction<AddNewRecipeMutation, AddNewRecipeMutationVariables>;
@@ -434,6 +487,7 @@ export type AddNewRecipeMutationFn = Apollo.MutationFunction<AddNewRecipeMutatio
  * const [addNewRecipeMutation, { data, loading, error }] = useAddNewRecipeMutation({
  *   variables: {
  *      input: // value for 'input'
+ *      uuid: // value for 'uuid'
  *   },
  * });
  */
@@ -599,6 +653,37 @@ export function useDeleteAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteAccountMutationHookResult = ReturnType<typeof useDeleteAccountMutation>;
 export type DeleteAccountMutationResult = Apollo.MutationResult<DeleteAccountMutation>;
 export type DeleteAccountMutationOptions = Apollo.BaseMutationOptions<DeleteAccountMutation, DeleteAccountMutationVariables>;
+export const DeleteRecipeDocument = gql`
+    mutation DeleteRecipe($id: Float!) {
+  deleteOwnedRecipe(recipe_id: $id)
+}
+    `;
+export type DeleteRecipeMutationFn = Apollo.MutationFunction<DeleteRecipeMutation, DeleteRecipeMutationVariables>;
+
+/**
+ * __useDeleteRecipeMutation__
+ *
+ * To run a mutation, you first call `useDeleteRecipeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRecipeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRecipeMutation, { data, loading, error }] = useDeleteRecipeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteRecipeMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRecipeMutation, DeleteRecipeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRecipeMutation, DeleteRecipeMutationVariables>(DeleteRecipeDocument, options);
+      }
+export type DeleteRecipeMutationHookResult = ReturnType<typeof useDeleteRecipeMutation>;
+export type DeleteRecipeMutationResult = Apollo.MutationResult<DeleteRecipeMutation>;
+export type DeleteRecipeMutationOptions = Apollo.BaseMutationOptions<DeleteRecipeMutation, DeleteRecipeMutationVariables>;
 export const DeleteSavedRecipeDocument = gql`
     mutation DeleteSavedRecipe($recipe_id: Float!) {
   deleteSavedRecipe(recipe_id: $recipe_id)
@@ -833,6 +918,69 @@ export function useSaveRecipeToUserMutation(baseOptions?: Apollo.MutationHookOpt
 export type SaveRecipeToUserMutationHookResult = ReturnType<typeof useSaveRecipeToUserMutation>;
 export type SaveRecipeToUserMutationResult = Apollo.MutationResult<SaveRecipeToUserMutation>;
 export type SaveRecipeToUserMutationOptions = Apollo.BaseMutationOptions<SaveRecipeToUserMutation, SaveRecipeToUserMutationVariables>;
+export const UpdateRecipeDocument = gql`
+    mutation UpdateRecipe($id: Float!, $input: RecipeInput!) {
+  updateRecipe(id: $id, input: $input)
+}
+    `;
+export type UpdateRecipeMutationFn = Apollo.MutationFunction<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
+
+/**
+ * __useUpdateRecipeMutation__
+ *
+ * To run a mutation, you first call `useUpdateRecipeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRecipeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRecipeMutation, { data, loading, error }] = useUpdateRecipeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateRecipeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRecipeMutation, UpdateRecipeMutationVariables>(UpdateRecipeDocument, options);
+      }
+export type UpdateRecipeMutationHookResult = ReturnType<typeof useUpdateRecipeMutation>;
+export type UpdateRecipeMutationResult = Apollo.MutationResult<UpdateRecipeMutation>;
+export type UpdateRecipeMutationOptions = Apollo.BaseMutationOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
+export const VoteOnRecipeDocument = gql`
+    mutation VoteOnRecipe($voteParams: VoteParams!) {
+  voteOnRecipe(vote_params: $voteParams)
+}
+    `;
+export type VoteOnRecipeMutationFn = Apollo.MutationFunction<VoteOnRecipeMutation, VoteOnRecipeMutationVariables>;
+
+/**
+ * __useVoteOnRecipeMutation__
+ *
+ * To run a mutation, you first call `useVoteOnRecipeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVoteOnRecipeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [voteOnRecipeMutation, { data, loading, error }] = useVoteOnRecipeMutation({
+ *   variables: {
+ *      voteParams: // value for 'voteParams'
+ *   },
+ * });
+ */
+export function useVoteOnRecipeMutation(baseOptions?: Apollo.MutationHookOptions<VoteOnRecipeMutation, VoteOnRecipeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VoteOnRecipeMutation, VoteOnRecipeMutationVariables>(VoteOnRecipeDocument, options);
+      }
+export type VoteOnRecipeMutationHookResult = ReturnType<typeof useVoteOnRecipeMutation>;
+export type VoteOnRecipeMutationResult = Apollo.MutationResult<VoteOnRecipeMutation>;
+export type VoteOnRecipeMutationOptions = Apollo.BaseMutationOptions<VoteOnRecipeMutation, VoteOnRecipeMutationVariables>;
 export const GetHomePageDocument = gql`
     query GetHomePage($limit: Float) {
   getHomePage(limit: $limit) {
@@ -987,6 +1135,39 @@ export function useGetSavedStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetSavedStatusQueryHookResult = ReturnType<typeof useGetSavedStatusQuery>;
 export type GetSavedStatusLazyQueryHookResult = ReturnType<typeof useGetSavedStatusLazyQuery>;
 export type GetSavedStatusQueryResult = Apollo.QueryResult<GetSavedStatusQuery, GetSavedStatusQueryVariables>;
+export const GetVoteStatusDocument = gql`
+    query GetVoteStatus($recipe_id: Float!) {
+  getVoteStatus(recipe_id: $recipe_id)
+}
+    `;
+
+/**
+ * __useGetVoteStatusQuery__
+ *
+ * To run a query within a React component, call `useGetVoteStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVoteStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVoteStatusQuery({
+ *   variables: {
+ *      recipe_id: // value for 'recipe_id'
+ *   },
+ * });
+ */
+export function useGetVoteStatusQuery(baseOptions: Apollo.QueryHookOptions<GetVoteStatusQuery, GetVoteStatusQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetVoteStatusQuery, GetVoteStatusQueryVariables>(GetVoteStatusDocument, options);
+      }
+export function useGetVoteStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVoteStatusQuery, GetVoteStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetVoteStatusQuery, GetVoteStatusQueryVariables>(GetVoteStatusDocument, options);
+        }
+export type GetVoteStatusQueryHookResult = ReturnType<typeof useGetVoteStatusQuery>;
+export type GetVoteStatusLazyQueryHookResult = ReturnType<typeof useGetVoteStatusLazyQuery>;
+export type GetVoteStatusQueryResult = Apollo.QueryResult<GetVoteStatusQuery, GetVoteStatusQueryVariables>;
 export const SavedRecipesDocument = gql`
     query SavedRecipes($limit: Float, $cursor: Float) {
   getSavedRecipes(limit: $limit, cursor: $cursor) {

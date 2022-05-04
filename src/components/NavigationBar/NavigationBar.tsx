@@ -58,7 +58,7 @@ const NavigationBar = () => {
   const [logout] = useLogoutMutation();
 
   // State
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("")
 
   // Functions
   const onSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -96,7 +96,7 @@ const NavigationBar = () => {
             <Input
               type="search"
               placeholder="Search"
-              width="18em"
+              width="22em"
               value={searchQuery}
               onChange={onSearchQueryChange}
             />

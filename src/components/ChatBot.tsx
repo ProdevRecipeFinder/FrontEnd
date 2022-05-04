@@ -92,9 +92,9 @@ const ChatBot = () => {
           borderRadius: "1em",
           zIndex: "100",
         }}
-        chatIcon="./chatIcon.png"
-        minimizeIcon="./minimizeIcon.png"
-        sendIcon="./sendIcon.png"
+        chatIcon="/chatIcon.png"
+        minimizeIcon="/minimizeIcon.png"
+        sendIcon="/sendIcon.png"
         isTyping={typing}
         messages={messages}
         onSend={message => handleSendMessage(message)}
