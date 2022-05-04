@@ -11,6 +11,7 @@ import { GetOneRecipeDocument, IngredientInputType, Recipe, useAddNewRecipeMutat
 import { initializeApollo } from "../../../utils/apollo";
 import getIngredientsData from "../../../utils/getIngredientsData";
 import styles from "../../../styles/create-recipe.module.css";
+import { checkUserAuth } from "../../../utils/checkUserAuth";
 
 interface Props {
   recipe: Recipe,
@@ -32,6 +33,8 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
   // Queries and Mutations
   const { data: whoami } = useWhoAmIQuery();
   const [updateRecipe] = useUpdateRecipeMutation();
+
+  checkUserAuth();
 
 
   // Manual State

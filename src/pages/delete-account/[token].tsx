@@ -2,28 +2,28 @@ import {
   Checkbox,
   useToast,
   Divider,
-  Button, 
+  Button,
   Center,
   Stack,
   Box,
   useColorModeValue
 } from "@chakra-ui/react"
 import { useDeleteAccountMutation, useLogoutMutation } from "../../generated/graphql"
-import { initializeApollo }         from "../../utils/apollo"
-import React, { useState }          from "react"
-import { useRouter }                from 'next/router'
-import styles                       from "./delete-account.module.css"
+import { initializeApollo } from "../../utils/apollo"
+import React, { useState } from "react"
+import { useRouter } from 'next/router'
+import styles from "./delete-account.module.css"
 
 const DeleteAccount = () => {
   // Hooks
   const router = useRouter()
   const apolloClient = initializeApollo()
   const toast = useToast()
-  
+
   // Mutations
   const [deleteAccount] = useDeleteAccountMutation()
   const [logout] = useLogoutMutation()
-  
+
   // State
   const token = router.query.token as string
   const [agreed, setAgreed] = useState(false)
@@ -54,13 +54,12 @@ const DeleteAccount = () => {
         </Box>
         <Center>
           <Button disabled={!agreed} colorScheme="red" onClick={async () => {
-            deleteAccount({ variables: { token: token } })
-            
             await logout();
+            deleteAccount({ variables: { token: token } })
 
             //evict cache
-            apolloClient.clearStore()
-            
+            apolloClient.resetStore();
+
             //notify user
             toast({
               title: "Success",
