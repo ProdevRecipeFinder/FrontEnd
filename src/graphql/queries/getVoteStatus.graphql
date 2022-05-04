@@ -1,0 +1,3 @@
+query GetVoteStatus($recipe_id: Float!){
+  getVoteStatus(recipe_id: $recipe_id)
+}

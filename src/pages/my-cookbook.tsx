@@ -1,35 +1,33 @@
 import {
   Button,
   Center,
-  Input
+  Input, SimpleGrid
 } from "@chakra-ui/react"
+import { NextPage } from "next"
+import Head from 'next/head'
+import React, { useState } from "react"
+import RecipeCard from "../components/Recipe/RecipeCard"
 import { Recipe, useSavedRecipesQuery } from "../generated/graphql"
-import React, { useState }              from "react"
-import { checkUserAuth }                from "../utils/checkUserAuth"
-import { SimpleGrid }                   from '@chakra-ui/react'
-import { NextPage }                     from "next"
-import RecipeCard                       from "../components/Recipe/RecipeCard"
-import Head                             from 'next/head'
 
 const MyCookBook: NextPage = () => {
   // Check authentication
-  checkUserAuth()
+  // checkUserAuth()
 
   // Hooks and Queries
   const { data: recipeResponse, loading, fetchMore } = useSavedRecipesQuery();
   const [search, setSearch] = useState("")
 
   if (loading)
-    return ( <Center>Loading...</Center> )
+    return (<Center>Loading...</Center>)
   if (!loading && !recipeResponse?.getSavedRecipes)
-    return ( <Center>No recipes added to Cookbook</Center> )
-  
-  
+    return (<Center>No recipes added to Your Cookbook</Center>)
+
+
   let recipeData = recipeResponse!.getSavedRecipes?.recipes as Recipe[];
 
   // Functions
   const localSearch = () => {
-    if (search === "") 
+    if (search === "")
       return recipeData
     const filteredData = recipeData.filter(recipe => { // Return only the recipes that match the search
       const toSearch = [recipe.recipe_title, recipe.recipe_desc]
@@ -37,17 +35,21 @@ const MyCookBook: NextPage = () => {
     })
     return filteredData
   }
-  
+
   // Render
   return (
     <React.Fragment>
       <Head>
-        <title>My Cookbook- Recipe Finder</title>
-        <meta name="description" content="Recipe Finder Cookbook Page" />
+        <title>My Cookbook - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder My Cookbook" />
       </Head>
 
+      <Center>
+        <h1>You have {recipeData.length} {recipeData.length === 1 ? "Recipe" : "Recipes"} saved to Your Cookbook</h1>
+      </Center>
+
       {/* An input search bar */}
-      <Input type="search" variant="flushed" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
+      <Input type="search" variant="flushed" placeholder="Search saved recipes" value={search} onChange={(e) => setSearch(e.target.value)} />
 
       <br /> <br />
 
@@ -55,14 +57,14 @@ const MyCookBook: NextPage = () => {
       {
         recipeData && recipeData.length ?
           <React.Fragment>
-            <SimpleGrid minChildWidth='300px' spacing="1em">
+            <SimpleGrid minChildWidth='250px' spacing="1em">
               {localSearch().map((recipe: Recipe) => (
-                <RecipeCard key={recipe.recipe_title} recipe={recipe} />
+                <RecipeCard key={recipe.recipe_title} recipe={recipe} maxWidth={400} height={225} />
               ))}
             </SimpleGrid>
 
             <br />
-            
+
             <Center>
               <Button disabled={!recipeResponse?.getSavedRecipes?.pageInfo.hasNextPage} onClick={() => {
                 fetchMore({

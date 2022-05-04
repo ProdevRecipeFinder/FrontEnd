@@ -16,6 +16,7 @@ import { Form, Formik }     from 'formik'
 import InputField           from "../../components/InputField"
 import styles               from "./settings.module.css"
 import React                from "react"
+import Head                 from "next/head"
 
 const account = () => {
   // Hooks
@@ -27,11 +28,14 @@ const account = () => {
 
   return (
     <React.Fragment>
+      <Head>
+        <title>Account - Recipe Finder</title>
+        <meta name="description" content="Recipe Finder Account" />
+      </Head>
       <Box className={styles.container}>
         <h1 className="title">Change Username</h1>
 
-        <Divider />
-        <br />
+        <Divider marginBottom="0.75em" />
 
         <Formik
           initialValues={{ username: "" }}
@@ -72,23 +76,21 @@ const account = () => {
           {
             ({ isSubmitting }) => (
               <Form style={{ width: useBreakpointValue({ sm: "100%", md: "100%", lg: "50%", })}}>
-                <InputField name="username" label="Username" />
-                <br />
+                <InputField name="username" label="Username" marginBottom="0.5em"/>
                 <Button type="submit" isLoading={isSubmitting}>Save</Button>
               </Form>
             )
           }
         </Formik>
 
-        <br /><br /><br />
-
-        <h1 className="title" style={{ color: "red" }}>Delete Account</h1>
-
-        <Divider />
         <br />
 
+        <h1 className="title" style={{ color: "#C53030" }}>Delete Account</h1>
+
+        <Divider marginBottom="0.75em"/>
+
         {/* delete account button */}
-        <Button variant="outline" colorScheme="red"
+        <Button variant="outline" colorScheme="red" style={{background: "transparent"}}
           onClick={() => {
             requestDeleteAccount()
             toast({

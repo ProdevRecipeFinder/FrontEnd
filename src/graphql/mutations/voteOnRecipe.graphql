@@ -1,0 +1,3 @@
+mutation VoteOnRecipe($voteParams: VoteParams!){
+  voteOnRecipe(vote_params: $voteParams)
+}

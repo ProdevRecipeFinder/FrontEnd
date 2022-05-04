@@ -2,13 +2,14 @@ import {
   Button,
   Center,
   VStack,
-  useToast
+  useToast,
+  useColorModeValue
 } from "@chakra-ui/react"
 import { useForgotPasswordMutation }  from "../../generated/graphql"
 import React, { useState }            from "react"
 import { Form, Formik }               from 'formik'
 import InputField                     from '../../components/InputField'
-import HCaptcha                       from '@hcaptcha/react-hcaptcha'
+import ReCAPTCHA                      from "react-google-recaptcha"
 import styles                         from "./reset-password.module.css"
 
 const verifyEmail = () => {
@@ -32,11 +33,15 @@ const verifyEmail = () => {
       </Center>
 
       <Center>
-        <VStack id={styles.resetBox} w="40em">
+        <VStack id={styles.resetBox} w="40em" borderWidth="1px" borderStyle="solid" borderColor={useColorModeValue("lightgray", "gray")}>
           <p>Enter your user account's verified email address and we will send you a password reset link.</p>
           <Formik
             initialValues={{ email: "" }}
-            onSubmit={async (values, { resetForm }) => {
+            onSubmit={async (values, { resetForm, setErrors }) => {
+
+              if (!values.email)
+                return setErrors({ email: "Please enter a valid email address" })
+
               // Here send message to backend to send verify email
               await forgotPassword({
                 variables: values
@@ -54,18 +59,18 @@ const verifyEmail = () => {
             }
             }>
             {
-              ({ isSubmitting }) => (
+              ({ isSubmitting, values }) => (
                 <Form style={{ width: "100%" }}>
                   <InputField name="email" placeholder="Enter email here" />
-                  < br />
+                  <br />
                   <Center>
-                      {/* <HCaptcha
-                          sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY as string}
-                          onVerify={() => handleVerificationSuccess()}
-                      /> */}
+                    <ReCAPTCHA 
+                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string}
+                      onChange={() => handleVerificationSuccess()}
+                    />
                   </Center>
                   <br />
-                  <Button type="submit" isLoading={isSubmitting} w="100%">Send password reset email</Button>
+                  <Button disabled={!isHuman} type="submit" isLoading={isSubmitting} w="100%">Send password reset email</Button>
                 </Form>
               )
             }

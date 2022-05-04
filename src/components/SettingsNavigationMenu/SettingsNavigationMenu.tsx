@@ -14,9 +14,9 @@ const SettingsNavigationMenu = () => {
     <React.Fragment>
       <Stack direction={"column"} padding="0.5em">
         <p>Account</p>
-        <NavigationBarItem icon={faUser} text={"Public Profile"} href={"/settings/profile"}/>
+        <NavigationBarItem icon={faUser} text={"Profile"} href={"/settings/profile"}/>
         <NavigationBarItem icon={faGear} text={"Account"} href={"/settings/account"}/>
-        <NavigationBarItem icon={faPaintBrush} text={"Appearance"} href={"/"}/>
+        <NavigationBarItem icon={faPaintBrush} text={"Appearance"} href={"/settings/appearance"}/>
       </Stack>
 
       <Divider margin="0.5em 0"/>

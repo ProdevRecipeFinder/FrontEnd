@@ -1,0 +1,21 @@
+input RecipeInput {
+  recipe_title: String!
+  recipe_desc: String!
+  prep_time_minutes: Int!
+  cook_time_minutes: Int!
+  ingredients: [IngredientInputType!]!
+  instructions: [InstructionInputType!]!
+  footnotes: [String!]!
+  original_url: String!
+  photo_url: String!
+}
+
+input IngredientInputType {
+  ingredient: String!
+  unit: String!
+  quantity: String!
+}
+
+input InstructionInputType {
+  step_desc: String!
+}

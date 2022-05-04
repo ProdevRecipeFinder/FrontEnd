@@ -2,7 +2,6 @@ import {
   useBreakpointValue,
   Divider,
   Avatar,
-  Button,
   Stack,
   Box
 } from "@chakra-ui/react"
@@ -10,7 +9,6 @@ import SettingsNavigationMenu from "../../components/SettingsNavigationMenu/Sett
 import { useWhoAmIQuery } from "../../generated/graphql"
 import { checkUserAuth } from "../../utils/checkUserAuth"
 import DefaultLayout from "./DefaultLayout"
-import NextLink from "next/link"
 import React from "react"
 import styles from "./settingsLayout.module.css"
 
@@ -31,7 +29,7 @@ const SettingsLayout = ({ children }: Props) => {
 
       {/* Avatar and username at the top of the page */}
       <Box id={styles.account}>
-        <Stack direction={useBreakpointValue({ sm: "column", md: "row" })}  align="center" >
+        <Stack direction={useBreakpointValue({ base: "column", md: "row" })}  align="center" >
           <Avatar
             size={"md"}
             src={"https://avatars.dicebear.com/api/male/username.svg"}
@@ -41,10 +39,6 @@ const SettingsLayout = ({ children }: Props) => {
             {userData?.whoami?.user_name}
           </p>
         </Stack>
-
-        <NextLink passHref href="/my-cookbook">
-          <Button marginLeft="auto">Go to My Cookbook</Button>
-        </NextLink>
       </Box>
 
       <Divider marginBottom="1em" marginTop="0.5em" />
