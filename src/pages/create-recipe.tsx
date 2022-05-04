@@ -27,7 +27,6 @@ const CreateRecipe = () => {
   const { data: whoami } = useWhoAmIQuery()
   const [addNewRecipe] = useAddNewRecipeMutation()
 
-
   // Manual State
   const [recipeName, setRecipeName] = useState("")
   const [recipeDescription, setRecipeDescription] = useState("")
@@ -131,7 +130,8 @@ const CreateRecipe = () => {
     if (footnote === "") {
       return
     }
-    if (footnotes.find(footnote => footnote === footnote)) {
+
+    if (footnotes.find(i => i === footnote)) {
       return
     }
     setFootnotes([...footnotes, footnote])

@@ -37,7 +37,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useLogoutMutation, useWhoAmIQuery } from "../../generated/graphql";
 import { useBreakpointValue } from "@chakra-ui/media-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useApolloClient } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NavigationBarItem from "./NavigationBarItem";
@@ -59,6 +59,9 @@ const NavigationBar = () => {
 
   // State
   const [searchQuery, setSearchQuery] = useState("")
+
+  useEffect(() => {
+  }, [userData?.whoami])
 
   // Functions
   const onSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) =>

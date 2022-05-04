@@ -7,10 +7,11 @@ import React, { useState } from "react";
 import { v4 } from 'uuid';
 import DeletableOption from "../../../components/DeletableOption";
 import { ImageUpload } from "../../../components/ImageUpload/ImageUpload";
-import { GetOneRecipeDocument, IngredientInputType, Recipe, useAddNewRecipeMutation, useGetOneRecipeQuery, useWhoAmIQuery } from "../../../generated/graphql";
+import { GetOneRecipeDocument, IngredientInputType, Recipe, useAddNewRecipeMutation, useGetOneRecipeQuery, useUpdateRecipeMutation, useWhoAmIQuery } from "../../../generated/graphql";
 import { initializeApollo } from "../../../utils/apollo";
 import getIngredientsData from "../../../utils/getIngredientsData";
 import styles from "../../../styles/create-recipe.module.css";
+import { checkUserAuth } from "../../../utils/checkUserAuth";
 
 interface Props {
   recipe: Recipe,
@@ -31,7 +32,9 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
 
   // Queries and Mutations
   const { data: whoami } = useWhoAmIQuery();
-  const [addNewRecipe] = useAddNewRecipeMutation();
+  const [updateRecipe] = useUpdateRecipeMutation();
+
+  checkUserAuth();
 
 
   // Manual State
@@ -43,11 +46,20 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
   const [imageChange, setImageChange] = useState(false);
 
   // Manual / Automatic State
-  const [ingredients, setIngredients] = useState<IngredientInputType[]>([])
+  // @ts-ignore
+  const [ingredients, setIngredients] = useState<IngredientInputType[]>(recipe.recipeIngredients?.map(i => {
+    return {
+      ingredient: i.ingredient_name,
+      quantity: i.ingredient_qty,
+      unit: i.ingredient_unit,
+    }
+  }))
   const [quantity, setQuantity] = useState("")
   const [ingredientName, setIngredientName] = useState("")
   const [unit, setUnit] = useState("")
-  const [instructions, setInstructions] = useState<string[]>([])
+  // @ts-ignore
+  const [instructions, setInstructions] = useState<string[]>(recipe.recipeSteps?.map(i => i.step_desc))
+
   const [step, setStep] = useState("")
   const [footnotes, setFootnotes] = useState<string[]>(recipe.footnotes)
   const [footnote, setFootnote] = useState("")
@@ -138,7 +150,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
     if (footnote === "") {
       return
     }
-    if (footnotes.find(footnote => footnote === footnote)) {
+    if (footnotes.find(i => i === footnote)) {
       return
     }
     setFootnotes([...footnotes, footnote])
@@ -156,7 +168,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
   // Add Recipe Functions
   const addRecipe = async () => {
     // Check for empty fields
-    if (recipeName === "" || recipeDescription === "" || cookTime === "" || prepTime === "" || ingredients.length === 0 || instructions.length === 0 || !imageUploaded) {
+    if (recipeName === "" || recipeDescription === "" || cookTime === "" || prepTime === "" || ingredients.length === 0 || instructions.length === 0) {
       return toast({
         title: "Missing Fields",
         description: "Please fill out all fields and upload a valid image",
@@ -166,8 +178,9 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
       })
     }
 
-    await addNewRecipe({
+    await updateRecipe({
       variables: {
+        id: recipe.id,
         input: {
           recipe_title: recipeName,
           recipe_desc: recipeDescription,
@@ -181,9 +194,9 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
           instructions: instructions.map(instruction => { return { step_desc: instruction } }),
           footnotes,
           original_url: "N/A",
-          photo_url: "https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg",
+          photo_url: recipe.photo_url,
         },
-        uuid: uuidState
+        uuid: imageUploaded ? uuidState : "no-update"
       }
     })
 
@@ -335,7 +348,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
           {!imageChange
             ? <Box>
               <Image src={recipe.photo_url} />
-              <Button onClick={() => setImageChange(true)}>Replace Image</Button>
+              <Button style={{ position: "absolute", top: "1em", right: "1em" }} onClick={() => setImageChange(true)}>Replace Image</Button>
             </Box>
             : <ImageUpload uuid={uuidState} setImageUploaded={setImageUploaded} />}
         </Box>
@@ -364,7 +377,6 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
         <Stack width={useBreakpointValue({ sm: "100%", md: "50%" })}>
           <h2 className="title">Ingredients</h2>
           <Divider width={useBreakpointValue({ sm: "100%", md: "80%" })} />
-
           {
             !ingredients.length ? null :
               <ul>
@@ -455,7 +467,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
       <Center>
         <Stack direction="row">
           <Button size="lg" variant="outline" colorScheme="red" background="transparent" onClick={clearInputs}>Clear</Button>
-          <Button size="lg" onClick={addRecipe}>Create Recipe</Button>
+          <Button size="lg" onClick={addRecipe}>Edit Recipe</Button>
         </Stack>
       </Center>
 
