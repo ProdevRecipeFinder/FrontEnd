@@ -66,6 +66,7 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
   // State
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [rating, setRating] = useState<number>(parseInt(recipe.rating_stars));
+  const [prevRating, setPrevRating] = useState<number>(0);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   
@@ -89,8 +90,11 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
         }
       });
       setHasVoted(voteStatus.getVoteStatus === -1 ? false : true);
+<<<<<<< Updated upstream
       console.log(voteStatus.getVoteStatus === -1)
       setRating(voteStatus.getVoteStatus);
+=======
+>>>>>>> Stashed changes
     }
     
     if (whoAmI?.whoami) { // Only run if user is logged in
@@ -168,6 +172,28 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedStatus" })
     apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getSavedRecipes" })
   }
+  async function updateVoteStatus() {
+    voteOnRecipe({
+      variables: {
+        voteParams: {
+          newStars: rating,
+          prevVote: hasVoted,
+          prevVoteValue: hasVoted ? prevRating : undefined,
+          recipe_id: recipe.id
+        }
+      }
+    })
+    toast({
+      title: "Vote Success",
+      description: "Recipe unsaved",
+      status: "info",
+      duration: 5000,
+      isClosable: true
+    })
+    setHasVoted(true) // Toggle saved status
+    apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "getVoteStatus" })
+  }
+
 
   // Render
   return (
@@ -199,7 +225,9 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
           <Center>
             <Box marginRight="0.5em" fontSize="1.2em">
               <StarRatingComponent name="rate1" starCount={5} starColor={hasVoted ? 'red' : 'gold'} value={rating} editing={whoAmI?.whoami ? true : false} onStarClick={(nextValue, prevValue) => {
+                setHasVoted(true);
                 setRating(nextValue);
+<<<<<<< Updated upstream
                 console.log(hasVoted)
                 console.log(prevValue)
                 voteOnRecipe({
@@ -212,6 +240,10 @@ const Recipe: NextPage<Props> = ({ recipe }) => {
                     }
                   }
                 })
+=======
+                setPrevRating(prevValue);
+                updateVoteStatus();
+>>>>>>> Stashed changes
               }} />
             </Box>
             {recipe.review_count} ratings
