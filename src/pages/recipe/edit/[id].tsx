@@ -59,6 +59,7 @@ const EditRecipe: NextPage<Props> = ({ recipe }) => {
   const [unit, setUnit] = useState("")
   // @ts-ignore
   const [instructions, setInstructions] = useState<string[]>(recipe.recipeSteps?.map(i => i.step_desc))
+
   const [step, setStep] = useState("")
   const [footnotes, setFootnotes] = useState<string[]>(recipe.footnotes)
   const [footnote, setFootnote] = useState("")

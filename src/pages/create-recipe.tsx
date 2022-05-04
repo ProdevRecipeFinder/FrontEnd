@@ -1,15 +1,15 @@
-import { Center, Stack, Input, Box, useBreakpointValue, Textarea, Divider, Button, Flex, useToast } from "@chakra-ui/react"
+import { Box, Button, Center, Divider, Flex, Input, Stack, Textarea, useBreakpointValue, useToast } from "@chakra-ui/react"
 import Head from "next/head"
-import React, { useState } from "react"
-import styles from "../styles/create-recipe.module.css"
-import DeletableOption from "../components/DeletableOption"
-import { useWhoAmIQuery, useAddNewRecipeMutation, IngredientInputType, useSaveRecipeToUserMutation } from "../generated/graphql"
-import { Configuration, OpenAIApi } from "openai";
-import getIngredientsData from "../utils/getIngredientsData"
-import { ImageUpload } from "../components/ImageUpload/ImageUpload"
-import { v4 } from 'uuid';
 import { useRouter } from 'next/router'
+import { Configuration, OpenAIApi } from "openai"
+import React, { useState } from "react"
+import { v4 } from 'uuid'
+import DeletableOption from "../components/DeletableOption"
+import { ImageUpload } from "../components/ImageUpload/ImageUpload"
+import { IngredientInputType, useAddNewRecipeMutation, useWhoAmIQuery } from "../generated/graphql"
+import styles from "../styles/create-recipe.module.css"
 import { initializeApollo } from "../utils/apollo"
+import getIngredientsData from "../utils/getIngredientsData"
 
 const config = new Configuration({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
@@ -26,8 +26,6 @@ const CreateRecipe = () => {
   // Queries and Mutations
   const { data: whoami } = useWhoAmIQuery()
   const [addNewRecipe] = useAddNewRecipeMutation()
-
-
 
   // Manual State
   const [recipeName, setRecipeName] = useState("")
@@ -326,10 +324,6 @@ const CreateRecipe = () => {
 
         { /* Recipe Image and information summary */}
         <Box width={useBreakpointValue({ sm: "100%", md: "50%" })} position="relative">
-          {/* <img
-            className={styles.recipeImage}
-            src={"https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"}
-          /> */}
           <ImageUpload uuid={uuidState} setImageUploaded={setImageUploaded} />
         </Box>
         <Box width={useBreakpointValue({ sm: "100%", md: "50%" })}>
