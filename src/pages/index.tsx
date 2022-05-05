@@ -72,7 +72,7 @@ const Home: NextPage<Props> = ({ mostPopular, homepageData }) => {
   };
 
   const displayMostPopualrRecipes = (mostPopular: Recipe[]) => {
-    if (mostPopular.length > 6) return null;
+    if (mostPopular.length < 6) return null;
 
     return (
       <React.Fragment>
